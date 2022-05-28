@@ -1,0 +1,12 @@
+version: "3.5"
+
+services:
+  app:
+    build: .
+    container_name: app_emr
+    volumes:
+      - .:/go/src/
+    ports:
+      - 9100:9100
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
