@@ -6,6 +6,7 @@ import "errors"
 var (
 	ErrMissingFamilyID      = errors.New("o ID da família está em branco ou ausente")
 	ErrMissingFamilySurname = errors.New("o nome de família está em branco ou ausente")
+	ErrFamilyNotFound = errors.New("família não encontrada")
 )
 
 // Errors related to the Family Member (one Member)

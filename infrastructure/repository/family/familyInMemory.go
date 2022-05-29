@@ -25,7 +25,7 @@ func (f *FamilyRepositoryInMemory) Create(family *family.Family) error {
 	if err != nil {
 		return err
 	}
-	
+
 	f.family = append(f.family, *family)
 	if len(f.family) > 0 {
 		return nil
@@ -41,7 +41,7 @@ func (f *FamilyRepositoryInMemory) FindById(id uuid.UUID) (*family.Family, error
 			return &f.family[x], nil
 		}
 	}
-	return &family.Family{}, errors.New("família não encontrada")
+	return &family.Family{}, family.ErrFamilyNotFound
 }
 
 
@@ -50,7 +50,7 @@ func (f *FamilyRepositoryInMemory) FindById(id uuid.UUID) (*family.Family, error
 func (f *FamilyRepositoryInMemory) ChangeName(id uuid.UUID, newSurname string) (*family.Family, error) {
 	fam, err := f.FindById(id)
 	if err != nil {
-		return &family.Family{}, errors.New("família não encontrada")
+		return &family.Family{}, family.ErrFamilyNotFound
 	}
 
 	fam.Surname = newSurname
