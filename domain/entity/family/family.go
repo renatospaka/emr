@@ -1,36 +1,38 @@
 package family
 
 import (
-	"errors"
 	"strings"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 type Family struct {
 	ID      uuid.UUID
 	Surname string
-	valid   bool
+	Valid   bool
 }
 
 func NewFamily(surname string) *Family {
-	return &Family{
+	newFamily := &Family{
 		ID:      uuid.NewV4(),
 		Surname: strings.TrimSpace(surname),
-		valid: false,
+		Valid:   false,
 	}
+
+	newFamily.IsValid()
+	return newFamily
 }
 
 // Check whenever the family structure is intact and filled
 func (f *Family) IsValid() error {
-	f.valid = false
+	f.Valid = false
 	if strings.TrimSpace(f.Surname) == "" {
-		return errors.New("o nome de família está em branco ou ausente")
+		return ErrMissingFamilySurname
 	}
 	if strings.TrimSpace(f.ID.String()) == "" {
-		return errors.New("o ID da família está em branco ou ausente")
+		return ErrMissingFamilyID
 	}
 
-	f.valid = true
+	f.Valid = true
 	return nil
 }

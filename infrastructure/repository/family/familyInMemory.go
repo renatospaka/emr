@@ -12,9 +12,20 @@ type FamilyRepositoryInMemory struct {
 	family []family.Family
 }
 
+func NewFamilyRepositoryInMemory() *FamilyRepositoryInMemory {
+	return &FamilyRepositoryInMemory{
+		family: []family.Family{},
+	}
+}
+
 // Creates a new family structure
 // or returns an error
 func (f *FamilyRepositoryInMemory) Create(family *family.Family) error {
+	err := family.IsValid()
+	if err != nil {
+		return err
+	}
+	
 	f.family = append(f.family, *family)
 	if len(f.family) > 0 {
 		return nil
