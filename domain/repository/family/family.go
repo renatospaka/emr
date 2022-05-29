@@ -12,7 +12,8 @@ type FamilyRepository interface {
 }
 
 type MemberRepository interface {
-	Add(person *family.Member) error
-	Change(person *family.Member) (*family.Member, error)
+	Add(member *family.Member) error
+	FindById(id uuid.UUID) (*family.Member, error)
+	Change(member *family.Member) (*family.Member, error)
 	Remove(id uuid.UUID) error
 }

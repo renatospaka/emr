@@ -23,7 +23,8 @@ func NewFamily(surname string) *Family {
 	return newFamily
 }
 
-// Check whenever the family structure is intact and filled
+// Check whenever the family structure is intact 
+// and filled accordingly to the model rules
 func (f *Family) IsValid() error {
 	f.Valid = false
 	if strings.TrimSpace(f.Surname) == "" {
