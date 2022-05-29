@@ -7,9 +7,9 @@ import (
 )
 
 type Family struct {
-	ID      uuid.UUID
-	Surname string
-	Valid   bool
+	ID      uuid.UUID `json:"family_id"`
+	Surname string    `json:"surname"`
+	Valid   bool      `json:"is_valid"`
 }
 
 func NewFamily(surname string) *Family {

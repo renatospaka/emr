@@ -11,7 +11,7 @@ import (
 )
 
 func TestFamily_Create(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("Dino da Silva")
 
 	err := repo.Create(fam)
@@ -24,7 +24,7 @@ func TestFamily_Create(t *testing.T) {
 }
 
 func TestFamily_Create_Surname_Missing(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory() 
 	fam := family.NewFamily("")
 
 	err := repo.Create(fam)
@@ -35,7 +35,7 @@ func TestFamily_Create_Surname_Missing(t *testing.T) {
 }
 
 func TestFamily_FindById(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory() 
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
@@ -46,7 +46,7 @@ func TestFamily_FindById(t *testing.T) {
 }
 
 func TestFamily_FindById_NotFound(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory() 
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
@@ -58,7 +58,7 @@ func TestFamily_FindById_NotFound(t *testing.T) {
 }
 
 func TestFamily_ChangeName(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory() 
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
@@ -71,7 +71,7 @@ func TestFamily_ChangeName(t *testing.T) {
 }
 
 func TestFamily_ChangeName_NotFound(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory() 
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
@@ -85,7 +85,7 @@ func TestFamily_ChangeName_NotFound(t *testing.T) {
 }
 
 func TestFamily_ChangeName_Surname_Missing(t *testing.T) {
-	var repo repoFamily.FamilyRepositoryInMemory 
+	repo := repoFamily.NewFamilyRepositoryInMemory() 
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 

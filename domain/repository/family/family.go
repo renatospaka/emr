@@ -11,8 +11,8 @@ type FamilyRepository interface {
 	ChangeName(id uuid.UUID, newSurname string) (*family.Family, error)
 }
 
-type PersonRepository interface {
-	Add(person *family.Person) error
-	Change(person *family.Person) (*family.Person, error)
+type MemberRepository interface {
+	Add(person *family.Member) error
+	Change(person *family.Member) (*family.Member, error)
 	Remove(id uuid.UUID) error
 }
