@@ -16,10 +16,10 @@ func TestFamily_Create(t *testing.T) {
 
 	err := repo.Create(fam)
 	require.Nil(t, err)
-	require.Equal(t, fam.Surname, "Dino da Silva")
+	require.Equal(t, "Dino da Silva", fam.Surname)
 	
-	err = fam.IsValid()
-	require.Nil(t, err)
+	err2 := fam.IsValid()
+	require.Nil(t, err2)
 }
 
 func TestFamily_Create_Surname_Missing(t *testing.T) {
@@ -29,7 +29,7 @@ func TestFamily_Create_Surname_Missing(t *testing.T) {
 
 	err := fam.IsValid()
 	require.NotNil(t, err)
-	require.Equal(t, fam.Surname, "")
+	require.Equal(t, "", fam.Surname)
 	require.Error(t, err, "o nome de família está em branco ou ausente")
 }
 
@@ -41,7 +41,7 @@ func TestFamily_FindById(t *testing.T) {
 	id := fam.ID
 	find, err := repo.FindById(id)
 	require.Nil(t, err)
-	require.Equal(t, find.ID, fam.ID)
+	require.Equal(t, id, find.ID)
 }
 
 func TestFamily_FindById_NotFound(t *testing.T) {
@@ -52,8 +52,8 @@ func TestFamily_FindById_NotFound(t *testing.T) {
 	id := uuid.NewV4()
 	find, err := repo.FindById(id)
 	require.NotNil(t, err)
-	require.Error(t, err, "família não encontrada")
-	require.Equal(t, find, &family.Family{})
+	require.Error(t, err, "família não encontradaa")
+	require.Equal(t, &family.Family{}, find)
 }
 
 func TestFamily_ChangeName(t *testing.T) {
@@ -65,7 +65,7 @@ func TestFamily_ChangeName(t *testing.T) {
 	updSurname := "Dino da Silva Sauro"
 	upd, err := repo.ChangeName(id, updSurname)
 	require.Nil(t, err)
-	require.Equal(t, upd.Surname, "Dino da Silva Sauro")
+	require.Equal(t, "Dino da Silva Sauro", upd.Surname)
 }
 
 func TestFamily_ChangeName_NotFound(t *testing.T) {
@@ -77,9 +77,9 @@ func TestFamily_ChangeName_NotFound(t *testing.T) {
 	updSurname := "Dino da Silva Sauro"
 	upd, err := repo.ChangeName(id, updSurname)
 	require.NotNil(t, err)
-	require.NotEqual(t, upd.Surname, "Dino da Silva Sauro")
+	require.NotEqual(t, "Dino da Silva Sauro", upd.Surname)
 	require.Error(t, err, "família não encontrada")
-	require.Equal(t, upd, &family.Family{})
+	require.Equal(t, &family.Family{}, upd)
 }
 
 func TestFamily_ChangeName_Surname_Missing(t *testing.T) {
@@ -92,6 +92,6 @@ func TestFamily_ChangeName_Surname_Missing(t *testing.T) {
 	upd, _ := repo.ChangeName(id, updSurname)
 	err := upd.IsValid()
 	require.NotNil(t, err)
-	require.Equal(t, upd.Surname, "")
 	require.Error(t, err, "o nome de família está em branco ou ausente")
+	require.Equal(t, "", upd.Surname)
 }
