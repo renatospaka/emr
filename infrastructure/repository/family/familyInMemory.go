@@ -43,5 +43,9 @@ func (f *FamilyRepositoryInMemory) ChangeName(id uuid.UUID, newSurname string) (
 	}
 
 	fam.Surname = newSurname
+	err = fam.IsValid()
+	if err != nil {
+		return &family.Family{}, err
+	}
 	return fam, nil
 }
