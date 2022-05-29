@@ -1,40 +1,19 @@
 package familyRepository_test
 
 import (
-	"errors"
+	// "errors"
 	"testing"
-
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
+
+	"github.com/renatospaka/emr/domain/entity/family"
+	repoFamily "github.com/renatospaka/emr/infrastructure/repository/family"
 )
 
-type Family struct {
-	ID      uuid.UUID
-	Surname string
-}
-
-type familyRepositoryInMemory struct {
-	family []Family
-}
-
-func NewFamily(surname string) *Family {
-	return &Family{
-		ID: uuid.NewV4(),
-		Surname: surname,	
-	}
-}
-
-func (f *familyRepositoryInMemory) Create(family *Family) error {
-	f.family = append(f.family, *family)
-	if len(f.family) > 0 {return nil}
-	return errors.New("Ocorreu um erro na gravação da nova família")
-}
-
-
 func TestFamily_Create(t *testing.T) {
-	var repo familyRepositoryInMemory 
-	fam := NewFamily("Essa Família")
+	var repo repoFamily.FamilyRepositoryInMemory 
+	fam := family.NewFamily("Essa Família")
 
 	err := repo.Create(fam)
 	require.Nil(t, err)
+	require.Equal(t, fam.Surname, "Essa Família")
 }

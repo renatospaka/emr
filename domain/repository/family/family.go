@@ -1,5 +1,7 @@
 package familyRepository
 
-// type familyRepository interface {
-// 	Create(family *Family) error 
-// }
+import "github.com/renatospaka/emr/domain/entity/family"
+
+type FamilyRepository interface {
+	Create(family *family.Family) error 
+}
