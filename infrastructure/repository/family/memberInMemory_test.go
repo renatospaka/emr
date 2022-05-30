@@ -149,3 +149,41 @@ func TestMember_FullName_FindById_NotFound(t *testing.T) {
 	require.EqualError(t, err, family.ErrMemberNotFound.Error())
 	require.Equal(t, &family.Member{}, find)
 }
+
+func TestMember_Chance(t *testing.T) {
+	memberRepo := familyRepository.NewMemberRepositoryInMemory()
+	member := family.NewMember("Renato", "", "Spakauskas", family.Male, dob)
+	_ = memberRepo.Add(member)
+
+	member.MiddleName = "Costa"
+	upd, err := memberRepo.Change(member)	
+	require.Nil(t, err)
+	require.True(t, upd.Valid)
+	require.Equal(t, "Costa", upd.MiddleName)
+}
+
+func TestMember_Chance_NotFound(t *testing.T) {
+	memberRepo := familyRepository.NewMemberRepositoryInMemory()
+	member := family.NewMember("Renato", "", "Spakauskas", family.Male, dob)
+	_ = memberRepo.Add(member)
+
+	new := family.NewMember("Renato", "", "Spakauskas", family.Male, dob)
+
+	new.MiddleName = "Costa"
+	upd, err := memberRepo.Change(new)	
+	require.NotNil(t, err)
+	require.True(t, upd.Valid)
+	require.EqualError(t, err, family.ErrMemberNotFound.Error())
+}
+
+func TestMember_Chance_NoChanges(t *testing.T) {
+	memberRepo := familyRepository.NewMemberRepositoryInMemory()
+	member := family.NewMember("Renato", "", "Spakauskas", family.Male, dob)
+	_ = memberRepo.Add(member)
+
+	upd, err := memberRepo.Change(member)	
+	require.NotNil(t, err)
+	require.True(t, upd.Valid)
+	require.EqualError(t, err, family.ErrNoChangesNeeded.Error())
+	require.EqualValues(t, member, upd)
+}

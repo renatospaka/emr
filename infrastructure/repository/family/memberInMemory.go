@@ -39,9 +39,11 @@ func (m *MemberRepositoryInMemory) FindById(id uuid.UUID) (*family.Member, error
 		return &family.Member{}, family.ErrMemberNotFound
 	}
 
-	for x, mem := range m.member {
-		if mem.ID == id {
-			return &m.member[x], nil
+	for x, memb := range m.member {
+		if memb.ID == id {
+			this := m.member[x]
+			this.IsValid()
+			return &this, nil
 		}
 	}
 	return &family.Member{}, family.ErrMemberNotFound
@@ -50,7 +52,36 @@ func (m *MemberRepositoryInMemory) FindById(id uuid.UUID) (*family.Member, error
 // Allow user to change or update attributes of a specific family member
 // or returns an error
 func (m *MemberRepositoryInMemory) Change(member *family.Member) (*family.Member, error) {
-	panic("Not Implemented")
+	err := member.IsValid()
+	if err != nil {
+		return member, err
+	}
+
+	id := member.ID
+	current, err := m.FindById(id)
+	if err != nil {
+		return member, err
+	}
+
+	// Check if there is any change to make. 
+	// If there isn't, no action would be taken
+	if current.Name == member.Name &&
+		current.MiddleName == member.MiddleName &&
+		current.LastName == member.LastName &&
+		current.DOB == member.DOB &&
+		current.Gender == member.Gender {
+			return member, family.ErrNoChangesNeeded
+	}
+
+	// apply the changes
+	current.Name = member.Name  
+	current.MiddleName = member.MiddleName  
+	current.LastName = member.LastName 
+	current.DOB = member.DOB 
+	current.Gender = member.Gender
+	current.IsValid()
+
+	return current, nil
 }
 
 // Remove (completely) a member

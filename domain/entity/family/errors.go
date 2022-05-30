@@ -24,3 +24,8 @@ var (
 	ErrInvalidMembeGender = errors.New("o gênero da pessoa é inválido")
 	ErrMemberNotFound = errors.New("pessoa não encontrada")
 )
+
+// Common errors
+var (
+	ErrNoChangesNeeded = errors.New("nenhuma alteração necessária")
+)
