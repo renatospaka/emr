@@ -2,9 +2,11 @@ package familyRepository
 
 import (
 	"errors"
-	
-	uuid "github.com/satori/go.uuid"
+	// "fmt"
+	// "log"
+
 	"github.com/renatospaka/emr/domain/entity/family"
+	uuid "github.com/satori/go.uuid"
 )
 
 type MemberRepositoryInMemory struct {
@@ -41,9 +43,7 @@ func (m *MemberRepositoryInMemory) FindById(id uuid.UUID) (*family.Member, error
 
 	for x, memb := range m.member {
 		if memb.ID == id {
-			this := m.member[x]
-			this.IsValid()
-			return &this, nil
+			return &m.member[x], nil
 		}
 	}
 	return &family.Member{}, family.ErrMemberNotFound
@@ -63,21 +63,21 @@ func (m *MemberRepositoryInMemory) Change(member *family.Member) (*family.Member
 		return member, err
 	}
 
-	// Check if there is any change to make. 
+	// Check if there is any change to make.
 	// If there isn't, no action would be taken
 	if current.Name == member.Name &&
-		current.MiddleName == member.MiddleName &&
-		current.LastName == member.LastName &&
-		current.DOB == member.DOB &&
-		current.Gender == member.Gender {
-			return member, family.ErrNoChangesNeeded
+			current.MiddleName == member.MiddleName &&
+			current.LastName == member.LastName &&
+			current.DOB == member.DOB &&
+			current.Gender == member.Gender {
+		return member, family.ErrNoChangesNeeded
 	}
 
 	// apply the changes
-	current.Name = member.Name  
-	current.MiddleName = member.MiddleName  
-	current.LastName = member.LastName 
-	current.DOB = member.DOB 
+	current.Name = member.Name
+	current.MiddleName = member.MiddleName
+	current.LastName = member.LastName
+	current.DOB = member.DOB
 	current.Gender = member.Gender
 	current.IsValid()
 
@@ -87,5 +87,15 @@ func (m *MemberRepositoryInMemory) Change(member *family.Member) (*family.Member
 // Remove (completely) a member
 // or returns an error
 func (m *MemberRepositoryInMemory) Remove(id uuid.UUID) error {
-	panic("Not Implemented")
+	for x, memb := range m.member {
+		if memb.ID == id {
+			var err error
+			m.member, err = removeMember(m.member, x)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+	}
+	return family.ErrMemberNotFound
 }
