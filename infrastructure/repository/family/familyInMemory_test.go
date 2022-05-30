@@ -18,13 +18,13 @@ func TestFamily_Create(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, "Dino da Silva", fam.Surname)
 	require.True(t, fam.Valid)
-	
+
 	err2 := fam.IsValid()
 	require.Nil(t, err2)
 }
 
 func TestFamily_Create_Surname_Missing(t *testing.T) {
-	repo := repoFamily.NewFamilyRepositoryInMemory() 
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("")
 
 	err := repo.Create(fam)
@@ -35,7 +35,7 @@ func TestFamily_Create_Surname_Missing(t *testing.T) {
 }
 
 func TestFamily_FindById(t *testing.T) {
-	repo := repoFamily.NewFamilyRepositoryInMemory() 
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
@@ -46,7 +46,7 @@ func TestFamily_FindById(t *testing.T) {
 }
 
 func TestFamily_FindById_NotFound(t *testing.T) {
-	repo := repoFamily.NewFamilyRepositoryInMemory() 
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
@@ -57,41 +57,41 @@ func TestFamily_FindById_NotFound(t *testing.T) {
 	require.Equal(t, &family.Family{}, find)
 }
 
-func TestFamily_ChangeName(t *testing.T) {
-	repo := repoFamily.NewFamilyRepositoryInMemory() 
+func TestFamily_SetFamilyName(t *testing.T) {
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
 	id := fam.ID
 	updSurname := "Dino da Silva Sauro"
-	upd, err := repo.ChangeName(id, updSurname)
+	upd, err := repo.SetFamilyName(id, updSurname)
 	require.Nil(t, err)
 	require.True(t, upd.Valid)
 	require.Equal(t, "Dino da Silva Sauro", upd.Surname)
 }
 
-func TestFamily_ChangeName_NotFound(t *testing.T) {
-	repo := repoFamily.NewFamilyRepositoryInMemory() 
+func TestFamily_SetFamilyName_NotFound(t *testing.T) {
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
 	id := uuid.NewV4()
 	updSurname := "Dino da Silva Sauro"
-	upd, err := repo.ChangeName(id, updSurname)
+	upd, err := repo.SetFamilyName(id, updSurname)
 	require.NotNil(t, err)
 	require.NotEqual(t, "Dino da Silva Sauro", upd.Surname)
 	require.EqualError(t, err, family.ErrFamilyNotFound.Error())
 	require.Equal(t, &family.Family{}, upd)
 }
 
-func TestFamily_ChangeName_Surname_Missing(t *testing.T) {
-	repo := repoFamily.NewFamilyRepositoryInMemory() 
+func TestFamily_SetFamilyName_Surname_Missing(t *testing.T) {
+	repo := repoFamily.NewFamilyRepositoryInMemory()
 	fam := family.NewFamily("Dino da Silva")
 	_ = repo.Create(fam)
 
 	id := fam.ID
 	updSurname := ""
-	upd, err := repo.ChangeName(id, updSurname)
+	upd, err := repo.SetFamilyName(id, updSurname)
 	require.NotNil(t, err)
 	require.EqualError(t, err, family.ErrMissingFamilySurname.Error())
 	require.False(t, upd.Valid)
