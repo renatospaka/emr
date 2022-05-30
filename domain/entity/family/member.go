@@ -81,12 +81,14 @@ func (m *Member) FullName(withTitle bool) string {
 		fullName = m.Name + " " + m.MiddleName + " " + m.LastName
 	}
 
-	if withTitle && len(fullName) > 2 {
+	if withTitle {
 		if m.Gender == Male {
 			fullName = "Sr. " + fullName
 		} else if m.Gender == Female {
 			fullName = "Sra. " + fullName
 		}
+
+		if len(fullName) <= 5 {fullName = ""}
 	}
 	return strings.TrimSpace(fullName)
 }
