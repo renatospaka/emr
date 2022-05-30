@@ -35,7 +35,16 @@ func (m *MemberRepositoryInMemory) Add(member *family.Member) error {
 // Find a member by his/her ID
 // or returns an error
 func (m *MemberRepositoryInMemory) FindById(id uuid.UUID) (*family.Member, error) {
-	panic("Not Implemented")
+	if len(m.member) == 0 {
+		return &family.Member{}, family.ErrMemberNotFound
+	}
+
+	for x, mem := range m.member {
+		if mem.ID == id {
+			return &m.member[x], nil
+		}
+	}
+	return &family.Member{}, family.ErrMemberNotFound
 }
 
 // Allow user to change or update attributes of a specific family member

@@ -22,4 +22,5 @@ var (
 	ErrInvalidMemberDOB = errors.New("a data de nascimento é inválida")
 	ErrMissingMembeGender = errors.New("o gênero da pessoa está em branco ou ausente")
 	ErrInvalidMembeGender = errors.New("o gênero da pessoa é inválido")
+	ErrMemberNotFound = errors.New("pessoa não encontrada")
 )

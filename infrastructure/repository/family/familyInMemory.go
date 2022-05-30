@@ -36,6 +36,10 @@ func (f *FamilyRepositoryInMemory) Create(family *family.Family) error {
 // Find a family by its ID
 // or returns an error
 func (f *FamilyRepositoryInMemory) FindById(id uuid.UUID) (*family.Family, error) {
+	if len(f.family) == 0 {
+		return &family.Family{}, family.ErrFamilyNotFound
+	}
+	
 	for x, fam := range f.family {
 		if fam.ID == id {
 			return &f.family[x], nil
