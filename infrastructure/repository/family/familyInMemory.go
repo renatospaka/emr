@@ -7,7 +7,6 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-
 type FamilyRepositoryInMemory struct {
 	family []family.Family
 }
@@ -39,7 +38,7 @@ func (f *FamilyRepositoryInMemory) FindById(id uuid.UUID) (*family.Family, error
 	if len(f.family) == 0 {
 		return &family.Family{}, family.ErrFamilyNotFound
 	}
-	
+
 	for x, fam := range f.family {
 		if fam.ID == id {
 			return &f.family[x], nil
@@ -48,10 +47,9 @@ func (f *FamilyRepositoryInMemory) FindById(id uuid.UUID) (*family.Family, error
 	return &family.Family{}, family.ErrFamilyNotFound
 }
 
-
 // Allow user to change or update the surname of a specific family
 // or returns an error
-func (f *FamilyRepositoryInMemory) ChangeName(id uuid.UUID, newSurname string) (*family.Family, error) {
+func (f *FamilyRepositoryInMemory) SetFamilyName(id uuid.UUID, newSurname string) (*family.Family, error) {
 	fam, err := f.FindById(id)
 	if err != nil {
 		return &family.Family{}, family.ErrFamilyNotFound
