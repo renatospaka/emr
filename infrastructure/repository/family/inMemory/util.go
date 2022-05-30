@@ -1,4 +1,4 @@
-package familyRepository
+package familyInMemory
 
 import "github.com/renatospaka/emr/domain/entity/family"
 
