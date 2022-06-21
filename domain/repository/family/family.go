@@ -9,6 +9,8 @@ type FamilyRepository interface {
 	Create(family *family.Family) error
 	FindById(id uuid.UUID) (*family.Family, error)
 	SetFamilyName(id uuid.UUID, newSurname string) (*family.Family, error)
+	FindFamilyMemberById(idMember uuid.UUID, idFamily uuid.UUID) (*family.Member, error)
+	AddFamilyMember(newMember *family.FamilyMember, toFamily uuid.UUID) (*family.Family, error)
 }
 
 type MemberRepository interface {

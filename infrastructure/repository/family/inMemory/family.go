@@ -1,7 +1,10 @@
 package familyInMemory
 
-import "github.com/renatospaka/emr/domain/entity/family"
+import (
+	"github.com/renatospaka/emr/domain/entity/family"
+)
 
+// Family stuff
 type FamilyRepositoryInMemory struct {
 	family []family.Family
 }
@@ -12,12 +15,13 @@ func NewFamilyRepositoryInMemory() *FamilyRepositoryInMemory {
 	}
 }
 
-// type MemberRepositoryInMemory struct {
-// 	member []family.Member
-// }
+// Family members stuff
+type FamilyMemberRepositoryInMemory struct {
+	familyMember family.FamilyMember
+}
 
-// func NewMemberRepositoryInMemory() *MemberRepositoryInMemory {
-// 	return &MemberRepositoryInMemory{
-// 		member: []family.Member{},
-// 	}
-// }
+func NewFamilyMemberRepositoryInMemory() *FamilyMemberRepositoryInMemory {
+	return &FamilyMemberRepositoryInMemory{
+		familyMember: family.FamilyMember{},
+	}
+}

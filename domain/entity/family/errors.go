@@ -9,6 +9,12 @@ var (
 	ErrFamilyNotFound       = errors.New("família não encontrada")
 )
 
+// Errors related to Family Member
+var(
+	ErrMemerAlreadyLinked = errors.New("o familiar informado já pertence a essa família")
+	ErrMemerNotLinked = errors.New("o familiar informado não pertence a essa família")
+)
+
 // Errors related to Member (one Member)
 var (
 	ErrMissingMemberID        = errors.New("o ID da pessoa está em branco ou ausente")
