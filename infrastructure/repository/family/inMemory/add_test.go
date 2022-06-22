@@ -99,13 +99,13 @@ func TestMember_Add_InvalidGender(t *testing.T) {
 func TestMember_FullName(t *testing.T) {
 	_ = repoMember.Add(member)
 
-	fullName := member.FullName(false)
+	fullName := member.FullName()
 	require.EqualValues(t, "Name MiddleName Lastname", fullName)
 }
 
-// func TestMember_FullName_Complete(t *testing.T) {
-// 	_ = repoMember.Add(member)
+func TestMember_FullName_Formal(t *testing.T) {
+	_ = repoMember.Add(member)
 
-// 	fullNameComplete := member.FullName(true)
-// 	require.EqualValues(t, "Sr. Name MiddleName Lastname", fullNameComplete)
-// }
+	fullNameFormal := member.FullNameFormal()
+	require.EqualValues(t, "Sr. Name MiddleName Lastname", fullNameFormal)
+}

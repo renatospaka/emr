@@ -72,25 +72,54 @@ func (m *Member) IsValid() error {
 }
 
 // Return the full name of this member
-// in casual or formal mode
-// withTitle =  true => Formal way
-// withTitle =  false => Casual way
-func (m *Member) FullName(withTitle bool) string {
-	fullName := m.Name + " " + m.LastName
+// in casual mode
+func (m *Member) FullName() string {
+	builder := strings.Builder{}
+	fullName := ""
+
 	if len(m.MiddleName) > 0 {
-		fullName = m.Name + " " + m.MiddleName + " " + m.LastName
+		builder.WriteString(m.Name)
+		builder.WriteString(" ")
+		builder.WriteString(m.MiddleName)
+		builder.WriteString(" ")
+		builder.WriteString(m.LastName)
+		fullName = builder.String()
+
+	} else {
+		builder.WriteString(m.Name)
+		builder.WriteString(" ")
+		builder.WriteString(m.LastName)
+		fullName = builder.String()
 	}
 
-	if withTitle {
+	return strings.TrimSpace(fullName)
+}
+
+// Return the full name of this member
+// in formal mode
+func (m *Member) FullNameFormal() string {
+	builder := strings.Builder{}
+	fullNameTmp := m.FullName()
+	fullName := ""
+	if len(fullNameTmp) > 0 {
+
 		if m.Gender == Male {
-			fullName = "Sr. " + fullName
-		} else if m.Gender == Female {
-			fullName = "Sra. " + fullName
+			builder.WriteString("Sr. ")
+			builder.WriteString(fullNameTmp)
+			fullName = builder.String()
+
+		}
+		if m.Gender == Female {
+			builder.WriteString("Sra. ")
+			builder.WriteString(fullNameTmp)
+			fullName = builder.String()
 		}
 
-		if len(fullName) <= 5 {
-			fullName = ""
-		}
+		// if len(fullName) <= 5 {
+		// 	fullName = ""
+		// }
+	} else {
+		fullName = "Palmeiras Campeão"
 	}
 	return strings.TrimSpace(fullName)
 }
