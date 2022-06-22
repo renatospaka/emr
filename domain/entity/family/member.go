@@ -4,11 +4,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/satori/go.uuid"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 type Member struct {
-	ID         uuid.UUID `json:"family_member_id"`
+	ID         string    `json:"family_member_id"`
 	Name       string    `json:"name"`
 	LastName   string    `json:"last_name"`
 	MiddleName string    `json:"middle_name"`
@@ -19,7 +19,7 @@ type Member struct {
 
 func NewMember(name string, middleName string, lastName string, gender string, dob time.Time) *Member {
 	return &Member{
-		ID:         uuid.NewV1(),
+		ID:         utils.GetID(),
 		Name:       strings.TrimSpace(name),
 		LastName:   strings.TrimSpace(lastName),
 		MiddleName: strings.TrimSpace(middleName),
@@ -29,7 +29,7 @@ func NewMember(name string, middleName string, lastName string, gender string, d
 	}
 }
 
-// Check whenever the member structure is intact 
+// Check whenever the member structure is intact
 // and filled accordingly to the model rules
 func (m *Member) IsValid() error {
 	m.Valid = false
@@ -39,7 +39,7 @@ func (m *Member) IsValid() error {
 	if len(strings.TrimSpace(m.Name)) < 3 {
 		return ErrMemberNameTooShort
 	}
-	if len(strings.TrimSpace(m.Name))> 20 {
+	if len(strings.TrimSpace(m.Name)) > 20 {
 		return ErrMemberNameTooLong
 	}
 	if strings.TrimSpace(m.LastName) == "" {
@@ -48,7 +48,7 @@ func (m *Member) IsValid() error {
 	if len(strings.TrimSpace(m.LastName)) < 3 {
 		return ErrMemberLastNameTooShort
 	}
-	if len(strings.TrimSpace(m.LastName))> 20 {
+	if len(strings.TrimSpace(m.LastName)) > 20 {
 		return ErrMemberLastNameTooLong
 	}
 	if m.DOB.IsZero() {
@@ -63,15 +63,15 @@ func (m *Member) IsValid() error {
 		return ErrInvalidMembeGender
 	}
 
-	if strings.TrimSpace(m.ID.String()) == "" {
+	if strings.TrimSpace(m.ID) == "" {
 		return ErrMissingMemberID
 	}
-	
+
 	m.Valid = true
 	return nil
 }
 
-// Return the full name of this member 
+// Return the full name of this member
 // in casual or formal mode
 // withTitle =  true => Formal way
 // withTitle =  false => Casual way
@@ -88,7 +88,9 @@ func (m *Member) FullName(withTitle bool) string {
 			fullName = "Sra. " + fullName
 		}
 
-		if len(fullName) <= 5 {fullName = ""}
+		if len(fullName) <= 5 {
+			fullName = ""
+		}
 	}
 	return strings.TrimSpace(fullName)
 }

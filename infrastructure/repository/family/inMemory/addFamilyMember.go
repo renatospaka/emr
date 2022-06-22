@@ -2,10 +2,9 @@ package familyInMemory
 
 import (
 	"github.com/renatospaka/emr/domain/entity/family"
-	uuid "github.com/satori/go.uuid"
 )
 
-func (f *FamilyRepositoryInMemory) AddFamilyMember(newMember family.FamilyMember, familyId uuid.UUID) (*family.Family, error) {
+func (f *FamilyRepositoryInMemory) AddFamilyMember(newMember family.FamilyMember, familyId string) (*family.Family, error) {
 	member := newMember.Member
 	err := member.IsValid()
 	if err != nil {

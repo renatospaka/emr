@@ -3,10 +3,10 @@ package familyInMemory_test
 import (
 	"testing"
 
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
 
 	"github.com/renatospaka/emr/domain/entity/family"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 func TestFamily_SetFamilyName(t *testing.T) {
@@ -23,7 +23,7 @@ func TestFamily_SetFamilyName(t *testing.T) {
 func TestFamily_ChangeName_NotFound(t *testing.T) {
 	_ = repoFam.Create(fam)
 
-	id := uuid.NewV4()
+	id := utils.GetID()
 	updSurname := "MiddleName Lastname"
 	upd, err := repoFam.SetFamilyName(id, updSurname)
 	require.NotNil(t, err)

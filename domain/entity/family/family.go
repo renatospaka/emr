@@ -3,11 +3,11 @@ package family
 import (
 	"strings"
 
-	uuid "github.com/satori/go.uuid"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 type Family struct {
-	ID      uuid.UUID       `json:"family_id"`
+	ID      string          `json:"family_id"`
 	Surname string          `json:"surname"`
 	Valid   bool            `json:"is_valid"`
 	Members []*FamilyMember `json:"members"`
@@ -21,7 +21,7 @@ type FamilyMember struct {
 
 func NewFamily(surname string) *Family {
 	newFamily := &Family{
-		ID:      uuid.NewV4(),
+		ID:      utils.GetID(),
 		Surname: strings.TrimSpace(surname),
 		Valid:   false,
 		Members: []*FamilyMember{},
@@ -38,14 +38,13 @@ func (f *Family) IsValid() error {
 	if strings.TrimSpace(f.Surname) == "" {
 		return ErrMissingFamilySurname
 	}
-	if strings.TrimSpace(f.ID.String()) == "" {
+	if strings.TrimSpace(f.ID) == "" {
 		return ErrMissingFamilyID
 	}
 
 	f.Valid = true
 	return nil
 }
-
 
 func NewFamilyMember(newMember *Member) *FamilyMember {
 	return &FamilyMember{
