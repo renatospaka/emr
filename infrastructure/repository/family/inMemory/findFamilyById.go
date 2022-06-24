@@ -2,12 +2,11 @@ package familyInMemory
 
 import (
 	"github.com/renatospaka/emr/domain/entity/family"
-	uuid "github.com/satori/go.uuid"
 )
 
 // Find a family by its ID
 // or returns an error
-func (f *FamilyRepositoryInMemory) FindById(id uuid.UUID) (*family.Family, error) {
+func (f *FamilyRepositoryInMemory) FindById(id string) (*family.Family, error) {
 	if len(f.family) == 0 {
 		return &family.Family{}, family.ErrFamilyNotFound
 	}

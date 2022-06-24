@@ -24,7 +24,7 @@ func main() {
 	if err != nil {
 		log.Println("Novo membro criado com erro:", err)
 	} else {
-		log.Println("Novo membro criado! Full name:(", memb.FullName(true), ")")
+		log.Println("Novo membro criado! Full name:(", memb.FullNameFormal(), memb.ID, ")")
 	}
 
 	id := memb.ID
@@ -32,16 +32,25 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	} else {
-		log.Println("Achou! Full name:", findMemb.FullName(true))
+		log.Println("Achou! Full name:", findMemb.FullNameFormal())
 	}
 
-	err = repoMember.Remove(id)
+	famMember := family.NewFamilyMember(memb)
+	// log.Println(famMember.Member.FullName(), famMember.RelationType, famMember.Status)
+	fam2, err := repoFamily.AddFamilyMember(*famMember, fam1.ID)
 	if err != nil {
 		log.Println(err)
+	} else {
+		log.Println("Adicionou o novo integrante:", fam2.Members[0].Member.FullNameFormal(), fam2.Members[0].Member.ID)
 	}
 
-	err = repoMember.Remove(id)
-	if err != nil {
-		log.Println(err)
-	}
+	// err = repoMember.Remove(id)
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+
+	// err = repoMember.Remove(id)
+	// if err != nil {
+	// 	log.Println(err)
+	// }
 }

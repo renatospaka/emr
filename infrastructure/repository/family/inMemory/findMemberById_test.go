@@ -3,10 +3,10 @@ package familyInMemory_test
 import (
 	"testing"
 
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
 
 	"github.com/renatospaka/emr/domain/entity/family"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 func TestMember_FindById(t *testing.T) {
@@ -22,7 +22,7 @@ func TestMember_FindById(t *testing.T) {
 func TestMember_FindById_NotFound(t *testing.T) {
 	_ = repoMember.Add(member)
 
-	id := uuid.NewV4()
+	id := utils.GetID()
 	find, err := repoMember.FindById(id)
 	require.NotNil(t, err)
 	require.EqualError(t, err, family.ErrMemberNotFound.Error())
