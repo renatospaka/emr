@@ -19,6 +19,7 @@ const (
 const (
 	Newborn   string = "Newborn"
 	Child     string = "Child"
+	Toddler		string = "Toddler"
 	Infant    string = "Infant"
 	Teen      string = "Teenr"
 	Adult     string = "Adult"

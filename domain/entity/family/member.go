@@ -18,10 +18,13 @@ type Member struct {
 	middleName   string    `json:"middle_name"`
 	nickname     string    `json:"nick_name"`
 	gender       string    `json:"gender"`
+	age          string    `json:"age_of"`
+	ageInMonths  int       `json:"age_in_months"`
+	ageInYears   int       `json:"age_in_years"`
+	lastChanged  int64     `json:"-"`
 	valid        bool      `json:"-"`
 	headOfFamily bool      `json:"head_family"`
 	dob          time.Time `json:"day_of_birth"`
-	lastChanged  time.Time `json:"-"`
 }
 
 func NewMember(name string, middleName string, lastName string) *Member {
@@ -35,8 +38,9 @@ func NewMember(name string, middleName string, lastName string) *Member {
 		valid:        false,
 		headOfFamily: false,
 		dob:          time.Time{},
-		lastChanged:  time.Now(),
+		lastChanged:  time.Now().UnixNano(),
 	}
+	member.setAge()
 	member.validate()
 	return member
 }
@@ -47,7 +51,7 @@ func (m *Member) SetFullName(name string, middleName string, lastName string) *M
 	m.name = strings.TrimSpace(name)
 	m.lastName = strings.TrimSpace(lastName)
 	m.middleName = strings.TrimSpace(middleName)
-	m.lastChanged = time.Now()
+	m.lastChanged = time.Now().UnixNano()
 	m.validate()
 	return m
 }
@@ -99,7 +103,8 @@ func (m *Member) FullNameFormal() string {
 // Set the day of birth of this member
 func (m *Member) SetBirthDate(dob time.Time) *Member {
 	m.dob = dob
-	m.lastChanged = time.Now()
+	m.lastChanged = time.Now().UnixNano()
+	m.setAge()
 	m.validate()
 	return m
 }
@@ -112,7 +117,7 @@ func (m *Member) BirthDate() time.Time {
 // Set the gender of this member
 func (m *Member) SetGender(gender string) *Member {
 	m.gender = gender
-	m.lastChanged = time.Now()
+	m.lastChanged = time.Now().UnixNano()
 	m.validate()
 	return m
 }
@@ -120,6 +125,51 @@ func (m *Member) SetGender(gender string) *Member {
 // Return the gender of this member
 func (m *Member) Gender() string {
 	return m.gender
+}
+
+// Return the age of the member in years since birth
+func (m *Member) AgeInYears() int {
+	return m.ageInYears
+}
+
+// Return the age of the member in months since birth
+func (m *Member) AgeInMonths() int {
+	return m.ageInMonths
+}
+
+// Return if the member is a newborn
+func (m *Member) IsNewborn() bool {
+	return m.age == Newborn
+}
+
+// Return if the member is a infant
+func (m *Member) IsInfant() bool {
+	return m.age == Infant
+}
+
+// Return if the member is a toddler
+func (m *Member) IsToddler() bool {
+	return m.age == Toddler
+}
+
+// Return if the member is a child
+func (m *Member) IsChild() bool {
+	return m.age == Child
+}
+
+// Return if the member is a teen
+func (m *Member) IsTeen() bool {
+	return m.age == Teen
+}
+
+// Return if the member is a adult
+func (m *Member) IsAdult() bool {
+	return m.age == Adult
+}
+
+// Return if the member is a elderly
+func (m *Member) IsElderly() bool {
+	return m.age == Elderly
 }
 
 // Return all errors found during the validation process
@@ -149,6 +199,48 @@ func (m *Member) ErrToArray() []string {
 		}
 	}
 	return toArray
+}
+
+// Calculate the age of this member in months, year
+// and classify his/her age accordingly
+// every time the day of birth changes
+func (m *Member) setAge() {
+	m.age = Undefined
+	m.ageInMonths = 0
+	m.ageInYears = 0
+	m.lastChanged = time.Now().UnixNano()
+	if m.dob.IsZero() {
+		return
+	}
+
+	// Calculate age in months and years based on the DOB
+	ageInYears, ageInMonths := utils.AgeFromToday(m.dob)
+	ageOf := ""
+
+	// uses this artcle to identify which phase of life (in a young phase) is today
+	// https://www.verywellfamily.com/difference-between-baby-newborn-infant-toddler-113848
+	if ageInMonths <= 2 {
+		ageOf = Newborn
+	} else if ageInMonths > 2 && ageInMonths <= 24 {
+		ageOf = Infant
+	} else if ageInMonths > 24 && ageInMonths < 60 {
+		ageOf = Toddler
+	} else if ageInYears >= 5 && ageInYears < 12 {
+		ageOf = Child
+	} else if ageInYears >= 12 && ageInYears < 18 {
+		ageOf = Teen
+	} else if ageInYears >= 18 && ageInYears < 65 {
+		ageOf = Adult
+	} else if ageInYears >= 65 {
+		ageOf = Elderly
+	} else {
+		ageOf = Undefined
+	}
+
+	m.age = ageOf
+	m.ageInYears = ageInYears
+	m.ageInMonths = ageInMonths
+	m.lastChanged = time.Now().UnixNano()
 }
 
 // Check whenever the member structure is intact
@@ -189,7 +281,6 @@ func (m *Member) validate() {
 
 	if strings.TrimSpace(m.ID) == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberID)
-		// return ErrMissingMemberID
 	}
 
 	m.valid = (analysisErrsMembers.Count() == 0)
