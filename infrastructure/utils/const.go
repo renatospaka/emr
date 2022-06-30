@@ -13,12 +13,16 @@ const (
 
 	LayoutDateTimeISO      = "2006-01-02T15:04:05-0700"
 	LayoutDateTimeISOShort = "2006-01-02T15:04:05"
-	LayoutDateTimeLOG   	 = "2006/01/02 15:04:05"
+	LayoutDateTimeLOG      = "2006/01/02 15:04:05"
 	LayoutDateTimeBRShort  = "02/01/2006 15:04:05"
 )
 
-const (
-	secondsInDay		float64 = (60 * 60) * 24						// 86400
-	secondsInMonth	float64 = (60 * 60 * 24) * 30				// 2592000		
-	secondsInYear		float64 = (60 * 60 * 24 * 30) * 12	// 31104000	
-)
+// const (
+// 	daysHours int64 = 24
+// 	daysMonth int64 = 30
+// 	daysYear  int64 = 365
+
+// 	secondsInDay   float64 = (60 * 60) * 24           // 86400
+// 	secondsInMonth float64 = (60 * 60 * 24) * 30      // 2592000
+// 	secondsInYear  float64 = (60 * 60 * 24 * 30) * 12 // 31104000
+// )
