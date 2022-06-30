@@ -19,8 +19,8 @@ type Member struct {
 	nickname     string    `json:"nick_name"`
 	gender       string    `json:"gender"`
 	age          string    `json:"age_of"`
-	ageInMonths  int       `json:"age_in_months"`
-	ageInYears   int       `json:"age_in_years"`
+	ageInMonths  int64     `json:"age_in_months"`
+	ageInYears   int64     `json:"age_in_years"`
 	lastChanged  int64     `json:"-"`
 	valid        bool      `json:"-"`
 	headOfFamily bool      `json:"head_family"`
@@ -128,12 +128,12 @@ func (m *Member) Gender() string {
 }
 
 // Return the age of the member in years since birth
-func (m *Member) AgeInYears() int {
+func (m *Member) AgeInYears() int64 {
 	return m.ageInYears
 }
 
 // Return the age of the member in months since birth
-func (m *Member) AgeInMonths() int {
+func (m *Member) AgeInMonths() int64 {
 	return m.ageInMonths
 }
 
@@ -199,6 +199,13 @@ func (m *Member) ErrToArray() []string {
 		}
 	}
 	return toArray
+}
+
+// Return if the member is validated
+// Use this whenever you want to guarantee the integrity of the structure
+func (m *Member) IsValid() bool {
+	m.validate()
+	return m.valid
 }
 
 // Calculate the age of this member in months, year
@@ -284,11 +291,4 @@ func (m *Member) validate() {
 	}
 
 	m.valid = (analysisErrsMembers.Count() == 0)
-}
-
-// Return if the member is validated
-// Use this whenever you want to guarantee the integrity of the structure
-func (m *Member) IsValid() bool {
-	m.validate()
-	return m.valid
 }

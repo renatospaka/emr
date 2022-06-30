@@ -24,14 +24,14 @@ func init() {
 	newMember = family.NewMember("Name", "Middle", "Last")
 
 	today := time.Now()
-
-	dobNewborn = time.Date(today.Year(), today.Month(), today.Day()-33, 0, 0, 0, 0, time.UTC)
-	dobInfant = time.Date(today.Year(), today.Month()-11, today.Day(), 0, 0, 0, 0, time.UTC)
-	dobToddler = time.Date(today.Year(), today.Month()-54, today.Day(), 0, 0, 0, 0, time.UTC)
-	dobChild = time.Date(today.Year()-7, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
-	dobTeen = time.Date(today.Year()-15, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
-	dobAdult = time.Date(today.Year()-33, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
-	dobElderly = time.Date(today.Year()-67, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
+	
+	dobNewborn = time.Date(today.Year(), today.Month(), today.Day()-33, today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
+	dobInfant = time.Date(today.Year(), today.Month()-11, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(),  time.UTC)
+	dobToddler = time.Date(today.Year(), today.Month()-54, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(),  time.UTC)
+	dobChild = time.Date(today.Year()-7, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(),  time.UTC)
+	dobTeen = time.Date(today.Year()-15, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(),  time.UTC)
+	dobAdult = time.Date(today.Year()-33, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(),  time.UTC)
+	dobElderly = time.Date(today.Year()-67, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(),  time.UTC)
 }
 
 func TestMember_IsValid(t *testing.T) {
@@ -202,7 +202,7 @@ func TestMember_IsInfant(t *testing.T) {
 	require.EqualValues(t, 11, ageInMonths)
 
 	ageInYears := newMember.AgeInYears()
-	require.EqualValues(t, 1, ageInYears)
+	require.EqualValues(t, 0, ageInYears)
 
 	ageT := newMember.IsInfant()
 	ageF := newMember.IsToddler()
@@ -216,10 +216,10 @@ func TestMember_IsToddler(t *testing.T) {
 	newMember.SetBirthDate(dobToddler)
 
 	ageInMonths := newMember.AgeInMonths()
-	require.EqualValues(t, 55, ageInMonths)
+	require.EqualValues(t, 54, ageInMonths)
 
 	ageInYears := newMember.AgeInYears()
-	require.EqualValues(t, 5, ageInYears)
+	require.EqualValues(t, 4, ageInYears)
 
 	ageT := newMember.IsToddler()
 	ageF := newMember.IsChild()
@@ -250,7 +250,7 @@ func TestMember_IsTeen(t *testing.T) {
 	newMember.SetBirthDate(dobTeen)
 
 	ageInMonths := newMember.AgeInMonths()
-	require.EqualValues(t, 183, ageInMonths)
+	require.EqualValues(t, 182, ageInMonths)
 
 	ageInYears := newMember.AgeInYears()
 	require.EqualValues(t, 15, ageInYears)
@@ -267,7 +267,7 @@ func TestMember_IsAdult(t *testing.T) {
 	newMember.SetBirthDate(dobAdult)
 
 	ageInMonths := newMember.AgeInMonths()
-	require.EqualValues(t, 402, ageInMonths)
+	require.EqualValues(t, 401, ageInMonths)
 
 	ageInYears := newMember.AgeInYears()
 	require.EqualValues(t, 33, ageInYears)
@@ -284,10 +284,10 @@ func TestMember_IsElderly(t *testing.T) {
 	newMember.SetBirthDate(dobElderly)
 
 	ageInMonths := newMember.AgeInMonths()
-	require.EqualValues(t, 816, ageInMonths)
+	require.EqualValues(t, 815, ageInMonths)
 
 	ageInYears := newMember.AgeInYears()
-	require.EqualValues(t, 68, ageInYears)
+	require.EqualValues(t, 67, ageInYears)
 
 	ageT := newMember.IsElderly()
 	ageF := newMember.IsNewborn()

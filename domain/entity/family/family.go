@@ -3,7 +3,7 @@ package family
 import (
 	"strings"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr2/infrastructure/utils"
 )
 
 type Family struct {
