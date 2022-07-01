@@ -1,24 +1,24 @@
 package utils_test
 
 import (
-	"testing"
 	"strings"
+	"testing"
 
-	"github.com/stretchr/testify/require"
 	uuid "github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 
 	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 func Test_GetID(t *testing.T) {
-	id := utils.GetID()	
+	id := utils.GetID()
 	_, err := uuid.Parse(id)
-	
+
 	require.Nil(t, err)
 }
 
 func Test_GetID_InvalidLength(t *testing.T) {
-	id := utils.GetID()	
+	id := utils.GetID()
 
 	builder := strings.Builder{}
 	builder.WriteString(id)
@@ -31,7 +31,7 @@ func Test_GetID_InvalidLength(t *testing.T) {
 }
 
 func Test_GetID_InvalidFormat(t *testing.T) {
-	id := utils.GetID()	
+	id := utils.GetID()
 
 	builder := strings.Builder{}
 	builder.WriteString(id)
@@ -44,14 +44,14 @@ func Test_GetID_InvalidFormat(t *testing.T) {
 }
 
 func Test_IsVaalidUUID(t *testing.T) {
-	id := utils.GetID()	
+	id := utils.GetID()
 	err := utils.IsVaalidUUID(id)
 
 	require.Nil(t, err)
 }
 
 func Test_IsVaalidUUID_InvalidLength(t *testing.T) {
-	id := utils.GetID()	
+	id := utils.GetID()
 
 	builder := strings.Builder{}
 	builder.WriteString(id)
@@ -64,7 +64,7 @@ func Test_IsVaalidUUID_InvalidLength(t *testing.T) {
 }
 
 func Test_IsVaalidUUID_InvalidFormat(t *testing.T) {
-	id := utils.GetID()	
+	id := utils.GetID()
 
 	builder := strings.Builder{}
 	builder.WriteString(id)
