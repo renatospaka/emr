@@ -1,4 +1,4 @@
-module github.com/renatospaka/emr2
+module github.com/renatospaka/emr
 
 go 1.18
 

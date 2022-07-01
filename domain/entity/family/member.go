@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/renatospaka/emr2/infrastructure/utils"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 var (
@@ -12,7 +12,7 @@ var (
 )
 
 type Member struct {
-	ID           string    `json:"family_member_id"`
+	id           string    `json:"family_member_id"`
 	name         string    `json:"name"`
 	lastName     string    `json:"last_name"`
 	middleName   string    `json:"middle_name"`
@@ -29,7 +29,7 @@ type Member struct {
 
 func NewMember(name string, middleName string, lastName string) *Member {
 	member := &Member{
-		ID:           utils.GetID(),
+		id:           utils.GetID(),
 		name:         strings.TrimSpace(name),
 		lastName:     strings.TrimSpace(lastName),
 		middleName:   strings.TrimSpace(middleName),
@@ -43,6 +43,11 @@ func NewMember(name string, middleName string, lastName string) *Member {
 	member.setAge()
 	member.validate()
 	return member
+}
+
+// Return the ID of this family
+func (m *Member) ID() string {
+	return m.id
 }
 
 // Set the full name of this member
@@ -286,7 +291,7 @@ func (m *Member) validate() {
 		analysisErrsMembers.AddErr(ErrMissingMemberDOB)
 	}
 
-	if strings.TrimSpace(m.ID) == "" {
+	if strings.TrimSpace(m.id) == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberID)
 	}
 

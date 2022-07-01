@@ -6,7 +6,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/renatospaka/emr2/domain/entity/family"
+	"github.com/renatospaka/emr/domain/entity/family"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 var (
@@ -47,6 +48,15 @@ func TestMember_IsNotValid(t *testing.T) {
 
 	require.False(t, newMember.IsValid())
 	require.NotEmpty(t, newMember.Err())
+}
+
+func TestMember_ID(t *testing.T) {
+	id := newMember.ID()
+	err := utils.IsVaalidUUID(id)
+
+	require.IsType(t, "", id)
+	require.Len(t, id, 36)
+	require.Nil(t, err)
 }
 
 func TestMember_FullName(t *testing.T) {

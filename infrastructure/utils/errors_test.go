@@ -4,12 +4,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/renatospaka/emr2/infrastructure/utils"
+	"github.com/renatospaka/emr/infrastructure/utils"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	errorTest = errors.New("testing a new error")
+	errorTest  = errors.New("testing a new error")
 	errorTest2 = errors.New("testing another error")
 )
 

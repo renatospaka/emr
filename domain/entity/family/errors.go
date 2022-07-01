@@ -11,8 +11,12 @@ var (
 
 // Errors related to Family Member
 var (
-	ErrMemberAlreadyLinked = errors.New("o familiar informado já pertence a essa família")
-	ErrMemberNotLinked     = errors.New("o familiar informado não pertence a essa família")
+	ErrFamilyMemberAlreadyLinked = errors.New("a pessoa informada já pertence a essa família")
+	ErrFamilyMemberNotLinked     = errors.New("a pessoa informada não pertence a essa família")
+	ErrFamilyMemberNotRelated    = errors.New("a pessoa informada não tem arentesco definido nessa família")
+	ErrFamilyMemberMissing       = errors.New("não há membros nessa família")
+	ErrFamilyMemberHeadMissing   = errors.New("não há uma pessoa responsável definida para essa família")
+	ErrFamilyMemberInvalidAge    = errors.New("a pessoa responsável definida para essa família deve ter mais de 18 anos")
 )
 
 // Errors related to Member (one Member)
