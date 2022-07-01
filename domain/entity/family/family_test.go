@@ -29,7 +29,7 @@ func TestFamily_IsValid(t *testing.T) {
 	require.Empty(t, newFamily.Err())
 }
 
-func TestFamily_IsInvalid(t *testing.T) {
+func TestFamily_IsValid_No(t *testing.T) {
 	newFamily.SetSurname("")
 
 	require.False(t, newFamily.IsValid())
