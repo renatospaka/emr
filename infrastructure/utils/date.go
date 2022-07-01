@@ -4,7 +4,6 @@ import (
 	"time"
 )
 
-
 // Calculate elapsed time (in seconds) from a given date
 // and returns formated in months and years
 func AgeFromToday(dateFrom time.Time) (years int64, months int64) {
