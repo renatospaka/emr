@@ -168,6 +168,13 @@ func TestMember_SetGenderInvalid(t *testing.T) {
 	require.EqualValues(t, family.ErrInvalidMemberGender.Error()+"\n", newMember.Err())
 }
 
+func TestMember_Gender(t *testing.T) {
+	newMember.SetGender(family.Female)
+	gender := newMember.Gender()
+
+	require.EqualValues(t, family.Female, gender)
+}
+
 func TestMember_SetBirthDate(t *testing.T) {
 	newMember.SetFullName("Name", "Middle", "Last")
 	newMember.SetGender(family.Male)
@@ -184,6 +191,27 @@ func TestMember_SetBirthDateMissing(t *testing.T) {
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMissingMemberDOB.Error()+"\n", newMember.Err())
+}
+
+func TestMember_BirthDate(t *testing.T) {
+	newMember.SetBirthDate(dobToddler)
+	dob := newMember.BirthDate()
+
+	require.EqualValues(t, dobToddler, dob)
+}
+
+func TestMember_AgeInMonths(t *testing.T) {
+	newMember.SetBirthDate(dobNewborn)
+	ageInMonths := newMember.AgeInMonths()
+
+	require.EqualValues(t, 1, ageInMonths)
+}
+
+func TestMember_AgeInYears(t *testing.T) {
+	newMember.SetBirthDate(dobNewborn)
+	ageInYears := newMember.AgeInYears()
+	
+	require.EqualValues(t, 0, ageInYears)
 }
 
 func TestMember_IsNewborn(t *testing.T) {

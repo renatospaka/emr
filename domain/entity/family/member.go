@@ -45,7 +45,7 @@ func NewMember(name string, middleName string, lastName string) *Member {
 	return member
 }
 
-// Return the ID of this family
+// Return the ID of this member
 func (m *Member) ID() string {
 	return m.id
 }
