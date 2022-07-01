@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/renatospaka/emr2/infrastructure/utils"
+	"github.com/renatospaka/emr/infrastructure/utils"
 )
 
 var (
@@ -12,18 +12,11 @@ var (
 )
 
 type Family struct {
-	id          string `json:"family_id"`
-	surname     string `json:"surname"`
-	valid       bool   `json:"is_valid"`
-	lastChanged int64
+	id          string          `json:"family_id"`
+	surname     string          `json:"surname"`
+	valid       bool            `json:"-"`
+	lastChanged int64           `json:"-"`
 	members     []*FamilyMember `json:"members"`
-}
-
-type FamilyMember struct {
-	member       *Member `json:"member"`
-	relationType string  `json:"relation_type"`
-	status       string  `json:"status"`
-	headOfFamily bool    `json:"status"`
 }
 
 func NewFamily(surname string) *Family {
@@ -38,12 +31,39 @@ func NewFamily(surname string) *Family {
 	return newFamily
 }
 
+// Return the ID of this family
+func (f *Family) ID() string {
+	return f.id
+}
+
 // Set the surname of the family
 func (f *Family) SetSurname(surname string) *Family {
 	f.surname = strings.TrimSpace(surname)
 	f.lastChanged = time.Now().UnixNano()
 	f.validate()
 	return f
+}
+
+// Return the surname of the family
+func (f *Family) Surname() string {
+	return f.surname
+}
+
+// A valid family must have at least one member
+func (f *Family) HasMembers() bool {
+	return len(f.members) > 0
+}
+
+// A valid family must have one head of family
+func (f *Family) HasHeadOfFamily() bool {
+	hasHead := false
+	for m := 0; m < len(f.members); m++ {
+		if f.members[m].IsHeadOfFamily() {
+			hasHead = true
+			break
+		}
+	}
+	return hasHead
 }
 
 // Check whenever the family structure is intact
@@ -91,30 +111,17 @@ func (f *Family) validate() {
 		analysisErrsFamily.AddErr(ErrMissingFamilySurname)
 	}
 
+	if !f.HasMembers() {
+		analysisErrsFamily.AddErr(ErrFamilyMemberMissing)
+	}
+
+	if !f.HasHeadOfFamily() {
+		analysisErrsFamily.AddErr(ErrFamilyMemberHeadMissing)
+	}
+
 	if strings.TrimSpace(f.id) == "" {
 		analysisErrsFamily.AddErr(ErrMissingFamilyID)
 	}
 
 	f.valid = (analysisErrsFamily.Count() == 0)
-}
-
-func NewFamilyMember(member *Member) *FamilyMember {
-	return &FamilyMember{
-		member:       member,
-		relationType: TBDRelation,
-		status:       FreshMember,
-		headOfFamily: false,
-	}
-}
-
-// Set the person who is the responsible for manage information
-// of this family core
-func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
-	fm.headOfFamily = true
-	return fm
-}
-
-// Return if this member is the responsible of this family core
-func (fm *FamilyMember) IsHeadOfFamily() bool {
-	return fm.headOfFamily
 }
