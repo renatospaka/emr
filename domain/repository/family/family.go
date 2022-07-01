@@ -7,7 +7,7 @@ import (
 type FamilyRepository interface {
 	Create(family *family.Family) error
 	FindById(id string) (*family.Family, error)
-	SetFamilyName(id string, newSurname string) (*family.Family, error)
+	SetFamilyName(id string, surname string) (*family.Family, error)
 	FindFamilyMemberById(idMember string, idFamily string) (*family.Member, error)
 	AddFamilyMember(newMember *family.FamilyMember, toFamily string) (*family.Family, error)
 }

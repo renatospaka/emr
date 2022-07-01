@@ -45,8 +45,9 @@ func TestMember_ID(t *testing.T) {
 }
 
 func TestMember_IsValid(t *testing.T) {
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.True(t, newMember.IsValid())
 	require.Empty(t, newMember.Err())
@@ -60,109 +61,120 @@ func TestMember_InValid_No(t *testing.T) {
 }
 
 func TestMember_FullName(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.Equal(t, newMember.FullName(), "Name Middle Last")
 	require.Empty(t, newMember.Err())
 }
 
 func TestMember_FullNameFormal(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.Equal(t, newMember.FullNameFormal(), "Sr. Name Middle Last")
 	require.Empty(t, newMember.Err())
 }
 
 func TestMember_SetFullName_NameMissing(t *testing.T) {
-	newMember.SetFullName("", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMissingMemberName.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetFullName_NameTooShort(t *testing.T) {
-	newMember.SetFullName("Na", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Na", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMemberNameTooShort.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetFullName_NameTooLong(t *testing.T) {
-	newMember.SetFullName("NameNameNameNameNameNameNameNameName", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("NameNameNameNameNameNameNameNameName", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMemberNameTooLong.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetFullName_LastNameMissing(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMissingMemberLastName.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetFullName_LastNameTooShort(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "La")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "La").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMemberLastNameTooShort.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetFullName_LastNameTooLong(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "LastLastLastLastLastLastLastLastLast")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "LastLastLastLastLastLastLastLastLast").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMemberLastNameTooLong.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetFullName_MiddleNameTooLong(t *testing.T) {
-	newMember.SetFullName("Name", "MiddleMiddleMiddleMiddleMiddleMiddleMiddle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "MiddleMiddleMiddleMiddleMiddleMiddleMiddle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMemberMiddleNameTooLong.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetGender(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.Equal(t, newMember.Gender(), family.Male)
 	require.Empty(t, newMember.Err())
 }
 
 func TestMember_SetGender_Missing(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender("")
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender("").
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMissingMemberGender.Error()+"\n", newMember.Err())
 }
 
 func TestMember_SetGender_Invalid(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender("other")
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender("other").
+		SetBirthDate(dobAdult)
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrInvalidMemberGender.Error()+"\n", newMember.Err())
@@ -176,18 +188,20 @@ func TestMember_Gender(t *testing.T) {
 }
 
 func TestMember_SetBirthDate(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	require.True(t, newMember.IsValid())
 	require.EqualValues(t, dobAdult, newMember.BirthDate())
 }
 
 func TestMember_SetBirthDate_Missing(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(time.Time{})
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(time.Time{})
 
 	require.False(t, newMember.IsValid())
 	require.EqualValues(t, family.ErrMissingMemberDOB.Error()+"\n", newMember.Err())
@@ -215,15 +229,10 @@ func TestMember_AgeInYears(t *testing.T) {
 }
 
 func TestMember_IsNewborn(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobNewborn)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 1, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 0, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobNewborn)
 
 	ageT := newMember.IsNewborn()
 	ageF := newMember.IsInfant()
@@ -232,15 +241,10 @@ func TestMember_IsNewborn(t *testing.T) {
 }
 
 func TestMember_IsInfant(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobInfant)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 11, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 0, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobInfant)
 
 	ageT := newMember.IsInfant()
 	ageF := newMember.IsToddler()
@@ -249,15 +253,10 @@ func TestMember_IsInfant(t *testing.T) {
 }
 
 func TestMember_IsToddler(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobToddler)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 54, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 4, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobToddler)
 
 	ageT := newMember.IsToddler()
 	ageF := newMember.IsChild()
@@ -266,15 +265,10 @@ func TestMember_IsToddler(t *testing.T) {
 }
 
 func TestMember_IsChild(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobChild)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 85, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 7, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobChild)
 
 	ageT := newMember.IsChild()
 	ageF := newMember.IsTeen()
@@ -283,15 +277,10 @@ func TestMember_IsChild(t *testing.T) {
 }
 
 func TestMember_IsTeen(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobTeen)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 182, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 15, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobTeen)
 
 	ageT := newMember.IsTeen()
 	ageF := newMember.IsAdult()
@@ -300,15 +289,10 @@ func TestMember_IsTeen(t *testing.T) {
 }
 
 func TestMember_IsAdult(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobAdult)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 401, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 33, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult)
 
 	ageT := newMember.IsAdult()
 	ageF := newMember.IsElderly()
@@ -317,15 +301,10 @@ func TestMember_IsAdult(t *testing.T) {
 }
 
 func TestMember_IsElderly(t *testing.T) {
-	newMember.SetFullName("Name", "Middle", "Last")
-	newMember.SetGender(family.Male)
-	newMember.SetBirthDate(dobElderly)
-
-	// ageInMonths := newMember.AgeInMonths()
-	// require.EqualValues(t, 815, ageInMonths)
-
-	// ageInYears := newMember.AgeInYears()
-	// require.EqualValues(t, 67, ageInYears)
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobElderly)
 
 	ageT := newMember.IsElderly()
 	ageF := newMember.IsNewborn()
@@ -334,9 +313,10 @@ func TestMember_IsElderly(t *testing.T) {
 }
 
 func TestMember_MoreThanOneError(t *testing.T) {
-	newMember.SetFullName("Na", "Middle", "LastLastLastLastLastLastLastLastLast")
-	newMember.SetGender("other")
-	newMember.SetBirthDate(time.Time{})
+	newMember.
+		SetFullName("Na", "Middle", "LastLastLastLastLastLastLastLastLast").
+		SetGender("other").
+		SetBirthDate(time.Time{})
 
 	allErrors := newMember.ErrToArray()
 	require.False(t, newMember.IsValid())
