@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/renatospaka/emr2/infrastructure/utils"
-	// 	"github.com/renatospaka/emr2/domain/entity/family"
-	// 	familyRepository "github.com/renatospaka/emr2/infrastructure/repository/family/inMemory"
+	"github.com/renatospaka/emr/infrastructure/utils"
+	// 	family "github.com/renatospaka/emr/family/domain/entity"
+	// 	familyRepository "github.com/renatospaka/emr/infrastructure/repository/family/inMemory"
 )
 
 func main() {
@@ -59,31 +59,31 @@ func main() {
 	ageInYears, ageInMonths := utils.AgeFromToday(today)
 	log.Println("today", today, ageInYears, ageInMonths)
 
-	dobNewborn := time.Date(today.Year(), today.Month(), today.Day()-33, 0, 0, 0, 0, time.UTC)
+	dobNewborn := time.Date(today.Year(), today.Month(), today.Day()-33, today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobNewborn)
 	log.Println("dobNewborn", dobNewborn, ageInYears, ageInMonths)
 
-	dobInfant := time.Date(today.Year(), today.Month()-29, today.Day(), 0, 0, 0, 0, time.UTC)
+	dobInfant := time.Date(today.Year(), today.Month()-11, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobInfant)
 	log.Println("dobInfant", dobInfant, ageInYears, ageInMonths)
 
-	dobToddler := time.Date(today.Year(), today.Month()-54, today.Day(), 0, 0, 0, 0, time.UTC)
+	dobToddler := time.Date(today.Year(), today.Month()-54, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobToddler)
 	log.Println("dobToddler", dobToddler, ageInYears, ageInMonths)
 
-	dobChild := time.Date(today.Year()-7, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
+	dobChild := time.Date(today.Year()-7, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobChild)
 	log.Println("dobChild", dobChild, ageInYears, ageInMonths)
 
-	dobTeen := time.Date(today.Year()-15, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
+	dobTeen := time.Date(today.Year()-15, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobTeen)
 	log.Println("dobTeen", dobTeen, ageInYears, ageInMonths)
 
-	dobAdult := time.Date(today.Year()-33, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
+	dobAdult := time.Date(today.Year()-33, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobAdult)
 	log.Println("dobAdult", dobAdult, ageInYears, ageInMonths)
 
-	dobElderly := time.Date(today.Year()-67, today.Month(), today.Day(), 0, 0, 0, 0, time.UTC)
+	dobElderly := time.Date(today.Year()-67, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	ageInYears, ageInMonths = utils.AgeFromToday(dobElderly)
 	log.Println("dobElderly", dobElderly, ageInYears, ageInMonths)
 }
