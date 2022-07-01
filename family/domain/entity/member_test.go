@@ -150,13 +150,32 @@ func TestMember_SetFullName_MiddleNameTooLong(t *testing.T) {
 	require.EqualValues(t, family.ErrMemberMiddleNameTooLong.Error()+"\n", newMember.Err())
 }
 
+func TestMember_SetNickname(t *testing.T) {
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetGender(family.Male).
+		SetBirthDate(dobAdult).
+		SetNickname("Nickname")
+
+	require.True(t, newMember.IsValid())
+}
+
+func TestMember_Nickname(t *testing.T) {
+	newMember.
+		SetFullName("Name", "Middle", "Last").
+		SetNickname("Nickname")
+	nick := newMember.Nickname()
+
+	require.EqualValues(t, "Nickname", nick)
+}
+
 func TestMember_SetGender(t *testing.T) {
 	newMember.
 		SetFullName("Name", "Middle", "Last").
 		SetGender(family.Male).
 		SetBirthDate(dobAdult)
 
-	require.Equal(t, newMember.Gender(), family.Male)
+	require.EqualValues(t, family.Male, newMember.Gender())
 	require.Empty(t, newMember.Err())
 }
 
