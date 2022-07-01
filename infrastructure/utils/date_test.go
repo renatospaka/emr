@@ -24,3 +24,12 @@ func TestDate_AgeFromToday_Zero(t *testing.T) {
 	require.EqualValues(t, int64(0), ageInYears)
 	require.EqualValues(t, int64(0), ageInMonths)
 }
+
+func TestDate_AgeBetweenDates(t *testing.T) {
+	today := time.Now()
+	onePastMonth := time.Date(today.Year(), today.Month()-1, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
+	ageInYears, ageInMonths := utils.AgeBetweenDates(today, onePastMonth )
+
+	require.EqualValues(t, int64(0), ageInYears)
+	require.EqualValues(t, int64(1), ageInMonths)
+}

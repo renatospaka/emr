@@ -105,6 +105,19 @@ func (m *Member) FullNameFormal() string {
 	return strings.TrimSpace(fullName)
 }
 
+// Set a nickname for this member
+func (m *Member) SetNickname(nick string) *Member {
+	m.nickname = strings.TrimSpace(nick)
+	m.lastChanged = time.Now().UnixNano()
+	m.validate()
+	return m
+}
+
+// Return the nickname for this member, if any
+func (m *Member) Nickname() string {
+	return m.nickname
+}
+
 // Set the day of birth of this member
 func (m *Member) SetBirthDate(dob time.Time) *Member {
 	m.dob = dob
