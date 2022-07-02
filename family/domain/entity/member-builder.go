@@ -20,17 +20,17 @@ func NewMemberBuilder() *MemberBuilder {
 // Execute all actions, create the Member
 // and return it to builder function
 func (mb *MemberBuilder) Build() *Member {
-	memb := NewMember("", "", "")
+	member := newMember()
 	for _, action := range mb.actions {
-		action(memb)
+		action(member)
 	}
-	memb.lastChanged = time.Now().UnixNano()
-	memb.validate()
+	member.lastChanged = time.Now().UnixNano()
+	member.validate()
 
-	if !memb.valid {
-		return &Member{}
-	}
-	return memb
+	// if !member.valid {
+	// 	return &Member{}
+	// }
+	return member
 }
 
 // Set the full name during the construction of this member

@@ -30,14 +30,14 @@ func TestMemberBuilder_Build(t *testing.T) {
 
 func TestMemberBuilder_Build_Invalid(t *testing.T) {
 	member := testMemberBuilder.
-		WithFullName("Name", "Middle", "Last").
+		WithFullName("Na", "Middle", "LastLastLastLastLastLastLast").
 		WithBirthDate(time.Time{}).
-		WithGender(family.Male).
+		WithGender("other").
 		WithNickname("Nick").
 		Build()
 
 	require.IsTypef(t, &family.Member{}, member, family.ErrMemberError.Error())
 	require.False(t, member.IsValid())
 	require.NotEmpty(t, member.Err())
-	require.Len(t, member.ErrToArray(), 5)
+	require.Len(t, member.ErrToArray(), 4)
 }

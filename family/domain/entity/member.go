@@ -27,12 +27,12 @@ type Member struct {
 	dob          time.Time `json:"day_of_birth"`
 }
 
-func NewMember(name string, middleName string, lastName string) *Member {
+func newMember() *Member {
 	member := &Member{
 		id:           utils.GetID(),
-		name:         strings.TrimSpace(name),
-		lastName:     strings.TrimSpace(lastName),
-		middleName:   strings.TrimSpace(middleName),
+		name:         "",	//strings.TrimSpace(name),
+		lastName:     "",	//strings.TrimSpace(lastName),
+		middleName:   "",	//strings.TrimSpace(middleName),
 		nickname:     "",
 		gender:       "",
 		valid:        false,

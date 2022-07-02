@@ -34,6 +34,7 @@ var (
 	ErrMissingMemberGender     = errors.New("o gênero da pessoa está em branco ou ausente")
 	ErrInvalidMemberGender     = errors.New("o gênero da pessoa é inválido")
 	ErrMemberNotFound          = errors.New("pessoa não encontrada")
+	ErrMemberError             = errors.New("não há informações suficientes para criar essa pessoa")
 )
 
 // Common errors
