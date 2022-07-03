@@ -1,6 +1,7 @@
 package family
 
 import (
+	"log"
 	"strings"
 	"time"
 
@@ -19,16 +20,16 @@ type Family struct {
 	members     []*FamilyMember `json:"members"`
 }
 
-func NewFamily(surname string) *Family {
-	newFamily := &Family{
+func newFamily() *Family {
+	fam := &Family{
 		id:      utils.GetID(),
-		surname: strings.TrimSpace(surname),
+		surname: "",
 		valid:   false,
 		members: []*FamilyMember{},
 	}
 
-	newFamily.IsValid()
-	return newFamily
+	fam.validate()
+	return fam
 }
 
 // Return the ID of this family
@@ -51,19 +52,21 @@ func (f *Family) Surname() string {
 
 // A valid family must have at least one member
 func (f *Family) HasMembers() bool {
+	log.Println("Family.HasMembers()")
 	return len(f.members) > 0
 }
 
 // A valid family must have one head of family
 func (f *Family) HasHeadOfFamily() bool {
-	hasHead := false
+	log.Println("Family.HasHeadOfFamily()")
+	hasHOF := false
 	for m := 0; m < len(f.members); m++ {
 		if f.members[m].IsHeadOfFamily() {
-			hasHead = true
+			hasHOF = true
 			break
 		}
 	}
-	return hasHead
+	return hasHOF
 }
 
 // Check whenever the family structure is intact
@@ -77,14 +80,25 @@ func (f *Family) IsValid() bool {
 // in a single string with a \n segregating each error
 func (f *Family) Err() string {
 	analysis := ""
+	builder := strings.Builder{}
+
+	// errors from family validation
 	if analysisErrsFamily.Count() > 0 {
-		builder := strings.Builder{}
 		for e := 0; e < len(analysisErrsFamily.Analysis); e++ {
 			builder.WriteString(analysisErrsFamily.Analysis[e].ErrDescription)
 			builder.WriteString("\n")
 		}
-		analysis = builder.String()
 	}
+
+	// errors from member validation
+	if analysisErrsMembers.Count() > 0 {
+		for e := 0; e < len(analysisErrsMembers.Analysis); e++ {
+			builder.WriteString(analysisErrsMembers.Analysis[e].ErrDescription)
+			builder.WriteString("\n")
+		}
+	}
+
+	analysis = builder.String()
 	return analysis
 }
 
@@ -105,23 +119,65 @@ func (f *Family) ErrToArray() []string {
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (f *Family) validate() {
+	log.Println("Family.validate()")
 	analysisErrsFamily.RemoveAll()
 
 	if strings.TrimSpace(f.surname) == "" {
 		analysisErrsFamily.AddErr(ErrMissingFamilySurname)
 	}
 
+	// Validate if all members, if any, are filled
+	// accordingly to the model rules
 	if !f.HasMembers() {
 		analysisErrsFamily.AddErr(ErrFamilyMemberMissing)
-	}
-
-	if !f.HasHeadOfFamily() {
-		analysisErrsFamily.AddErr(ErrFamilyMemberHeadMissing)
+	} else {
+		f.validateHeadOfFamily()
 	}
 
 	if strings.TrimSpace(f.id) == "" {
 		analysisErrsFamily.AddErr(ErrMissingFamilyID)
 	}
 
-	f.valid = (analysisErrsFamily.Count() == 0)
+	f.valid = (analysisErrsFamily.Count() == 0 && analysisErrsMembers.Count() == 0)
+}
+
+// There must be at least one member in a family
+// All members must be valid
+// There must be one HOF defined
+// Only ONE HOF defined per family
+func (f *Family) validateHeadOfFamily() {
+	hasHOF := false
+	thisHOF := false
+	countHOF := 0
+	for m := 0; m < len(f.members); m++ {
+		clearErrsOnValidation = false
+		thisHOF = f.members[m].headOfFamily
+		f.members[m].member.validate()
+
+		// how many HOF are there?
+		if thisHOF {
+			countHOF++
+			hasHOF = true
+		}
+		
+		// invalid member (any reason)
+		if !f.members[m].member.valid {
+			analysisErrsMembers.AddErr(ErrMemberError)
+			
+			// there is not possible an invalid HOF
+			if thisHOF {
+				analysisErrsMembers.AddErr(ErrFamilyMemberHOFError)
+			}
+		}
+	}
+
+	// there is no HOF defined
+	if !hasHOF {
+		analysisErrsFamily.AddErr(ErrFamilyMemberHOFMissing)
+	} else
+	// there are more than one HOF defined
+	if hasHOF && countHOF > 1 {
+		analysisErrsFamily.AddErr(ErrFamilyMemberTooManyHOF)
+	}
+	clearErrsOnValidation = true
 }
