@@ -1,6 +1,7 @@
 package family
 
 import (
+	"log"
 	"strings"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 
 var (
 	analysisErrsMembers = utils.NewAnalysisErrs()
+	clearErrsOnValidation = true
 )
 
 type Member struct {
@@ -27,12 +29,13 @@ type Member struct {
 	dob          time.Time `json:"day_of_birth"`
 }
 
-func NewMember(name string, middleName string, lastName string) *Member {
+func newMember() *Member {
+	clearErrsOnValidation = true
 	member := &Member{
 		id:           utils.GetID(),
-		name:         strings.TrimSpace(name),
-		lastName:     strings.TrimSpace(lastName),
-		middleName:   strings.TrimSpace(middleName),
+		name:         "",	//strings.TrimSpace(name),
+		lastName:     "",	//strings.TrimSpace(lastName),
+		middleName:   "",	//strings.TrimSpace(middleName),
 		nickname:     "",
 		gender:       "",
 		valid:        false,
@@ -271,7 +274,10 @@ func (m *Member) setAge() {
 // Check whenever the member structure is intact
 // and filled accordingly to the model rules
 func (m *Member) validate() {
-	analysisErrsMembers.RemoveAll()
+	log.Println("Member.validate()")
+	if clearErrsOnValidation {
+		analysisErrsMembers.RemoveAll()
+	}
 
 	if strings.TrimSpace(m.name) == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberName)

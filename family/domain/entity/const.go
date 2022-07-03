@@ -6,20 +6,20 @@ const (
 	Other  string = "Other"
 )
 
-const (
-	Casual string = "Casual"
-	Formal string = "Formal"
-)
+// const (
+// 	Casual string = "Casual"
+// 	Formal string = "Formal"
+// )
 
-const (
-	Self    string = "Self"
-	Someone string = "Someone"
-)
+// const (
+// 	Self    string = "Self"
+// 	Someone string = "Someone"
+// )
 
 const (
 	Newborn   string = "Newborn"
 	Child     string = "Child"
-	Toddler		string = "Toddler"
+	Toddler   string = "Toddler"
 	Infant    string = "Infant"
 	Teen      string = "Teenr"
 	Adult     string = "Adult"
@@ -49,6 +49,7 @@ const (
 	InLawDaughter string = "DaughterInLaw"
 	InLawSon      string = "SonInLaw"
 	TBDRelation   string = "ToBeDefined"
+	Self          string = "Self"
 )
 
 const (
