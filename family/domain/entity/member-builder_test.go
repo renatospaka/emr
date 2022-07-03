@@ -39,5 +39,5 @@ func TestMemberBuilder_Build_Invalid(t *testing.T) {
 	require.IsTypef(t, &family.Member{}, member, family.ErrMemberError.Error())
 	require.False(t, member.IsValid())
 	require.NotEmpty(t, member.Err())
-	require.Len(t, member.ErrToArray(), 4)
+	require.Len(t, member.ErrToArray(), 42)
 }

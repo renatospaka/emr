@@ -1,6 +1,7 @@
 package family
 
 import (
+	"log"
 	"strings"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 
 var (
 	analysisErrsMembers = utils.NewAnalysisErrs()
+	clearErrsOnValidation = true
 )
 
 type Member struct {
@@ -28,6 +30,7 @@ type Member struct {
 }
 
 func newMember() *Member {
+	clearErrsOnValidation = true
 	member := &Member{
 		id:           utils.GetID(),
 		name:         "",	//strings.TrimSpace(name),
@@ -271,7 +274,10 @@ func (m *Member) setAge() {
 // Check whenever the member structure is intact
 // and filled accordingly to the model rules
 func (m *Member) validate() {
-	analysisErrsMembers.RemoveAll()
+	log.Println("Member.validate()")
+	if clearErrsOnValidation {
+		analysisErrsMembers.RemoveAll()
+	}
 
 	if strings.TrimSpace(m.name) == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberName)
