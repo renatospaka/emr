@@ -25,7 +25,7 @@ func TestFamilyBuilder_Build(t *testing.T) {
 
 	fam := testFamilyBuilder.
 		WithSurname("Middle Last").
-		HasHeadOfFamily(member).
+		WithHeadOfFamily(member).
 		Build()
 
 	require.IsTypef(t, &family.Family{}, fam, "não é do tipo *Family{}")
@@ -43,11 +43,11 @@ func TestFamilyBuilder_Invalid(t *testing.T) {
 
 	fam := testFamilyBuilder.
 		WithSurname("Middle Last").
-		HasHeadOfFamily(member).
+		WithHeadOfFamily(member).
 		Build()
 
 	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
 	require.False(t, fam.IsValid())
 	require.NotEmpty(t, fam.Err())
-	require.Len(t, fam.ErrToArray(), 4)
+	require.Len(t, fam.ErrToArray(), 6)
 }
