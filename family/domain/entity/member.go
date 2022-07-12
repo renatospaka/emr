@@ -1,7 +1,6 @@
 package family
 
 import (
-	"log"
 	"strings"
 	"time"
 
@@ -30,7 +29,7 @@ type Member struct {
 }
 
 func newMember() *Member {
-	log.Println("Member.newMember()")
+	// log.Println("Member.newMember()")
 	clearErrsOnValidation = true
 	member := &Member{
 		id:           utils.GetID(),
@@ -55,7 +54,7 @@ func (m *Member) ID() string {
 // Set the full name of this member
 // name + middle name + last name
 func (m *Member) SetFullName(name string, middleName string, lastName string) *Member {
-	log.Println("Member.SetFullName()")
+	// log.Println("Member.SetFullName()")
 	m.name = strings.TrimSpace(name)
 	m.lastName = strings.TrimSpace(lastName)
 	m.middleName = strings.TrimSpace(middleName)
@@ -67,7 +66,7 @@ func (m *Member) SetFullName(name string, middleName string, lastName string) *M
 // Return the full name of this member
 // in casual mode
 func (m *Member) FullName() string {
-	log.Println("Member.FullName()")
+	// log.Println("Member.FullName()")
 	builder := strings.Builder{}
 	fullName := ""
 
@@ -90,7 +89,7 @@ func (m *Member) FullName() string {
 // Return the full name of this member
 // in formal mode
 func (m *Member) FullNameFormal() string {
-	log.Println("Member.FullNameFormal()")
+	// log.Println("Member.FullNameFormal()")
 	builder := strings.Builder{}
 	fullNameTmp := m.FullName()
 	fullName := ""
@@ -112,7 +111,7 @@ func (m *Member) FullNameFormal() string {
 
 // Set a nickname for this member
 func (m *Member) SetNickname(nick string) *Member {
-	log.Println("Member.SetNickname()")
+	// log.Println("Member.SetNickname()")
 	m.nickname = strings.TrimSpace(nick)
 	m.lastChanged = time.Now().UnixNano()
 	m.valid = false
@@ -121,13 +120,13 @@ func (m *Member) SetNickname(nick string) *Member {
 
 // Return the nickname for this member, if any
 func (m *Member) Nickname() string {
-	log.Println("Member.Nickname()")
+	// log.Println("Member.Nickname()")
 	return m.nickname
 }
 
 // Set the day of birth of this member
 func (m *Member) SetBirthDate(dob time.Time) *Member {
-	log.Println("Member.SetBirthDate()")
+	// log.Println("Member.SetBirthDate()")
 	m.dob = dob
 	m.lastChanged = time.Now().UnixNano()
 	m.valid = false
@@ -137,13 +136,13 @@ func (m *Member) SetBirthDate(dob time.Time) *Member {
 
 // Return the day of birth of this member
 func (m *Member) BirthDate() time.Time {
-	log.Println("Member.BirthDate()")
+	// log.Println("Member.BirthDate()")
 	return m.dob
 }
 
 // Set the gender of this member
 func (m *Member) SetGender(gender string) *Member {
-	log.Println("Member.SetGender()")
+	// log.Println("Member.SetGender()")
 	m.gender = gender
 	m.lastChanged = time.Now().UnixNano()
 	m.valid = false
@@ -152,68 +151,68 @@ func (m *Member) SetGender(gender string) *Member {
 
 // Return the gender of this member
 func (m *Member) Gender() string {
-	log.Println("Member.Gender()")
+	// log.Println("Member.Gender()")
 	return m.gender
 }
 
 // Return the age of the member in years since birth
 func (m *Member) AgeInYears() int64 {
-	log.Println("Member.AgeInYears()")
+	// log.Println("Member.AgeInYears()")
 	return m.ageInYears
 }
 
 // Return the age of the member in months since birth
 func (m *Member) AgeInMonths() int64 {
-	log.Println("Member.AgeInMonths()")
+	// log.Println("Member.AgeInMonths()")
 	return m.ageInMonths
 }
 
 // Return if the member is a newborn
 func (m *Member) IsNewborn() bool {
-	log.Println("Member.IsNewborn()")
+	// log.Println("Member.IsNewborn()")
 	return m.age == Newborn
 }
 
 // Return if the member is a infant
 func (m *Member) IsInfant() bool {
-	log.Println("Member.IsInfant()")
+	// log.Println("Member.IsInfant()")
 	return m.age == Infant
 }
 
 // Return if the member is a toddler
 func (m *Member) IsToddler() bool {
-	log.Println("Member.IsToddler()")
+	// log.Println("Member.IsToddler()")
 	return m.age == Toddler
 }
 
 // Return if the member is a child
 func (m *Member) IsChild() bool {
-	log.Println("Member.IsChild()")
+	// log.Println("Member.IsChild()")
 	return m.age == Child
 }
 
 // Return if the member is a teen
 func (m *Member) IsTeen() bool {
-	log.Println("Member.IsTeen()")
+	// log.Println("Member.IsTeen()")
 	return m.age == Teen
 }
 
 // Return if the member is a adult
 func (m *Member) IsAdult() bool {
-	log.Println("Member.IsAdult()")
+	// log.Println("Member.IsAdult()")
 	return m.age == Adult
 }
 
 // Return if the member is a elderly
 func (m *Member) IsElderly() bool {
-	log.Println("Member.IsElderly()")
+	// log.Println("Member.IsElderly()")
 	return m.age == Elderly
 }
 
 // Return all errors found during the validation process
 // in a single string with a \n segregating each error
 func (m *Member) Err() string {
-	log.Println("Member.Err()")
+	// log.Println("Member.Err()")
 	analysis := ""
 	if analysisErrsMembers.Count() > 0 {
 		builder := strings.Builder{}
@@ -229,7 +228,7 @@ func (m *Member) Err() string {
 // Return all errors found during the validation process
 // in an array
 func (m *Member) ErrToArray() []string {
-	log.Println("Member.ErrToArray()")
+	// log.Println("Member.ErrToArray()")
 	analysis := m.Err()
 	toArray := []string{}
 	if len(analysis) > 0 {
@@ -244,10 +243,10 @@ func (m *Member) ErrToArray() []string {
 // Return if the member is validated
 // Use this whenever you want to guarantee the integrity of the structure
 func (m *Member) IsValid() bool {
-	log.Println("Member.IsValid() - starting")
+	// log.Println("Member.IsValid() - starting")
 	clearErrsOnValidation = true
 	m.validate()
-	log.Println("Member.IsValid(", m.valid, ")")
+	// log.Println("Member.IsValid(", m.valid, ")")
 	return m.valid
 }
 
@@ -255,7 +254,7 @@ func (m *Member) IsValid() bool {
 // and classify his/her age accordingly
 // every time the day of birth changes
 func (m *Member) setAge() {
-	log.Println("Member.setAge()")
+	// log.Println("Member.setAge()")
 	m.age = Undefined
 	m.ageInMonths = 0
 	m.ageInYears = 0
@@ -298,7 +297,7 @@ func (m *Member) setAge() {
 // Check whenever the member structure is intact
 // and filled accordingly to the model rules
 func (m *Member) validate() {
-	log.Println("Member.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
+	// log.Println("Member.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
 	if clearErrsOnValidation {
 		analysisErrsMembers.RemoveAll()
 	}
@@ -337,6 +336,6 @@ func (m *Member) validate() {
 	if strings.TrimSpace(m.id) == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberID)
 	}
-	log.Println("Member.validate(", analysisErrsMembers.Count() == 0, ")")
+	// log.Println("Member.validate(", analysisErrsMembers.Count() == 0, ")")
 	m.valid = (analysisErrsMembers.Count() == 0)
 }
