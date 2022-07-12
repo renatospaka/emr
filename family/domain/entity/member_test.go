@@ -30,17 +30,11 @@ func init() {
 		Build()
 	today := time.Now()
 	dobNewborn = today.Add(-15 * (utils.HoursDay) * time.Hour)
-	// dobInfant = time.Date(today.Year(), today.Month()-11, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	dobInfant = today.Add(-11 * utils.HoursMonth * time.Hour)
-	// dobToddler = time.Date(today.Year(), today.Month()-54, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	dobToddler = today.Add(-54 * utils.HoursMonth * time.Hour)
-	// dobChild = time.Date(today.Year()-7, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	dobChild = today.Add(-7 * utils.HoursYear * time.Hour)
-	// dobTeen = time.Date(today.Year()-15, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	dobTeen = today.Add(-15 * utils.HoursYear * time.Hour)
-	// dobAdult = time.Date(today.Year()-33, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	dobAdult = today.Add(-33 * utils.HoursYear * time.Hour)
-	// dobElderly = time.Date(today.Year()-67, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
 	dobElderly = today.Add(-67 * utils.HoursYear * time.Hour)
 }
 

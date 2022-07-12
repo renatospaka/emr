@@ -2,7 +2,6 @@ package family
 
 import (
 	"log"
-	"strings"
 	"time"
 )
 
@@ -39,9 +38,7 @@ func (mb *MemberBuilder) Build() *Member {
 func (mb *MemberBuilder) WithFullName(name string, middleName string, lastName string) *MemberBuilder {
 	log.Println("MemberBuilder.WithFullName()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		m.name = strings.TrimSpace(name)
-		m.lastName = strings.TrimSpace(lastName)
-		m.middleName = strings.TrimSpace(middleName)
+		m.SetFullName(name, middleName, lastName)
 	})
 	return mb
 }
@@ -50,8 +47,7 @@ func (mb *MemberBuilder) WithFullName(name string, middleName string, lastName s
 func (mb *MemberBuilder) WithBirthDate(dob time.Time) *MemberBuilder {
 	log.Println("MemberBuilder.WithBirthDate()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		// m.SetBirthDate(dob)
-		m.dob = dob
+		m.SetBirthDate(dob)
 	})
 	return mb
 }
@@ -60,8 +56,7 @@ func (mb *MemberBuilder) WithBirthDate(dob time.Time) *MemberBuilder {
 func (mb *MemberBuilder) WithGender(gender string) *MemberBuilder {
 	log.Println("MemberBuilder.WithGender()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		// m.SetGender(gender)
-		m.gender = gender
+		m.SetGender(gender)
 	})
 	return mb
 }
@@ -70,8 +65,7 @@ func (mb *MemberBuilder) WithGender(gender string) *MemberBuilder {
 func (mb *MemberBuilder) WithNickname(nick string) *MemberBuilder {
 	log.Println("MemberBuilder.WithNickname()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		// m.SetNickname(nick)
-		m.nickname = strings.TrimSpace(nick)
+		m.SetNickname(nick)
 	})
 	return mb
 }

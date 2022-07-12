@@ -244,6 +244,8 @@ func (m *Member) ErrToArray() []string {
 // Return if the member is validated
 // Use this whenever you want to guarantee the integrity of the structure
 func (m *Member) IsValid() bool {
+	log.Println("Member.IsValid() - starting")
+	clearErrsOnValidation = true
 	m.validate()
 	log.Println("Member.IsValid(", m.valid, ")")
 	return m.valid
