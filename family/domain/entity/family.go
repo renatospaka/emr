@@ -1,6 +1,7 @@
 package family
 
 import (
+	"log"
 	"strings"
 	"time"
 
@@ -20,12 +21,13 @@ type Family struct {
 }
 
 func newFamily() *Family {
-	//log.Println("Family.newFamily()")
+	log.Println("Family.newFamily()")
 	fam := &Family{
-		id:      utils.GetID(),
-		surname: "",
-		valid:   false,
-		members: []*FamilyMember{},
+		id:          utils.GetID(),
+		surname:     "",
+		valid:       false,
+		lastChanged: time.Now().UnixNano(),
+		members:     []*FamilyMember{},
 	}
 
 	return fam
@@ -33,13 +35,13 @@ func newFamily() *Family {
 
 // Return the ID of this family
 func (f *Family) ID() string {
-	//log.Println("Family.ID()")
+	log.Println("Family.ID()")
 	return f.id
 }
 
 // Set the surname of the family
 func (f *Family) SetSurname(surname string) *Family {
-	//log.Println("Family.SetSurname()")
+	log.Println("Family.SetSurname()")
 	f.surname = strings.TrimSpace(surname)
 	f.lastChanged = time.Now().UnixNano()
 	f.valid = false
@@ -48,13 +50,13 @@ func (f *Family) SetSurname(surname string) *Family {
 
 // Return the surname of the family
 func (f *Family) Surname() string {
-	//log.Println("Family.Surname()")
+	log.Println("Family.Surname()")
 	return f.surname
 }
 
 // A valid family must have at least one member
 func (f *Family) HasMembers() bool {
-	//log.Println("Family.HasMembers(", len(f.members) > 0, ")")
+	log.Println("Family.HasMembers(", len(f.members) > 0, ")")
 	return len(f.members) > 0
 }
 
@@ -67,7 +69,7 @@ func (f *Family) HasHeadOfFamily() bool {
 			break
 		}
 	}
-	//log.Println("Family.HasHeadOfFamily(", hasHOF, ")")
+	log.Println("Family.HasHeadOfFamily(", hasHOF, ")")
 	return hasHOF
 }
 
@@ -75,14 +77,14 @@ func (f *Family) HasHeadOfFamily() bool {
 // and filled accordingly to the model rules
 func (f *Family) IsValid() bool {
 	f.validate()
-	//log.Println("Family.IsValid(", f.valid, ")")
+	log.Println("Family.IsValid(", f.valid, ")")
 	return f.valid
 }
 
 // Return all errors found during the validation process
 // in a single string with a \n segregating each error
 func (f *Family) Err() string {
-	//log.Println("Family.Err()")
+	log.Println("Family.Err()")
 	analysis := ""
 	builder := strings.Builder{}
 
@@ -109,7 +111,7 @@ func (f *Family) Err() string {
 // Return all errors found during the validation process
 // in an array
 func (f *Family) ErrToArray() []string {
-	//log.Println("Family.ErrToArray()")
+	log.Println("Family.ErrToArray()")
 	analysis := f.Err()
 	toArray := []string{}
 	if len(analysis) > 0 {
@@ -124,6 +126,7 @@ func (f *Family) ErrToArray() []string {
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (f *Family) validate() {
+	log.Println("Family.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
 	analysisErrsFamily.RemoveAll()
 
 	if strings.TrimSpace(f.surname) == "" {
@@ -142,7 +145,7 @@ func (f *Family) validate() {
 		analysisErrsFamily.AddErr(ErrMissingFamilyID)
 	}
 
-	//log.Println("Family.validate(", analysisErrsFamily.Count() == 0, ")")
+	log.Println("Family.validate(", analysisErrsFamily.Count() == 0, ")")
 	f.valid = (analysisErrsFamily.Count() == 0 && analysisErrsMembers.Count() == 0)
 }
 
@@ -151,7 +154,7 @@ func (f *Family) validate() {
 // There must be one HOF defined
 // Only ONE HOF defined per family
 func (f *Family) validateHeadOfFamily() {
-	//log.Println("Family.validateHeadOfFamily()")
+	log.Println("Family.validateHeadOfFamily()")
 	hasHOF := false
 	thisHOF := false
 	countHOF := 0

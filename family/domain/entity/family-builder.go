@@ -1,6 +1,7 @@
 package family
 
 import (
+	"log"
 	"time"
 )
 
@@ -12,7 +13,7 @@ type FamilyBuilder struct {
 
 // Initialize the new families builder
 func NewFamilyBuilder() *FamilyBuilder {
-	//log.Println("FamilyBuilder.NewFamilyBuilder()")
+	log.Println("FamilyBuilder.NewFamilyBuilder()")
 	return &FamilyBuilder{
 		actions: []familyActions{},
 	}
@@ -21,29 +22,30 @@ func NewFamilyBuilder() *FamilyBuilder {
 // Execute all actions, create the Family
 // and return it to caller
 func (fb *FamilyBuilder) Build() *Family {
-	//log.Println("FamilyBuilder.Build()")
+	log.Println("FamilyBuilder.Build()")
 	fam := newFamily()
 	for _, action := range fb.actions {
 		action(fam)
 	}
 	fam.lastChanged = time.Now().UnixNano()
 	fam.valid = false
+	fam.validate()
 	return fam
 }
 
 // Set the surname of the family
 func (fb *FamilyBuilder) WithSurname(surname string) *FamilyBuilder {
-	//log.Println("FamilyBuilder.WithSurname()")
+	log.Println("FamilyBuilder.WithSurname()")
 	fb.actions = append(fb.actions, func(f *Family) {
 		f.surname = surname
 	})
 	return fb
 }
 
-// Set the person who is the responsible for manage information
-// of this family core
-func (fb *FamilyBuilder) WithHeadOfFamily(headOfFamily *Member) *FamilyBuilder {
-	//log.Println("FamilyBuilder.WithHeadOfFamily()")
+// Set the Head of Family (hof), a person who is the responsible
+// for manage information of this family core
+func (fb *FamilyBuilder) WithHOF(headOfFamily *Member) *FamilyBuilder {
+	log.Println("FamilyBuilder.WithHOF()")
 	fb.actions = append(fb.actions, func(f *Family) {
 		hof := newFamilyMember(headOfFamily)
 		hof.SetHeadOfFamily().
@@ -53,15 +55,14 @@ func (fb *FamilyBuilder) WithHeadOfFamily(headOfFamily *Member) *FamilyBuilder {
 	return fb
 }
 
-// Just a person who is member of this family core
+// add a family member to the family core
 func (fb *FamilyBuilder) WithMember(member *Member) *FamilyBuilder {
-	//log.Println("FamilyBuilder.WithMember()")
-	fb.actions = append(fb.actions, func(f *Family) {
-		memb := newFamilyMember(member)
-		memb.SetRelationType(Self)
-		// .SetMember()
-		f.members = append(f.members, memb)
-	})
+	// log.Println("FamilyBuilder.WithMember()")
+	// fb.actions = append(fb.actions, func(f *Family) {
+	// 	memb := newFamilyMember(member)
+	// 	memb.SetRelationType(Self)
+	// 	// .SetMember()
+	// 	f.members = append(f.members, memb)
+	// })
 	return fb
 }
-
