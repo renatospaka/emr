@@ -2,6 +2,7 @@ package family_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -35,7 +36,7 @@ func TestFamilyBuilder_Build(t *testing.T) {
 func TestFamilyBuilder_InvalidMember(t *testing.T) {
 	member := testMemberBuilder.
 		WithFullName("Na", "", "LastLastLastLastLastLastLast").
-		WithBirthDate(dobAdult).
+		WithBirthDate(time.Time{}).
 		WithGender(family.Male).
 		WithNickname("Nick").
 		Build()

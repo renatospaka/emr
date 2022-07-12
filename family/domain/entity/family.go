@@ -76,6 +76,8 @@ func (f *Family) HasHeadOfFamily() bool {
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (f *Family) IsValid() bool {
+	log.Println("Family.IsValid() - starting")
+	clearErrsOnValidation = true
 	f.validate()
 	log.Println("Family.IsValid(", f.valid, ")")
 	return f.valid
@@ -128,6 +130,7 @@ func (f *Family) ErrToArray() []string {
 func (f *Family) validate() {
 	log.Println("Family.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
 	analysisErrsFamily.RemoveAll()
+	analysisErrsMembers.RemoveAll()
 
 	if strings.TrimSpace(f.surname) == "" {
 		analysisErrsFamily.AddErr(ErrMissingFamilySurname)

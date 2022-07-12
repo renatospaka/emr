@@ -37,7 +37,7 @@ func (fb *FamilyBuilder) Build() *Family {
 func (fb *FamilyBuilder) WithSurname(surname string) *FamilyBuilder {
 	log.Println("FamilyBuilder.WithSurname()")
 	fb.actions = append(fb.actions, func(f *Family) {
-		f.surname = surname
+		f.SetSurname(surname)
 	})
 	return fb
 }
@@ -48,7 +48,8 @@ func (fb *FamilyBuilder) WithHOF(headOfFamily *Member) *FamilyBuilder {
 	log.Println("FamilyBuilder.WithHOF()")
 	fb.actions = append(fb.actions, func(f *Family) {
 		hof := newFamilyMember(headOfFamily)
-		hof.SetHeadOfFamily().
+		hof.
+			SetHeadOfFamily().
 			SetRelationType(Self)
 		f.members = append(f.members, hof)
 	})
