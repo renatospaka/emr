@@ -16,11 +16,11 @@ type FamilyMember struct {
 	relationType string  `json:"relation_type"`
 	status       string  `json:"status"`
 	valid        bool    `json:"-"`
-	lastChanged  int64   `json:"-"`
 	headOfFamily bool    `json:"status"`
+	lastChanged  int64   `json:"-"`
 }
 
-func NewFamilyMember(member *Member) *FamilyMember {
+func newFamilyMember(member *Member) *FamilyMember {
 	return &FamilyMember{
 		member:       member,
 		relationType: TBDRelation,
@@ -34,6 +34,7 @@ func NewFamilyMember(member *Member) *FamilyMember {
 // of this family core
 func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
 	fm.headOfFamily = true
+	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
 }
@@ -42,6 +43,7 @@ func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
 // of this family core
 func (fm *FamilyMember) UnsetHeadOfFamily() *FamilyMember {
 	fm.headOfFamily = false
+	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
 }
@@ -55,6 +57,7 @@ func (fm *FamilyMember) IsHeadOfFamily() bool {
 // head of the family of this family core
 func (fm *FamilyMember) SetRelationType(relationType string) *FamilyMember {
 	fm.relationType = relationType
+	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
 }
@@ -122,7 +125,7 @@ func (fm *FamilyMember) ErrToArray() []string {
 func (fm *FamilyMember) validate() {
 	analysisErrsFamilyMembers.RemoveAll()
 
-	// member validation
+	// check member validation
 	fm.member.validate()
 
 	if !fm.member.IsAdult() && !fm.member.IsElderly() {
