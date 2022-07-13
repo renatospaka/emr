@@ -20,12 +20,12 @@ func TestFamilyBuilder_Build(t *testing.T) {
 		WithFullName("Name", "Middle", "Last").
 		WithBirthDate(dobAdult).
 		WithGender(family.Male).
-		WithNickname("Nick").
+		WithNickname("Top Cat").
 		Build()
 
 	fam := testFamilyBuilder.
 		WithSurname("Middle Last").
-		HasHeadOfFamily(member).
+		WithHOF(member).
 		Build()
 
 	require.IsTypef(t, &family.Family{}, fam, "não é do tipo *Family{}")
@@ -33,21 +33,34 @@ func TestFamilyBuilder_Build(t *testing.T) {
 	require.Empty(t, fam.Err())
 }
 
-func TestFamilyBuilder_Invalid(t *testing.T) {
-	member := testMemberBuilder.
-		WithFullName("Na", "Middle", "LastLastLastLastLastLastLast").
+func TestFamilyBuilder_InvalidMember(t *testing.T) {
+	invalidMember := testMemberBuilder.
+		WithFullName("Na", "", "LastLastLastLastLastLastLast").
 		WithBirthDate(time.Time{}).
-		WithGender("other").
+		WithGender(family.Male).
 		WithNickname("Nick").
 		Build()
 
 	fam := testFamilyBuilder.
 		WithSurname("Middle Last").
-		HasHeadOfFamily(member).
+		WithHOF(invalidMember).
 		Build()
 
 	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
 	require.False(t, fam.IsValid())
 	require.NotEmpty(t, fam.Err())
 	require.Len(t, fam.ErrToArray(), 4)
+}
+
+func TestFamilyBuilder_InvalidFamily(t *testing.T) {
+	missingMember := &family.Member{}
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(missingMember).
+		Build()
+
+	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
+	require.False(t, fam.IsValid())
+	require.NotEmpty(t, fam.Err())
+	require.Len(t, fam.ErrToArray(), 10)
 }

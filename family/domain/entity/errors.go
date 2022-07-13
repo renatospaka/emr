@@ -12,14 +12,15 @@ var (
 
 // Errors related to Family Member
 var (
-	ErrFamilyMemberAlreadyLinked = errors.New("a pessoa informada já pertence a essa família")
-	ErrFamilyMemberNotLinked     = errors.New("a pessoa informada não pertence a essa família")
-	ErrFamilyMemberNotRelated    = errors.New("a pessoa informada não tem arentesco definido nessa família")
-	ErrFamilyMemberMissing       = errors.New("não há membros nessa família")
-	ErrFamilyMemberHOFMissing    = errors.New("não há uma pessoa responsável definida para essa família")
-	ErrFamilyMemberHOFInvalidAge = errors.New("a pessoa responsável definida para essa família deve ser maior de idade")
-	ErrFamilyMemberHOFError      = errors.New("essa pessoa não pode possui os critérios para ser responsável por uma família")
-	ErrFamilyMemberTooManyHOF    = errors.New("só pode haver um responsável por família")
+	ErrFamilyMemberAlreadyLinked   = errors.New("a pessoa informada já pertence a essa família")
+	ErrFamilyMemberNotLinked       = errors.New("a pessoa informada não pertence a essa família")
+	ErrFamilyMemberNotRelated      = errors.New("a pessoa informada não tem vínculo familiar definido nessa família")
+	ErrFamilyMemberMissing         = errors.New("não há membros nessa família")
+	ErrFamilyMemberHOFMissing      = errors.New("não há uma pessoa responsável definida para essa família")
+	ErrFamilyMemberHOFInvalidAge   = errors.New("a pessoa responsável definida para essa família deve ser maior de idade")
+	ErrFamilyMemberHOFError        = errors.New("essa pessoa não pode possui os critérios para ser responsável por uma família")
+	ErrFamilyMemberTooManyHOF      = errors.New("só pode haver um responsável por família")
+	ErrFamilyMemberInvalidRelation = errors.New("o vínculo familiar é inválido ")
 )
 
 // Errors related to Member (one Member)

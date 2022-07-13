@@ -29,13 +29,13 @@ func init() {
 		WithGender(family.Male).
 		Build()
 	today := time.Now()
-	dobNewborn = time.Date(today.Year(), today.Month(), today.Day()-33, today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	dobInfant = time.Date(today.Year(), today.Month()-11, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	dobToddler = time.Date(today.Year(), today.Month()-54, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	dobChild = time.Date(today.Year()-7, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	dobTeen = time.Date(today.Year()-15, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	dobAdult = time.Date(today.Year()-33, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	dobElderly = time.Date(today.Year()-67, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
+	dobNewborn = today.Add(-15 * (utils.HoursDay) * time.Hour)
+	dobInfant = today.Add(-11 * utils.HoursMonth * time.Hour)
+	dobToddler = today.Add(-54 * utils.HoursMonth * time.Hour)
+	dobChild = today.Add(-7 * utils.HoursYear * time.Hour)
+	dobTeen = today.Add(-15 * utils.HoursYear * time.Hour)
+	dobAdult = today.Add(-33 * utils.HoursYear * time.Hour)
+	dobElderly = today.Add(-67 * utils.HoursYear * time.Hour)
 }
 
 func TestMember_ID(t *testing.T) {
@@ -65,7 +65,8 @@ func TestMember_InValid_No(t *testing.T) {
 func TestMember_FullName(t *testing.T) {
 	member.
 		SetFullName("Name2", "Middle2", "Last2").
-		SetBirthDate(dobAdult)
+		SetBirthDate(dobAdult).
+		IsValid()
 
 	require.Equal(t, member.FullName(), "Name2 Middle2 Last2")
 	require.Empty(t, member.Err())
@@ -74,7 +75,8 @@ func TestMember_FullName(t *testing.T) {
 func TestMember_FullNameFormal(t *testing.T) {
 	member.
 		SetFullName("Name2", "Middle2", "Last2").
-		SetBirthDate(dobAdult)
+		SetBirthDate(dobAdult).
+		IsValid()
 
 	require.Equal(t, member.FullNameFormal(), "Sr. Name2 Middle2 Last2")
 	require.Empty(t, member.Err())
@@ -159,7 +161,9 @@ func TestMember_Nickname(t *testing.T) {
 		WithGender(family.Male).
 		WithNickname("Nick").
 		Build()
-	member.SetNickname("Nickname")
+	member.
+		SetNickname("Nickname").
+		IsValid()
 	nick := member.Nickname()
 
 	require.EqualValues(t, "Nickname", nick)
@@ -168,7 +172,8 @@ func TestMember_Nickname(t *testing.T) {
 func TestMember_SetGender(t *testing.T) {
 	member.
 		SetGender(family.Female).
-		SetBirthDate(dobAdult)
+		SetBirthDate(dobAdult).
+		IsValid()
 
 	require.EqualValues(t, family.Female, member.Gender())
 	require.Empty(t, member.Err())
@@ -195,7 +200,8 @@ func TestMember_SetGender_Invalid(t *testing.T) {
 func TestMember_Gender(t *testing.T) {
 	member.
 		SetGender(family.Female).
-		SetBirthDate(dobAdult)
+		SetBirthDate(dobAdult).
+		IsValid()
 	gender := member.Gender()
 
 	require.EqualValues(t, family.Female, gender)
@@ -226,7 +232,7 @@ func TestMember_AgeInMonths(t *testing.T) {
 	member.SetBirthDate(dobNewborn)
 	ageInMonths := member.AgeInMonths()
 
-	require.EqualValues(t, 1, ageInMonths)
+	require.EqualValues(t, 0, ageInMonths)
 }
 
 func TestMember_AgeInYears(t *testing.T) {
@@ -307,7 +313,8 @@ func TestMember_MoreThanOneError(t *testing.T) {
 		Build()
 	member.
 		SetBirthDate(time.Time{}).
-		SetGender("other")
+		SetGender("other").
+		IsValid()
 
 	allErrors := member.ErrToArray()
 	require.False(t, member.IsValid())

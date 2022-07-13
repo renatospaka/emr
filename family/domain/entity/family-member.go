@@ -16,24 +16,35 @@ type FamilyMember struct {
 	relationType string  `json:"relation_type"`
 	status       string  `json:"status"`
 	valid        bool    `json:"-"`
-	lastChanged  int64   `json:"-"`
 	headOfFamily bool    `json:"status"`
+	lastChanged  int64   `json:"-"`
 }
 
-func NewFamilyMember(member *Member) *FamilyMember {
+func newFamilyMember(member *Member) *FamilyMember {
 	return &FamilyMember{
 		member:       member,
 		relationType: TBDRelation,
 		status:       FreshMember,
 		valid:        false,
 		headOfFamily: false,
+		lastChanged: time.Now().UnixNano(),
 	}
 }
 
 // Set the person who is the responsible for manage information
 // of this family core
+func (fm *FamilyMember) Add(member *Member) *FamilyMember {
+	fm.member = member
+	fm.valid = false
+	fm.lastChanged = time.Now().UnixNano()
+	return fm
+}
+
+// Set the person who is the responsible for manage information
+// of this family core
 func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
-	fm.headOfFamily = true
+	fm.headOfFamily = fm.canBeHOF()
+	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
 }
@@ -42,6 +53,7 @@ func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
 // of this family core
 func (fm *FamilyMember) UnsetHeadOfFamily() *FamilyMember {
 	fm.headOfFamily = false
+	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
 }
@@ -55,6 +67,7 @@ func (fm *FamilyMember) IsHeadOfFamily() bool {
 // head of the family of this family core
 func (fm *FamilyMember) SetRelationType(relationType string) *FamilyMember {
 	fm.relationType = relationType
+	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
 }
@@ -117,21 +130,34 @@ func (fm *FamilyMember) ErrToArray() []string {
 	return toArray
 }
 
-// Check whenever the family structure is intact
-// and filled accordingly to the model rules
+// check whether the current member is able to assume
+// the head of family position - only of age people can
+func (fm *FamilyMember) canBeHOF() bool {
+	hof := (fm.member.IsAdult() || fm.member.IsElderly())
+	if !hof {
+		fm.valid = false
+	}
+	return hof
+}
+
+// Check whenever the structure of this family member
+// is intact and filled accordingly to the model rules
 func (fm *FamilyMember) validate() {
 	analysisErrsFamilyMembers.RemoveAll()
 
-	// member validation
+	// check member validation
 	fm.member.validate()
 
-	if !fm.member.IsAdult() && !fm.member.IsElderly() {
-		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberNotRelated)
+	if !fm.canBeHOF() {
+		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberHOFInvalidAge)
 	}
 
 	if strings.TrimSpace(fm.relationType) == "" {
 		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberNotRelated)
-	}
+	} 
+	if (fm.relationType != Self && fm.headOfFamily) {
+		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberInvalidRelation)
+	} 
 
 	fm.valid = (analysisErrsFamilyMembers.Count() == 0 && analysisErrsMembers.Count() == 0)
 }

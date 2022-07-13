@@ -16,3 +16,14 @@ const (
 	LayoutDateTimeLOG      = "2006/01/02 15:04:05"
 	LayoutDateTimeBRShort  = "02/01/2006 15:04:05"
 )
+
+const (
+	Day   = 24
+	Months = 30
+	Year = 12
+
+	HoursDay = Day
+	HoursMonth = Day * Months
+	HoursYear = Day * Months * Year
+)
+
