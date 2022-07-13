@@ -10,7 +10,7 @@ type FamilyBuilder struct {
 	actions []familyActions
 }
 
-// Initialize the new families builder
+// Initialize the new family builder
 func NewFamilyBuilder() *FamilyBuilder {
 	// log.Println("FamilyBuilder.NewFamilyBuilder()")
 	return &FamilyBuilder{
@@ -44,14 +44,14 @@ func (fb *FamilyBuilder) WithSurname(surname string) *FamilyBuilder {
 // Set the Head of Family (hof), a person who is the responsible
 // for manage information of this family core
 func (fb *FamilyBuilder) WithHOF(headOfFamily *Member) *FamilyBuilder {
-	// log.Println("FamilyBuilder.WithHOF()")
-	fb.actions = append(fb.actions, func(f *Family) {
-		hof := newFamilyMember(headOfFamily)
-		hof.
-			SetHeadOfFamily().
-			SetRelationType(Self)
-		f.members = append(f.members, hof)
-	})
+	// // log.Println("FamilyBuilder.WithHOF()")
+	// fb.actions = append(fb.actions, func(f *Family) {
+	// 	hof := newFamilyMember(headOfFamily)
+	// 	hof.
+	// 		SetHeadOfFamily().
+	// 		SetRelationType(Self)
+	// 	f.members = append(f.members, hof)
+	// })
 	return fb
 }
 

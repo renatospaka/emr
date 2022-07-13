@@ -1,86 +1,128 @@
 package family_test
 
-// import (
-// 	"testing"
+import (
+	"testing"
 
-// 	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/require"
 
-// 	family "github.com/renatospaka/emr/family/domain/entity"
-// 	"github.com/renatospaka/emr/infrastructure/utils"
-// )
+	family "github.com/renatospaka/emr/family/domain/entity"
+	"github.com/renatospaka/emr/infrastructure/utils"
+)
 
-// var (
-// 	fam = family.newFamily()
-// )
+var (
+	fam = family.Family{}
+)
 
-// func TestFamily_ID(t *testing.T) {
-// 	id := fam.ID()
-// 	err := utils.IsVaalidUUID(id)
+func init() {
+	testFamilyBuilder = family.NewFamilyBuilder()
+	member = testMemberBuilder.
+		WithFullName("Name", "Middle", "Last").
+		WithBirthDate(dobAdult).
+		WithGender(family.Male).
+		WithNickname("Top Cat").
+		Build()
+}
 
-// 	require.IsType(t, "", id)
-// 	require.Len(t, id, 36)
-// 	require.Nil(t, err)
-// }
+func TestFamily_ID(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		Build()
 
-// func TestFamily_IsValid(t *testing.T) {
-// 	fam.SetSurname("Surname")
+	id := fam.ID()
+	err := utils.IsVaalidUUID(id)
 
-// 	require.True(t, fam.IsValid())
-// 	require.Empty(t, fam.Err())
-// }
+	require.IsType(t, "", id)
+	require.Len(t, id, 36)
+	require.Nil(t, err)
+}
 
-// func TestFamily_IsValid_No(t *testing.T) {
-// 	fam.SetSurname("")
+func TestFamily_IsValid(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	fam.SetSurname("Surname")
 
-// 	require.False(t, fam.IsValid())
-// 	require.NotEmpty(t, fam.Err())
-// }
+	require.True(t, fam.IsValid())
+	require.Empty(t, fam.Err())
+}
 
-// func TestFamily_Surname(t *testing.T) {
-// 	fam.SetSurname("Another Surname")
-// 	surname := fam.Surname()
+func TestFamily_IsValid_No(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	fam.SetSurname("")
 
-// 	require.EqualValues(t, "Another Surname", surname)
-// }
+	require.False(t, fam.IsValid())
+	require.NotEmpty(t, fam.Err())
+}
 
-// func TestFamily_HasMembers(t *testing.T) {
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	hasMembers := fam.HasMembers()
+func TestFamily_Surname(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	fam.SetSurname("Another Surname")
+	surname := fam.Surname()
 
-// 	require.True(t, hasMembers)
-// }
+	require.EqualValues(t, "Another Surname", surname)
+}
 
-// func TestFamily_HasMembers_Missing(t *testing.T) {
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	fam.IsValid()
-// 	hasMembers := fam.HasMembers()
+func TestFamily_HasMembers(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	//Need to prepare to include a member
+	//This test will fail until then
+	hasMembers := fam.HasMembers()
 
-// 	allErrors := fam.ErrToArray()
-// 	require.False(t, hasMembers)
-// 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
-// 	require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
-// 	require.Equal(t, 2, len(allErrors))
-// }
+	require.True(t, hasMembers)
+}
 
-// func TestFamily_HasHeadOfFamily(t *testing.T) {
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	hasHOF := fam.HasHeadOfFamily()
+func TestFamily_HasMembers_Missing(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	//Need to prepare to include a member
+	//This test will fail until then
+	fam.IsValid()
+	hasMembers := fam.HasMembers()
 
-// 	require.True(t, hasHOF)
-// }
+	allErrors := fam.ErrToArray()
+	require.False(t, hasMembers)
+	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
+	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
+	require.Equal(t, 1, len(allErrors))
+}
 
-// func TestFamily_HasHeadOfFamily_Missing(t *testing.T) {
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	fam.IsValid()
-// 	hasHOF := fam.HasHeadOfFamily()
+func TestFamily_HasHeadOfFamily(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	//Need to prepare to include a member
+	//This test will fail until then
+	hasHOF := fam.HasHeadOfFamily()
 
-// 	allErrors := fam.ErrToArray()
-// 	require.False(t, hasHOF)
-// 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
-// 	require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
-// 	require.Equal(t, 2, len(allErrors))
-// }
+	require.True(t, hasHOF)
+}
+
+func TestFamily_HasHeadOfFamily_Missing(t *testing.T) {
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(member).
+		Build()
+	//Need to prepare to include a member
+	//This test will fail until then
+	fam.IsValid()
+	hasHOF := fam.HasHeadOfFamily()
+
+	allErrors := fam.ErrToArray()
+	require.False(t, hasHOF)
+	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
+	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
+	require.Equal(t, 1, len(allErrors))
+}

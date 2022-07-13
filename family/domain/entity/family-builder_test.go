@@ -34,7 +34,7 @@ func TestFamilyBuilder_Build(t *testing.T) {
 }
 
 func TestFamilyBuilder_InvalidMember(t *testing.T) {
-	member := testMemberBuilder.
+	invalidMember := testMemberBuilder.
 		WithFullName("Na", "", "LastLastLastLastLastLastLast").
 		WithBirthDate(time.Time{}).
 		WithGender(family.Male).
@@ -43,11 +43,24 @@ func TestFamilyBuilder_InvalidMember(t *testing.T) {
 
 	fam := testFamilyBuilder.
 		WithSurname("Middle Last").
-		WithHOF(member).
+		WithHOF(invalidMember).
 		Build()
 
 	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
 	require.False(t, fam.IsValid())
 	require.NotEmpty(t, fam.Err())
-	require.Len(t, fam.ErrToArray(), 6)
+	require.Len(t, fam.ErrToArray(), 4)
+}
+
+func TestFamilyBuilder_InvalidFamily(t *testing.T) {
+	missingMember := &family.Member{}
+	fam := testFamilyBuilder.
+		WithSurname("Middle Last").
+		WithHOF(missingMember).
+		Build()
+
+	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
+	require.False(t, fam.IsValid())
+	require.NotEmpty(t, fam.Err())
+	require.Len(t, fam.ErrToArray(), 10)
 }
