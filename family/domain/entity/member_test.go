@@ -38,6 +38,23 @@ func init() {
 	dobElderly = today.Add(-67 * utils.HoursYear * time.Hour)
 }
 
+func TestMember_IsValid(t *testing.T) {
+	testMember.SetBirthDate(dobChild)
+
+	require.True(t, testMember.IsValid())
+	require.Empty(t, testMember.Err())
+}
+
+func TestMember_Invalid_EmptyMember(t *testing.T) {
+	emptyMember := &family.Member{}
+
+	require.False(t, emptyMember.IsValid())
+
+	allErrors := emptyMember.ErrToArray()
+	require.Contains(t, allErrors, family.ErrInvalidMember.Error())
+	require.Len(t, allErrors, 1)
+}
+
 func TestMember_ID(t *testing.T) {
 	id := testMember.ID()
 	err := utils.IsVaalidUUID(id)
@@ -46,20 +63,6 @@ func TestMember_ID(t *testing.T) {
 	require.True(t, valid)
 	require.NotEmpty(t, id)
 	require.Nil(t, err)
-}
-
-func TestMember_IsValid(t *testing.T) {
-	testMember.SetBirthDate(dobChild)
-
-	require.True(t, testMember.IsValid())
-	require.Empty(t, testMember.Err())
-}
-
-func TestMember_InValid_No(t *testing.T) {
-	testMember.SetFullName("", "Middle", "Last")
-
-	require.False(t, testMember.IsValid())
-	require.NotEmpty(t, testMember.Err())
 }
 
 func TestMember_FullName(t *testing.T) {
@@ -313,14 +316,14 @@ func TestMember_MoreThanOneError(t *testing.T) {
 		Build()
 	testMember.
 		SetBirthDate(time.Time{}).
-		SetGender("other").
-		IsValid()
+		SetGender("other")
+
+	require.False(t, testMember.IsValid())
 
 	allErrors := testMember.ErrToArray()
-	require.False(t, testMember.IsValid())
 	require.Contains(t, allErrors, family.ErrMemberNameTooShort.Error())
 	require.Contains(t, allErrors, family.ErrMemberLastNameTooLong.Error())
 	require.Contains(t, allErrors, family.ErrInvalidMemberGender.Error())
 	require.Contains(t, allErrors, family.ErrMissingMemberDOB.Error())
-	require.Equal(t, 4, len(allErrors))
+	require.Equal(t, len(allErrors), 4)
 }

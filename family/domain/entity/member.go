@@ -297,32 +297,46 @@ func (m *Member) setAge() {
 // Check whenever the member structure is intact
 // and filled accordingly to the model rules
 func (m *Member) validate() {
-	// log.Println("Member.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
+	// log.Printf("Member.validate() -> clearErrsOnValidation: %t", clearErrsOnValidation)
 	if clearErrsOnValidation {
 		analysisErrsMembers.RemoveAll()
 	}
 
-	if strings.TrimSpace(m.name) == "" {
+	// test if all properties are nil or empty
+	if m.id == "" &&
+		m.name == "" &&
+		m.lastName == "" &&
+		m.gender == "" && 
+		m.dob.IsZero() {
+			analysisErrsMembers.AddErr(ErrInvalidMember)
+			m.valid = (analysisErrsMembers.Count() == 0)
+			// log.Printf("Member.validate(%t)", m.valid)
+			return
+	}
+	
+	// test each property individually
+
+	if m.name == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberName)
-	} else if len(strings.TrimSpace(m.name)) < 3 {
+	} else if len(m.name) < 3 {
 		analysisErrsMembers.AddErr(ErrMemberNameTooShort)
-	} else if len(strings.TrimSpace(m.name)) > 20 {
+	} else if len(m.name) > 20 {
 		analysisErrsMembers.AddErr(ErrMemberNameTooLong)
 	}
 
-	if len(strings.TrimSpace(m.middleName)) > 20 {
+	if len(m.middleName) > 20 {
 		analysisErrsMembers.AddErr(ErrMemberMiddleNameTooLong)
 	}
 
-	if strings.TrimSpace(m.lastName) == "" {
+	if m.lastName == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberLastName)
-	} else if len(strings.TrimSpace(m.lastName)) < 3 {
+	} else if len(m.lastName) < 3 {
 		analysisErrsMembers.AddErr(ErrMemberLastNameTooShort)
-	} else if len(strings.TrimSpace(m.lastName)) > 20 {
+	} else if len(m.lastName) > 20 {
 		analysisErrsMembers.AddErr(ErrMemberLastNameTooLong)
 	}
 
-	gender := strings.TrimSpace(m.gender)
+	gender := m.gender
 	if gender == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberGender)
 	} else if gender != Male && gender != Female && gender != Other {
@@ -333,9 +347,9 @@ func (m *Member) validate() {
 		analysisErrsMembers.AddErr(ErrMissingMemberDOB)
 	}
 
-	if strings.TrimSpace(m.id) == "" {
+	if m.id == "" {
 		analysisErrsMembers.AddErr(ErrMissingMemberID)
 	}
-	// log.Println("Member.validate(", analysisErrsMembers.Count() == 0, ")")
 	m.valid = (analysisErrsMembers.Count() == 0)
+	// log.Printf("Member.validate(%t)", m.valid)
 }
