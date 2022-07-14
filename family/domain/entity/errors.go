@@ -25,6 +25,7 @@ var (
 
 // Errors related to Member (one Member)
 var (
+	ErrInvalidMember           = errors.New("todas as propriedades dessa pessoa são inválidas ou em branco")
 	ErrMissingMemberID         = errors.New("o ID da pessoa está em branco ou ausente")
 	ErrMissingMemberName       = errors.New("o nome da pessoa está em branco ou ausente")
 	ErrMemberNameTooShort      = errors.New("o nome da pessoa é muito pequeno")

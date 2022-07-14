@@ -163,7 +163,7 @@ func (f *Family) validateHeadOfFamily() {
 	for m := 0; m < len(f.members); m++ {
 		clearErrsOnValidation = false
 		thisHOF = f.members[m].headOfFamily
-		f.members[m].member.validate()
+		f.members[m].Member.validate()
 
 		// how many HOF are there?
 		if thisHOF {
@@ -172,7 +172,7 @@ func (f *Family) validateHeadOfFamily() {
 		}
 
 		// invalid member (any reason)
-		if !f.members[m].member.valid {
+		if !f.members[m].Member.valid {
 			analysisErrsMembers.AddErr(ErrMemberError)
 
 			// there is not possible an invalid HOF
