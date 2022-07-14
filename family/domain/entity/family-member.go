@@ -12,29 +12,29 @@ var (
 )
 
 type FamilyMember struct {
-	member       *Member `json:"member"`
-	relationType string  `json:"relation_type"`
-	status       string  `json:"status"`
-	valid        bool    `json:"-"`
-	headOfFamily bool    `json:"status"`
-	lastChanged  int64   `json:"-"`
+	*Member      `json:"member"`
+	relationType string `json:"relation_type"`
+	status       string `json:"status"`
+	valid        bool   `json:"-"`
+	headOfFamily bool   `json:"status"`
+	lastChanged  int64  `json:"-"`
 }
 
-func newFamilyMember(member *Member) *FamilyMember {
+func newFamilyMember() *FamilyMember {
 	return &FamilyMember{
-		member:       member,
+		Member:       &Member{},
 		relationType: TBDRelation,
 		status:       FreshMember,
 		valid:        false,
 		headOfFamily: false,
-		lastChanged: time.Now().UnixNano(),
+		lastChanged:  time.Now().UnixNano(),
 	}
 }
 
 // Set the person who is the responsible for manage information
 // of this family core
-func (fm *FamilyMember) Add(member *Member) *FamilyMember {
-	fm.member = member
+func (fm *FamilyMember) add(member *Member) *FamilyMember {
+	fm.Member = member
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
@@ -133,7 +133,7 @@ func (fm *FamilyMember) ErrToArray() []string {
 // check whether the current member is able to assume
 // the head of family position - only of age people can
 func (fm *FamilyMember) canBeHOF() bool {
-	hof := (fm.member.IsAdult() || fm.member.IsElderly())
+	hof := (fm.Member.IsAdult() || fm.Member.IsElderly())
 	if !hof {
 		fm.valid = false
 	}
@@ -146,7 +146,7 @@ func (fm *FamilyMember) validate() {
 	analysisErrsFamilyMembers.RemoveAll()
 
 	// check member validation
-	fm.member.validate()
+	fm.Member.validate()
 
 	if !fm.canBeHOF() {
 		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberHOFInvalidAge)
@@ -154,10 +154,10 @@ func (fm *FamilyMember) validate() {
 
 	if strings.TrimSpace(fm.relationType) == "" {
 		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberNotRelated)
-	} 
-	if (fm.relationType != Self && fm.headOfFamily) {
+	}
+	if fm.relationType != Self && fm.headOfFamily {
 		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberInvalidRelation)
-	} 
+	}
 
 	fm.valid = (analysisErrsFamilyMembers.Count() == 0 && analysisErrsMembers.Count() == 0)
 }

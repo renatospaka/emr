@@ -4,38 +4,41 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-
 	family "github.com/renatospaka/emr/family/domain/entity"
 )
 
 var (
-	testFamilyMemberBuilder = &family.FamilyMemberBuilder{}
-	testHOF = &family.Member{}
+	testFamilyMemberBuilder *family.FamilyMemberBuilder
 )
 
 func init() {
 	testMemberBuilder = family.NewMemberBuilder()
-	testHOF = testMemberBuilder.
+	testFamilyBuilder = family.NewFamilyBuilder()
+	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
+}
+
+func TestFamilyMember_Build(t *testing.T) {
+	hof := testMemberBuilder.
 		WithFullName("Name", "Middle", "Last").
 		WithBirthDate(dobAdult).
 		WithGender(family.Male).
 		WithNickname("Nick").
 		Build()
-
-	testFamilyBuilder = family.NewFamilyBuilder()
-	testFamily = testFamilyBuilder.
-		WithSurname("Super Family").
+		
+	famMember := testFamilyMemberBuilder.
+		AsHOF(hof).
 		Build()
 
-	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
+	require.True(t, famMember.IsValid())
+	require.Empty(t, famMember.Err())
+	require.IsTypef(t, &family.Member{}, famMember.Member, "não é do tipo *FamilyMember{}")
 }
 
-func TestFamilyMember_IsValid(t *testing.T) {
-	familyMember := testFamilyMemberBuilder. 
-		// WithHeadOfFamily(testHOF).
+func TestFamilyMember_Build_Invalid(t *testing.T) {
+	famMember := testFamilyMemberBuilder.
+		AsHOF( &family.Member{}).
 		Build()
-	
-	require.EqualValues(t, family.Self, familyMember.RelationType())
-	require.True(t, familyMember.IsValid())
-	require.Empty(t, familyMember.Err())
+
+	require.False(t, famMember.IsValid())
+	require.NotEmpty(t, famMember.Err())
 }
