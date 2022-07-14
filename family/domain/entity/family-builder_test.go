@@ -2,10 +2,8 @@ package family_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
-
 	family "github.com/renatospaka/emr/family/domain/entity"
 )
 
@@ -28,39 +26,17 @@ func TestFamilyBuilder_Build(t *testing.T) {
 		WithHOF(member).
 		Build()
 
-	require.IsTypef(t, &family.Family{}, fam, "não é do tipo *Family{}")
 	require.True(t, fam.IsValid())
 	require.Empty(t, fam.Err())
+	require.IsTypef(t, &family.Family{}, fam, "não é do tipo *Family{}")
 }
 
-func TestFamilyBuilder_InvalidMember(t *testing.T) {
-	invalidMember := testMemberBuilder.
-		WithFullName("Na", "", "LastLastLastLastLastLastLast").
-		WithBirthDate(time.Time{}).
-		WithGender(family.Male).
-		WithNickname("Nick").
-		Build()
-
+func TestFamilyBuilder_Build_Invalid(t *testing.T) {
 	fam := testFamilyBuilder.
 		WithSurname("Super Family").
-		WithHOF(invalidMember).
+		WithHOF(&family.Member{}).
 		Build()
 
-	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
 	require.False(t, fam.IsValid())
 	require.NotEmpty(t, fam.Err())
-	require.Len(t, fam.ErrToArray(), 4)
-}
-
-func TestFamilyBuilder_InvalidFamily(t *testing.T) {
-	missingMember := &family.Member{}
-	fam := testFamilyBuilder.
-		WithSurname("Super Family").
-		WithHOF(missingMember).
-		Build()
-
-	require.IsTypef(t, &family.Family{}, fam, family.ErrFamilyError.Error())
-	require.False(t, fam.IsValid())
-	require.NotEmpty(t, fam.Err())
-	require.Len(t, fam.ErrToArray(), 10)
 }
