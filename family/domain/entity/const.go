@@ -6,16 +6,6 @@ const (
 	Other  string = "Other"
 )
 
-// const (
-// 	Casual string = "Casual"
-// 	Formal string = "Formal"
-// )
-
-// const (
-// 	Self    string = "Self"
-// 	Someone string = "Someone"
-// )
-
 const (
 	Newborn   string = "Newborn"
 	Child     string = "Child"
@@ -42,12 +32,12 @@ const (
 	StepSister    string = "StepSister"
 	StepDaughter  string = "StepDaughter"
 	StepSon       string = "StepSon"
-	InLawFather   string = "FatherInLaw"
-	InLawMother   string = "MotherInLaw"
-	InLawBrother  string = "BrotherInLaw"
-	InLawSister   string = "SisterInLaw"
-	InLawDaughter string = "DaughterInLaw"
-	InLawSon      string = "SonInLaw"
+	FatherInLaw   string = "FatherInLaw"
+	MotherInLaw   string = "MotherInLaw"
+	BrotherInLaw  string = "BrotherInLaw"
+	SisterInLaw   string = "SisterInLaw"
+	DaughterInLaw string = "DaughterInLaw"
+	SonInLaw      string = "SonInLaw"
 	TBDRelation   string = "ToBeDefined"
 	Self          string = "Self"
 )
@@ -58,3 +48,31 @@ const (
 	RemovedMember  string = "removed-member"
 	UpdatedMember  string = "updated-member"
 )
+
+var relations map[string]string
+
+func init() {
+	relations = make(map[string]string)
+	relations[TBDRelation] = TBDRelation
+	relations[Self] = Self
+	relations[Father] = Father
+	relations[Mother] = Mother
+	relations[Brother] = Brother
+	relations[Sister] = Sister
+	relations[Daughter] = Daughter
+	relations[Son] = Son
+	relations[Husband] = Husband
+	relations[Wife] = Wife
+	relations[StepFather] = StepFather
+	relations[StepMother] = StepMother
+	relations[StepBrother] = StepBrother
+	relations[StepSister] = StepSister
+	relations[StepDaughter] = StepDaughter
+	relations[StepSon] = StepSon
+	relations[FatherInLaw] = FatherInLaw
+	relations[MotherInLaw] = MotherInLaw
+	relations[BrotherInLaw] = BrotherInLaw
+	relations[SisterInLaw] = SisterInLaw
+	relations[DaughterInLaw] = DaughterInLaw
+	relations[SonInLaw] = SonInLaw
+}
