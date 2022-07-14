@@ -1,40 +1,56 @@
 package family_test
 
-// import (
-// 	"testing"
+import (
+	"testing"
 
-// 	"github.com/stretchr/testify/require"
+	family "github.com/renatospaka/emr/family/domain/entity"
+	"github.com/stretchr/testify/require"
+)
 
-// 	family "github.com/renatospaka/emr/family/domain/entity"
-// )
+var (
+	testMemberHOF    *family.Member
+)
 
-// var (
-// 	testHOF    = &family.Member{}
-// )
+func init() {
+	// testMemberBuilder = family.NewMemberBuilder()
+	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
 
-// func init() {
-// 	testMemberBuilder = family.NewMemberBuilder()
-// 	testHOF = testMemberBuilder.
-// 		WithFullName("Name", "Middle", "Last").
-// 		WithBirthDate(dobAdult).
-// 		WithGender(family.Male).
-// 		WithNickname("Nick").
-// 		Build()
+	// testMember = testMemberBuilder.
+	// 	WithFullName("Name2", "Ordinary", "Last2").
+	// 	WithBirthDate(dobAdult).
+	// 	WithGender(family.Female).
+	// 	WithNickname("Nick2").
+	// 	Build()
 
-// 	testFamilyBuilder = family.NewFamilyBuilder()
-// 	testFamily = testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Build()
+}
 
-// 	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
-// }
-
-// func TestFamilyMember_IsValid(t *testing.T) {
-// 	familyMember := testFamilyMemberBuilder. 
-// 		WithHeadOfFamily(testHOF).
-// 		Build()
+func TestFamilyMember_IsValid_HOF(t *testing.T) {
+	testMemberHOF = testMemberBuilder.
+		WithFullName("Name", "HOF", "Last").
+		WithBirthDate(dobAdult).
+		WithGender(family.Male).
+		WithNickname("Nick").
+		Build()
 	
-// 	require.EqualValues(t, family.Self, familyMember.relationType())
-// 	require.True(t, familyMember.IsValid())
-// 	require.Empty(t, familyMember.Err())
-// }
+	famMember := testFamilyMemberBuilder. 
+		AsHOF(testMemberHOF).
+		Build()
+
+
+	require.True(t, famMember.IsHeadOfFamily())
+	require.True(t, testMemberHOF.IsAdult())
+	require.EqualValues(t, family.Self, famMember.RelationType())
+	require.True(t, famMember.IsValid())
+	require.Empty(t, famMember.Err())
+	// require.Len(t, famMember.ErrToArray(), 3)
+}
+
+func TestFamilyMember_Inalid_HOF_Empty(t *testing.T) {
+	famMember := testFamilyMemberBuilder. 
+		AsHOF(&family.Member{}).
+		Build()
+
+	require.False(t, famMember.IsValid())
+	require.NotEmpty(t, famMember.Err())
+	require.Len(t, famMember.ErrToArray(), 3)
+}

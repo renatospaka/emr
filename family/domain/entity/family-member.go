@@ -21,6 +21,7 @@ type FamilyMember struct {
 }
 
 func newFamilyMember() *FamilyMember {
+	// log.Println("FamilyMember.newFamilyMember()")
 	return &FamilyMember{
 		Member:       &Member{},
 		relationType: TBDRelation,
@@ -34,6 +35,7 @@ func newFamilyMember() *FamilyMember {
 // Set the person who is the responsible for manage information
 // of this family core
 func (fm *FamilyMember) add(member *Member) *FamilyMember {
+	// log.Println("FamilyMember.add()")
 	fm.Member = member
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -43,7 +45,8 @@ func (fm *FamilyMember) add(member *Member) *FamilyMember {
 // Set the person who is the responsible for manage information
 // of this family core
 func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
-	fm.headOfFamily = fm.canBeHOF()
+	// log.Println("FamilyMember.SetHeadOfFamily()")
+	fm.headOfFamily = true
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
 	return fm
@@ -52,6 +55,7 @@ func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
 // Unset the person who is the responsible for manage information
 // of this family core
 func (fm *FamilyMember) UnsetHeadOfFamily() *FamilyMember {
+	// log.Println("FamilyMember.UnsetHeadOfFamily()")
 	fm.headOfFamily = false
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -60,12 +64,14 @@ func (fm *FamilyMember) UnsetHeadOfFamily() *FamilyMember {
 
 // Return if this member is the responsible of this family core
 func (fm *FamilyMember) IsHeadOfFamily() bool {
+	// log.Printf("FamilyMember.IsHeadOfFamily(%t)", fm.headOfFamily)
 	return fm.headOfFamily
 }
 
 // Set relationship type of the person to the on who is the
 // head of the family of this family core
 func (fm *FamilyMember) SetRelationType(relationType string) *FamilyMember {
+	// log.Println("FamilyMember.SetRelationType()")
 	fm.relationType = relationType
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -75,17 +81,20 @@ func (fm *FamilyMember) SetRelationType(relationType string) *FamilyMember {
 // Return the  relationship type of this member to the
 // head of the family
 func (fm *FamilyMember) RelationType() string {
+	// log.Printf("FamilyMember.RelationType(%s)", fm.relationType)
 	return fm.relationType
 }
 
 // Return the current status of this member
 func (fm *FamilyMember) Status() string {
+	// log.Printf("FamilyMember.Status(%s)", fm.status)
 	return fm.status
 }
 
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (fm *FamilyMember) IsValid() bool {
+	// log.Println("FamilyMember.IsValid()")
 	fm.validate()
 	return fm.valid
 }
@@ -93,6 +102,7 @@ func (fm *FamilyMember) IsValid() bool {
 // Return all errors found during the validation process
 // in a single string with a \n segregating each error
 func (fm *FamilyMember) Err() string {
+	// log.Println("FamilyMember.Err()")
 	analysis := ""
 	builder := strings.Builder{}
 
@@ -119,6 +129,7 @@ func (fm *FamilyMember) Err() string {
 // Return all errors found during the validation process
 // in an array
 func (fm *FamilyMember) ErrToArray() []string {
+	// log.Println("FamilyMember.ErrToArray()")
 	analysis := fm.Err()
 	toArray := []string{}
 	if len(analysis) > 0 {
@@ -137,27 +148,36 @@ func (fm *FamilyMember) canBeHOF() bool {
 	if !hof {
 		fm.valid = false
 	}
+	// log.Printf("FamilyMember.canBeHOF(%t)", hof)
 	return hof
 }
 
 // Check whenever the structure of this family member
 // is intact and filled accordingly to the model rules
 func (fm *FamilyMember) validate() {
+	// log.Println("FamilyMember.validate()")
 	analysisErrsFamilyMembers.RemoveAll()
 
 	// check member validation
 	fm.Member.validate()
 
-	if !fm.canBeHOF() {
-		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberHOFInvalidAge)
+	// familiar relationship valid
+	_, ok := relations[fm.relationType]
+	if !ok {
+		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberInvalidRelation)
 	}
 
-	if strings.TrimSpace(fm.relationType) == "" {
+	if fm.relationType == "" {
 		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberNotRelated)
 	}
 	if fm.relationType != Self && fm.headOfFamily {
 		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberInvalidRelation)
 	}
 
+	if !fm.canBeHOF() {
+		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberHOFInvalidAge)
+	}
+
 	fm.valid = (analysisErrsFamilyMembers.Count() == 0 && analysisErrsMembers.Count() == 0)
+	// log.Printf("FamilyMember.validate(%t)", fm.valid)
 }

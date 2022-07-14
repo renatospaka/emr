@@ -17,7 +17,7 @@ func init() {
 	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
 }
 
-func TestFamilyMember_Build(t *testing.T) {
+func TestFamilyMember_Build_HOF(t *testing.T) {
 	hof := testMemberBuilder.
 		WithFullName("Name", "Middle", "Last").
 		WithBirthDate(dobAdult).
@@ -34,11 +34,29 @@ func TestFamilyMember_Build(t *testing.T) {
 	require.IsTypef(t, &family.Member{}, famMember.Member, "não é do tipo *FamilyMember{}")
 }
 
-func TestFamilyMember_Build_Invalid(t *testing.T) {
+func TestFamilyMember_Build_HOF_Invalid(t *testing.T) {
 	famMember := testFamilyMemberBuilder.
-		AsHOF( &family.Member{}).
+		AsHOF(&family.Member{}).
 		Build()
 
 	require.False(t, famMember.IsValid())
 	require.NotEmpty(t, famMember.Err())
+}
+
+func TestFamilyMember_Build_Ordinary(t *testing.T) {
+	member := testMemberBuilder.
+		WithFullName("Name", "Middle", "Last").
+		WithBirthDate(dobAdult).
+		WithGender(family.Male).
+		WithNickname("Nick").
+		Build()
+		
+	famMember := testFamilyMemberBuilder.
+		AsOrdinary(member).
+		RelatedAs(family.Wife).
+		Build()
+
+	require.True(t, famMember.IsValid())
+	require.Empty(t, famMember.Err())
+	require.IsTypef(t, &family.Member{}, famMember.Member, "não é do tipo *FamilyMember{}")
 }

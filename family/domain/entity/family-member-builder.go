@@ -34,7 +34,7 @@ func (fb *FamilyMemberBuilder) Build() *FamilyMember {
 
 // Set the relationship of this member to the HOF
 func (fb *FamilyMemberBuilder) RelatedAs(relationType string) *FamilyMemberBuilder {
-	// log.Println("FamilyMemberBuilder.SetRelationType()")
+	// log.Println("FamilyMemberBuilder.RelatedAs()")
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.SetRelationType(relationType)
 	})
@@ -42,22 +42,23 @@ func (fb *FamilyMemberBuilder) RelatedAs(relationType string) *FamilyMemberBuild
 }
 
 // Add this member as the HOF
-func (fb *FamilyMemberBuilder) AsHOF(hof *Member) *FamilyMemberBuilder {
-	// log.Println("FamilyMemberBuilder.SetRelationType()")
+func (fb *FamilyMemberBuilder) AsHOF(member *Member) *FamilyMemberBuilder {
+	// log.Println("FamilyMemberBuilder.AsHOF()")
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
-		fm.add(hof)
+		fm.add(member)
 		fm.SetHeadOfFamily()
 		fm.SetRelationType(Self)
 	})
 	return fb
 }
 
-// Add this member as the HOF
-func (fb *FamilyMemberBuilder) WithMember(member *Member) *FamilyMemberBuilder {
-	// log.Println("FamilyMemberBuilder.SetRelationType()")
+// Add this member as an ordinary family member
+func (fb *FamilyMemberBuilder) AsOrdinary(member *Member) *FamilyMemberBuilder {
+	// log.Println("FamilyMemberBuilder.AsOrdinary()")
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.add(member)
 		fm.UnsetHeadOfFamily()
+		fm.SetRelationType(TBDRelation)
 	})
 	return fb
 }
