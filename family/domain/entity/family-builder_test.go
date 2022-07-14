@@ -9,7 +9,7 @@ import (
 	family "github.com/renatospaka/emr/family/domain/entity"
 )
 
-var testFamilyBuilder = &family.FamilyBuilder{}
+var testFamilyBuilder *family.FamilyBuilder
 
 func init() {
 	testFamilyBuilder = family.NewFamilyBuilder()

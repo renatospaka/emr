@@ -11,14 +11,14 @@ import (
 )
 
 var (
-	testMember = &family.Member{}
-	dobNewborn = time.Time{}
-	dobInfant  = time.Time{}
-	dobToddler = time.Time{}
-	dobChild   = time.Time{}
-	dobTeen    = time.Time{}
-	dobAdult   = time.Time{}
-	dobElderly = time.Time{}
+	testMember *family.Member
+	dobNewborn time.Time
+	dobInfant  time.Time
+	dobToddler time.Time
+	dobChild   time.Time
+	dobTeen    time.Time
+	dobAdult   time.Time
+	dobElderly time.Time
 )
 
 func init() {

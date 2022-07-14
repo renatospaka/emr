@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	testFamily = &family.Family{}
+	testFamily *family.Family
 )
 
 func init() {
