@@ -10,25 +10,25 @@ import (
 )
 
 var (
-	fam = family.Family{}
+	testFamily = &family.Family{}
 )
 
 func init() {
 	testFamilyBuilder = family.NewFamilyBuilder()
-	member = testMemberBuilder.
+	testMember = testMemberBuilder.
 		WithFullName("Name", "Middle", "Last").
 		WithBirthDate(dobAdult).
 		WithGender(family.Male).
-		WithNickname("Top Cat").
+		WithNickname("Nick").
 		Build()
 }
 
 func TestFamily_ID(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
 		Build()
 
-	id := fam.ID()
+	id := testFamily.ID()
 	err := utils.IsVaalidUUID(id)
 
 	require.IsType(t, "", id)
@@ -37,61 +37,61 @@ func TestFamily_ID(t *testing.T) {
 }
 
 func TestFamily_IsValid(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
-	fam.SetSurname("Surname")
+	testFamily.SetSurname("Surname")
 
-	require.True(t, fam.IsValid())
-	require.Empty(t, fam.Err())
+	require.True(t, testFamily.IsValid())
+	require.Empty(t, testFamily.Err())
 }
 
 func TestFamily_IsValid_No(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
-	fam.SetSurname("")
+	testFamily.SetSurname("")
 
-	require.False(t, fam.IsValid())
-	require.NotEmpty(t, fam.Err())
+	require.False(t, testFamily.IsValid())
+	require.NotEmpty(t, testFamily.Err())
 }
 
 func TestFamily_Surname(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
-	fam.SetSurname("Another Surname")
-	surname := fam.Surname()
+	testFamily.SetSurname("Another Surname")
+	surname := testFamily.Surname()
 
 	require.EqualValues(t, "Another Surname", surname)
 }
 
 func TestFamily_HasMembers(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
 	//Need to prepare to include a member
 	//This test will fail until then
-	hasMembers := fam.HasMembers()
+	hasMembers := testFamily.HasMembers()
 
 	require.True(t, hasMembers)
 }
 
 func TestFamily_HasMembers_Missing(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
 	//Need to prepare to include a member
 	//This test will fail until then
-	fam.IsValid()
-	hasMembers := fam.HasMembers()
+	testFamily.IsValid()
+	hasMembers := testFamily.HasMembers()
 
-	allErrors := fam.ErrToArray()
+	allErrors := testFamily.ErrToArray()
 	require.False(t, hasMembers)
 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
 	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
@@ -99,28 +99,28 @@ func TestFamily_HasMembers_Missing(t *testing.T) {
 }
 
 func TestFamily_HasHeadOfFamily(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
 	//Need to prepare to include a member
 	//This test will fail until then
-	hasHOF := fam.HasHeadOfFamily()
+	hasHOF := testFamily.HasHeadOfFamily()
 
 	require.True(t, hasHOF)
 }
 
 func TestFamily_HasHeadOfFamily_Missing(t *testing.T) {
-	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
-		WithHOF(member).
+	testFamily := testFamilyBuilder.
+		WithSurname("Super Family").
+		WithHOF(testMember).
 		Build()
 	//Need to prepare to include a member
 	//This test will fail until then
-	fam.IsValid()
-	hasHOF := fam.HasHeadOfFamily()
+	testFamily.IsValid()
+	hasHOF := testFamily.HasHeadOfFamily()
 
-	allErrors := fam.ErrToArray()
+	allErrors := testFamily.ErrToArray()
 	require.False(t, hasHOF)
 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
 	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())

@@ -24,7 +24,7 @@ func TestFamilyBuilder_Build(t *testing.T) {
 		Build()
 
 	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
+		WithSurname("Super Family").
 		WithHOF(member).
 		Build()
 
@@ -42,7 +42,7 @@ func TestFamilyBuilder_InvalidMember(t *testing.T) {
 		Build()
 
 	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
+		WithSurname("Super Family").
 		WithHOF(invalidMember).
 		Build()
 
@@ -55,7 +55,7 @@ func TestFamilyBuilder_InvalidMember(t *testing.T) {
 func TestFamilyBuilder_InvalidFamily(t *testing.T) {
 	missingMember := &family.Member{}
 	fam := testFamilyBuilder.
-		WithSurname("Middle Last").
+		WithSurname("Super Family").
 		WithHOF(missingMember).
 		Build()
 

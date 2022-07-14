@@ -9,19 +9,32 @@ package family_test
 // )
 
 // var (
-// 	memberHOF       = family.NewMember("Name HOF", "", "Lastname")
-// 	newFamilyMember = family.NewFamilyMember(memberHOF)
+// 	testHOF    = &family.Member{}
 // )
 
+// func init() {
+// 	testMemberBuilder = family.NewMemberBuilder()
+// 	testHOF = testMemberBuilder.
+// 		WithFullName("Name", "Middle", "Last").
+// 		WithBirthDate(dobAdult).
+// 		WithGender(family.Male).
+// 		WithNickname("Nick").
+// 		Build()
+
+// 	testFamilyBuilder = family.NewFamilyBuilder()
+// 	testFamily = testFamilyBuilder.
+// 		WithSurname("Super Family").
+// 		Build()
+
+// 	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
+// }
+
 // func TestFamilyMember_IsValid(t *testing.T) {
-// 	memberHOF.SetBirthDate(dobAdult)
-// 	memberHOF.SetGender(family.Male)
-// 	// memberOK := memberHOF.IsValid()
-
-// 	newFamily.SetSurname("Surname")
-// 	// newFamilyMember.
-// 		// familyOK := newFamily.IsValid()
-
-// 	require.True(t, newFamilyMember.IsValid())
-// 	require.Empty(t, newFamilyMember.Err())
+// 	familyMember := testFamilyMemberBuilder. 
+// 		WithHeadOfFamily(testHOF).
+// 		Build()
+	
+// 	require.EqualValues(t, family.Self, familyMember.relationType())
+// 	require.True(t, familyMember.IsValid())
+// 	require.Empty(t, familyMember.Err())
 // }
