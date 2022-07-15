@@ -36,7 +36,7 @@ func (fb *FamilyBuilder) Build() *Family {
 func (fb *FamilyBuilder) WithSurname(surname string) *FamilyBuilder {
 	// log.Println("FamilyBuilder.WithSurname()")
 	fb.actions = append(fb.actions, func(f *Family) {
-		f.SetSurname(surname)
+		f.ChangeSurname(surname)
 	})
 	return fb
 }

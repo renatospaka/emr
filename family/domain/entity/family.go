@@ -39,8 +39,8 @@ func (f *Family) ID() string {
 }
 
 // Set the surname of the family
-func (f *Family) SetSurname(surname string) *Family {
-	// log.Println("Family.SetSurname()")
+func (f *Family) ChangeSurname(surname string) *Family {
+	// log.Println("Family.ChangeSurname()")
 	f.surname = strings.TrimSpace(surname)
 	f.lastChanged = time.Now().UnixNano()
 	f.valid = false
@@ -53,7 +53,7 @@ func (f *Family) Surname() string {
 	return f.surname
 }
 
-// The size of the family 
+// The size of the family
 //(count of family members)
 func (f *Family) Size() int {
 	// log.Println("Family.Size(", len(f.members) > 0, ")")

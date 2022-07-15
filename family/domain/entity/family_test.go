@@ -41,7 +41,7 @@ func TestFamily_IsValid(t *testing.T) {
 		WithSurname("Super Family").
 		Add(testMember).
 		Build()
-	testFamily.SetSurname("Surname")
+	testFamily.ChangeSurname("Surname")
 
 	require.True(t, testFamily.IsValid())
 	require.Empty(t, testFamily.Err())
@@ -52,7 +52,7 @@ func TestFamily_IsValid_No(t *testing.T) {
 		WithSurname("Super Family").
 		Add(testMember).
 		Build()
-	testFamily.SetSurname("")
+	testFamily.ChangeSurname("")
 
 	require.False(t, testFamily.IsValid())
 	require.NotEmpty(t, testFamily.Err())
@@ -63,7 +63,7 @@ func TestFamily_Surname(t *testing.T) {
 		WithSurname("Super Family").
 		Add(testMember).
 		Build()
-	testFamily.SetSurname("Another Surname")
+	testFamily.ChangeSurname("Another Surname")
 	surname := testFamily.Surname()
 
 	require.EqualValues(t, "Another Surname", surname)

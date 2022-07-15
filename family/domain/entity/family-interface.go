@@ -2,7 +2,7 @@ package family
 
 type FamilyEntityInterface interface {
 	ID()
-	SetSurname(surname string) *Family
+	ChangeSurname(surname string) *Family
 	Surname() string
 	Size() int
 	HasHeadOfFamily() bool
