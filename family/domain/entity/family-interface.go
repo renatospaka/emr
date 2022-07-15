@@ -4,15 +4,14 @@ type FamilyEntityInterface interface {
 	ID()
 	SetSurname(surname string) *Family
 	Surname() string
-	HasMembers() bool
+	Size() int
 	HasHeadOfFamily() bool
 }
 
 type FamilyEntityBuilderInterface interface {
 	Build() *Family
 	WithSurname(surname string) *FamilyBuilder
-	AsHOF(hof *Member) *FamilyBuilder
-	WithMember(member *Member) *FamilyBuilder
+	Add(member *FamilyMember) *FamilyBuilder
 }
 
 type FamilyValidationEntityInterface interface {

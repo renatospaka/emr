@@ -53,10 +53,11 @@ func (f *Family) Surname() string {
 	return f.surname
 }
 
-// A valid family must have at least one member
-func (f *Family) HasMembers() bool {
-	// log.Println("Family.HasMembers(", len(f.members) > 0, ")")
-	return len(f.members) > 0
+// The size of the family 
+//(count of family members)
+func (f *Family) Size() int {
+	// log.Println("Family.Size(", len(f.members) > 0, ")")
+	return len(f.members)
 }
 
 // A valid family must have one head of family
@@ -137,7 +138,7 @@ func (f *Family) validate() {
 
 	// Validate if all members, if any, are filled
 	// accordingly to the model rules
-	if !f.HasMembers() {
+	if f.Size() < 1 {
 		analysisErrsFamily.AddErr(ErrFamilyMemberMissing)
 	} else {
 		f.validateHeadOfFamily()
