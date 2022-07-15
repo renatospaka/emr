@@ -4,7 +4,7 @@ type FamilyMemberEntityInterface interface {
 	SetHeadOfFamily() *FamilyMember
 	UnsetHeadOfFamily() *FamilyMember
 	IsHeadOfFamily() bool
-	SetRelationType(relationType string) *FamilyMember
+	ChangeRelationType(relationType string) *FamilyMember
 	RelationType() string
 	Status() string
 }

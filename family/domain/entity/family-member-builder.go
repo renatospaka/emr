@@ -36,7 +36,7 @@ func (fb *FamilyMemberBuilder) Build() *FamilyMember {
 func (fb *FamilyMemberBuilder) RelatedAs(relationType string) *FamilyMemberBuilder {
 	// log.Println("FamilyMemberBuilder.RelatedAs()")
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
-		fm.SetRelationType(relationType)
+		fm.ChangeRelationType(relationType)
 	})
 	return fb
 }
@@ -47,7 +47,7 @@ func (fb *FamilyMemberBuilder) AsHOF(member *Member) *FamilyMemberBuilder {
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.add(member)
 		fm.SetHeadOfFamily()
-		fm.SetRelationType(Self)
+		fm.ChangeRelationType(Self)
 	})
 	return fb
 }
@@ -58,7 +58,7 @@ func (fb *FamilyMemberBuilder) AsOrdinary(member *Member) *FamilyMemberBuilder {
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.add(member)
 		fm.UnsetHeadOfFamily()
-		fm.SetRelationType(TBDRelation)
+		fm.ChangeRelationType(TBDRelation)
 	})
 	return fb
 }

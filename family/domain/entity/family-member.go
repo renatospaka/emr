@@ -60,8 +60,8 @@ func (fm *FamilyMember) IsHeadOfFamily() bool {
 
 // Set relationship type of the person to the on who is the
 // head of the family of this family core
-func (fm *FamilyMember) SetRelationType(relationType string) *FamilyMember {
-	// log.Println("FamilyMember.SetRelationType()")
+func (fm *FamilyMember) ChangeRelationType(relationType string) *FamilyMember {
+	// log.Println("FamilyMember.ChangeRelationType()")
 	fm.relationType = relationType
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()

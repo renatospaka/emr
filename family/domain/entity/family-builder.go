@@ -46,7 +46,7 @@ func (fb *FamilyBuilder) Add(member *FamilyMember) *FamilyBuilder {
 	// // log.Println("FamilyBuilder.Add()")
 	// fb.actions = append(fb.actions, func(f *Family) {
 	// 	memb := newFamilyMember(member)
-	// 	memb.SetRelationType(Self)
+	// 	memb.ChangeRelationType(Self)
 	// 	// .SetMember()
 	// 	f.members = append(f.members, memb)
 	// })
