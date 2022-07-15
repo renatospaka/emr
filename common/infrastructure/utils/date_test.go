@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 	"github.com/stretchr/testify/require"
 )
 
