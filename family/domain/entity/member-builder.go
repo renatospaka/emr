@@ -37,7 +37,7 @@ func (mb *MemberBuilder) Build() *Member {
 func (mb *MemberBuilder) WithFullName(name string, middleName string, lastName string) *MemberBuilder {
 	// log.Println("MemberBuilder.WithFullName()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		m.SetFullName(name, middleName, lastName)
+		m.ChangeFullName(name, middleName, lastName)
 	})
 	return mb
 }
@@ -46,7 +46,7 @@ func (mb *MemberBuilder) WithFullName(name string, middleName string, lastName s
 func (mb *MemberBuilder) WithBirthDate(dob time.Time) *MemberBuilder {
 	// log.Println("MemberBuilder.WithBirthDate()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		m.SetBirthDate(dob)
+		m.ChangeBirthDate(dob)
 	})
 	return mb
 }
@@ -55,7 +55,7 @@ func (mb *MemberBuilder) WithBirthDate(dob time.Time) *MemberBuilder {
 func (mb *MemberBuilder) WithGender(gender string) *MemberBuilder {
 	// log.Println("MemberBuilder.WithGender()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		m.SetGender(gender)
+		m.ChangeGender(gender)
 	})
 	return mb
 }
@@ -64,7 +64,7 @@ func (mb *MemberBuilder) WithGender(gender string) *MemberBuilder {
 func (mb *MemberBuilder) WithNickname(nick string) *MemberBuilder {
 	// log.Println("MemberBuilder.WithNickname()")
 	mb.actions = append(mb.actions, func(m *Member) {
-		m.SetNickname(nick)
+		m.ChangeNickname(nick)
 	})
 	return mb
 }

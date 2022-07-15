@@ -53,8 +53,8 @@ func (m *Member) ID() string {
 
 // Set the full name of this member
 // name + middle name + last name
-func (m *Member) SetFullName(name string, middleName string, lastName string) *Member {
-	// log.Println("Member.SetFullName()")
+func (m *Member) ChangeFullName(name string, middleName string, lastName string) *Member {
+	// log.Println("Member.ChangeFullName()")
 	m.name = strings.TrimSpace(name)
 	m.lastName = strings.TrimSpace(lastName)
 	m.middleName = strings.TrimSpace(middleName)
@@ -110,8 +110,8 @@ func (m *Member) FullNameFormal() string {
 }
 
 // Set a nickname for this member
-func (m *Member) SetNickname(nick string) *Member {
-	// log.Println("Member.SetNickname()")
+func (m *Member) ChangeNickname(nick string) *Member {
+	// log.Println("Member.ChangeNickname()")
 	m.nickname = strings.TrimSpace(nick)
 	m.lastChanged = time.Now().UnixNano()
 	m.valid = false
@@ -125,8 +125,8 @@ func (m *Member) Nickname() string {
 }
 
 // Set the day of birth of this member
-func (m *Member) SetBirthDate(dob time.Time) *Member {
-	// log.Println("Member.SetBirthDate()")
+func (m *Member) ChangeBirthDate(dob time.Time) *Member {
+	// log.Println("Member.ChangeBirthDate()")
 	m.dob = dob
 	m.lastChanged = time.Now().UnixNano()
 	m.valid = false
@@ -141,8 +141,8 @@ func (m *Member) BirthDate() time.Time {
 }
 
 // Set the gender of this member
-func (m *Member) SetGender(gender string) *Member {
-	// log.Println("Member.SetGender()")
+func (m *Member) ChangeGender(gender string) *Member {
+	// log.Println("Member.ChangeGender()")
 	m.gender = gender
 	m.lastChanged = time.Now().UnixNano()
 	m.valid = false
@@ -306,14 +306,14 @@ func (m *Member) validate() {
 	if m.id == "" &&
 		m.name == "" &&
 		m.lastName == "" &&
-		m.gender == "" && 
+		m.gender == "" &&
 		m.dob.IsZero() {
-			analysisErrsMembers.AddErr(ErrInvalidMember)
-			m.valid = (analysisErrsMembers.Count() == 0)
-			// log.Printf("Member.validate(%t)", m.valid)
-			return
+		analysisErrsMembers.AddErr(ErrInvalidMember)
+		m.valid = (analysisErrsMembers.Count() == 0)
+		// log.Printf("Member.validate(%t)", m.valid)
+		return
 	}
-	
+
 	// test each property individually
 
 	if m.name == "" {
