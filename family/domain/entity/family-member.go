@@ -34,16 +34,6 @@ func newFamilyMember() *FamilyMember {
 
 // Set the person who is the responsible for manage information
 // of this family core
-func (fm *FamilyMember) add(member *Member) *FamilyMember {
-	// log.Println("FamilyMember.add()")
-	fm.Member = member
-	fm.valid = false
-	fm.lastChanged = time.Now().UnixNano()
-	return fm
-}
-
-// Set the person who is the responsible for manage information
-// of this family core
 func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
 	// log.Println("FamilyMember.SetHeadOfFamily()")
 	fm.headOfFamily = true
@@ -139,6 +129,16 @@ func (fm *FamilyMember) ErrToArray() []string {
 		}
 	}
 	return toArray
+}
+
+// Set the person who is the responsible for manage information
+// of this family core
+func (fm *FamilyMember) add(member *Member) *FamilyMember {
+	// log.Println("FamilyMember.add()")
+	fm.Member = member
+	fm.valid = false
+	fm.lastChanged = time.Now().UnixNano()
+	return fm
 }
 
 // check whether the current member is able to assume

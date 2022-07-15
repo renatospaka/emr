@@ -23,7 +23,7 @@ func TestFamilyBuilder_Build(t *testing.T) {
 
 	fam := testFamilyBuilder.
 		WithSurname("Super Family").
-		WithHOF(member).
+		Add(member).
 		Build()
 
 	require.True(t, fam.IsValid())
@@ -34,7 +34,7 @@ func TestFamilyBuilder_Build(t *testing.T) {
 func TestFamilyBuilder_Build_Invalid(t *testing.T) {
 	fam := testFamilyBuilder.
 		WithSurname("Super Family").
-		WithHOF(&family.Member{}).
+		Add(&family.Member{}).
 		Build()
 
 	require.False(t, fam.IsValid())
