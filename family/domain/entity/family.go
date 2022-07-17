@@ -79,10 +79,8 @@ func (f *Family) HasHeadOfFamily() bool {
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (f *Family) IsValid() bool {
-	// log.Println("Family.IsValid() - starting")
-	clearErrsOnValidation = true
+	// log.Println("Family.IsValid()")
 	f.validate()
-	// log.Printf("Family.IsValid(%t)", f.valid)
 	return f.valid
 }
 
@@ -123,7 +121,7 @@ func (f *Family) Err() []string {
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (f *Family) validate() {
-	// log.Println("Family.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
+	// log.Println("Family.validate()")
 	f.err.ClearAll()
 
 	err := utils.IsVaalidUUID(f.id)
@@ -175,4 +173,5 @@ func (f *Family) validate() {
 	}
 
 	f.valid = (f.err.Count() == 0 && !hasErros)
+	// log.Printf("Family.validate(%t)", f.valid)
 }

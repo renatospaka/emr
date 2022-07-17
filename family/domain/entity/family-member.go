@@ -1,6 +1,7 @@
 package family
 
 import (
+	"log"
 	"time"
 
 	"github.com/renatospaka/emr/common/infrastructure/err"
@@ -21,7 +22,7 @@ type FamilyMember struct {
 }
 
 func newFamilyMember() *FamilyMember {
-	// log.Println("FamilyMember.newFamilyMember()")
+	log.Println("FamilyMember.newFamilyMember()")
 	return &FamilyMember{
 		Member:       &Member{},
 		relationType: TBDRelation,
@@ -35,8 +36,8 @@ func newFamilyMember() *FamilyMember {
 
 // Set the person who is the responsible for manage information
 // of this family core
-func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
-	// log.Println("FamilyMember.SetHeadOfFamily()")
+func (fm *FamilyMember) PromoteToHOF() *FamilyMember {
+	log.Println("FamilyMember.PromoteToHOF()")
 	fm.headOfFamily = true
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -45,8 +46,8 @@ func (fm *FamilyMember) SetHeadOfFamily() *FamilyMember {
 
 // Unset the person who is the responsible for manage information
 // of this family core
-func (fm *FamilyMember) UnsetHeadOfFamily() *FamilyMember {
-	// log.Println("FamilyMember.UnsetHeadOfFamily()")
+func (fm *FamilyMember) DowngradeToOrdinary() *FamilyMember {
+	log.Println("FamilyMember.DowngradeToOrdinary()")
 	fm.headOfFamily = false
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -55,14 +56,14 @@ func (fm *FamilyMember) UnsetHeadOfFamily() *FamilyMember {
 
 // Return if this member is the responsible of this family core
 func (fm *FamilyMember) IsHeadOfFamily() bool {
-	// log.Printf("FamilyMember.IsHeadOfFamily(%t)", fm.headOfFamily)
+	log.Printf("FamilyMember.IsHeadOfFamily(%t)", fm.headOfFamily)
 	return fm.headOfFamily
 }
 
 // Set relationship type of the person to the on who is the
 // head of the family of this family core
 func (fm *FamilyMember) ChangeRelationType(relationType string) *FamilyMember {
-	// log.Println("FamilyMember.ChangeRelationType()")
+	log.Println("FamilyMember.ChangeRelationType()")
 	fm.relationType = relationType
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -72,29 +73,28 @@ func (fm *FamilyMember) ChangeRelationType(relationType string) *FamilyMember {
 // Return the  relationship type of this member to the
 // head of the family
 func (fm *FamilyMember) RelationType() string {
-	// log.Printf("FamilyMember.RelationType(%s)", fm.relationType)
+	log.Printf("FamilyMember.RelationType(%s)", fm.relationType)
 	return fm.relationType
 }
 
 // Return the current status of this member
 func (fm *FamilyMember) Status() string {
-	// log.Printf("FamilyMember.Status(%s)", fm.status)
+	log.Printf("FamilyMember.Status(%s)", fm.status)
 	return fm.status
 }
 
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (fm *FamilyMember) IsValid() bool {
-	// log.Println("FamilyMember.IsValid() - starting")
+	log.Println("FamilyMember.IsValid()")
 	fm.validate()
-	// log.Printf("FamilyMember.IsValid(%t)", fm.valid)
 	return fm.valid
 }
 
 // Return all errors found during the validation process
 // in an array
 func (fm *FamilyMember) Err() []string {
-	// log.Println("FamilyMember.Err()")
+	log.Println("FamilyMember.Err()")
 	toArray := []string{}
 	if fm.err.Count() > 0 {
 		for e := 0; e < len(fm.err.Err); e++ {
@@ -107,7 +107,7 @@ func (fm *FamilyMember) Err() []string {
 // Set the person who is the responsible for manage information
 // of this family core
 func (fm *FamilyMember) add(member *Member) *FamilyMember {
-	// log.Println("FamilyMember.add()")
+	log.Println("FamilyMember.add()")
 	fm.Member = member
 	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
@@ -121,19 +121,22 @@ func (fm *FamilyMember) hofReady() bool {
 	if !hof {
 		fm.valid = false
 	}
-	// log.Printf("FamilyMember.hofReady(%t)", hof)
+	log.Printf("FamilyMember.hofReady(%t)", hof)
 	return hof
 }
 
 // Check whenever the structure of this family member
 // is intact and filled accordingly to the model rules
 func (fm *FamilyMember) validate() {
-	// log.Println("FamilyMember.validate()")
+	log.Println("FamilyMember.validate()")
 	fm.err.ClearAll()
+	log.Println("FamilyMember.validate().fm.err.ClearAll()")
 
 	// check member validation
-	memb := fm.Member
-	if !memb.IsValid() {
+	// memb := fm.Member
+	log.Println("FamilyMember.validate().fm.Member")
+	if !fm.Member.IsValid() {
+		log.Println("FamilyMember.validate().[x]fm.Member.IsValid()")
 		// invalid member (any reason)
 		fm.err.Add(ErrMemberError)
 
@@ -142,9 +145,12 @@ func (fm *FamilyMember) validate() {
 			fm.err.Add(ErrFamilyMemberHOFError)
 		}
 	} else {
+		log.Println("FamilyMember.validate().[ok]fm.Member.IsValid()")
 		// hof must be a valid member
 		if fm.headOfFamily {
+			log.Println("FamilyMember.validate().[ok]fm.headOfFamily")
 			if !fm.hofReady() {
+				log.Println("FamilyMember.validate().[x]fm.hofReady()")
 				fm.err.Add(ErrFamilyMemberHOFInvalidAge)
 			}
 		}
@@ -162,5 +168,6 @@ func (fm *FamilyMember) validate() {
 		fm.err.Add(ErrFamilyMemberInvalidRelation)
 	}
 
-	fm.valid = (fm.err.Count() == 0 && memb.err.Count() == 0)
+	fm.valid = (fm.err.Count() == 0 && fm.Member.err.Count() == 0)
+	log.Printf("FamilyMember.validate(%t)", fm.valid)
 }

@@ -1,8 +1,8 @@
 package family
 
 type FamilyMemberEntityInterface interface {
-	SetHeadOfFamily() *FamilyMember
-	UnsetHeadOfFamily() *FamilyMember
+	PromoteToHOF() *FamilyMember
+	DowngradeToOrdinary() *FamilyMember
 	IsHeadOfFamily() bool
 	ChangeRelationType(relationType string) *FamilyMember
 	RelationType() string
