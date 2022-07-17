@@ -7,10 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var (
-	testMemberHOF    *family.Member
-)
-
 func init() {
 	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
 }

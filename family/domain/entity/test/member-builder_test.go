@@ -9,8 +9,6 @@ import (
 	family "github.com/renatospaka/emr/family/domain/entity"
 )
 
-var testMemberBuilder *family.MemberBuilder
-
 func init() {
 	testMemberBuilder = family.NewMemberBuilder()
 }

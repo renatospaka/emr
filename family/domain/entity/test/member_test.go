@@ -10,17 +10,6 @@ import (
 	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
-var (
-	testMember *family.Member
-	dobNewborn time.Time
-	dobInfant  time.Time
-	dobToddler time.Time
-	dobChild   time.Time
-	dobTeen    time.Time
-	dobAdult   time.Time
-	dobElderly time.Time
-)
-
 func init() {
 	testMemberBuilder = family.NewMemberBuilder()
 	testMember = testMemberBuilder.
