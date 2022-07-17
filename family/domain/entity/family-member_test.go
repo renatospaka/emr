@@ -40,7 +40,7 @@ func TestFamilyMember_Inalid_HOF_Empty(t *testing.T) {
 
 	require.False(t, famMember.IsValid())
 	require.NotEmpty(t, famMember.Err())
-	require.Len(t, famMember.ErrToArray(), 2)
+	require.Len(t, famMember.Err(), 2)
 }
 
 func TestFamilyMember_Inalid_HOF_Invalid_Age(t *testing.T) {
@@ -57,7 +57,7 @@ func TestFamilyMember_Inalid_HOF_Invalid_Age(t *testing.T) {
 
 	require.False(t, famMember.IsValid())
 	require.NotEmpty(t, famMember.Err())
-	require.Len(t, famMember.ErrToArray(), 1)
+	require.Len(t, famMember.Err(), 1)
 }
 
 func TestFamilyMember_IsValid_Ordinary(t *testing.T) {

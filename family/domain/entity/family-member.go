@@ -1,15 +1,14 @@
 package family
 
 import (
-	"strings"
 	"time"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/err"
 )
 
-var (
-	analysisErrsFamilyMembers = utils.NewAnalysisErrs()
-)
+// var (
+// 	analysisErrsFamilyMembers = errs.NewErrors()
+// )
 
 type FamilyMember struct {
 	*Member      `json:"member"`
@@ -18,6 +17,7 @@ type FamilyMember struct {
 	valid        bool   `json:"-"`
 	headOfFamily bool   `json:"status"`
 	lastChanged  int64  `json:"-"`
+	err          *err.Errors
 }
 
 func newFamilyMember() *FamilyMember {
@@ -29,6 +29,7 @@ func newFamilyMember() *FamilyMember {
 		valid:        false,
 		headOfFamily: false,
 		lastChanged:  time.Now().UnixNano(),
+		err:          err.NewErrors().ClearAll(),
 	}
 }
 
@@ -84,48 +85,20 @@ func (fm *FamilyMember) Status() string {
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (fm *FamilyMember) IsValid() bool {
-	// log.Println("FamilyMember.IsValid()")
+	// log.Println("FamilyMember.IsValid() - starting")
 	fm.validate()
+	// log.Printf("FamilyMember.IsValid(%t)", fm.valid)
 	return fm.valid
 }
 
 // Return all errors found during the validation process
-// in a single string with a \n segregating each error
-func (fm *FamilyMember) Err() string {
-	// log.Println("FamilyMember.Err()")
-	analysis := ""
-	builder := strings.Builder{}
-
-	// errors from familyMember validation
-	if analysisErrsFamilyMembers.Count() > 0 {
-		for e := 0; e < len(analysisErrsFamilyMembers.Analysis); e++ {
-			builder.WriteString(analysisErrsFamilyMembers.Analysis[e].ErrDescription)
-			builder.WriteString("\n")
-		}
-	}
-
-	// errors from member validation
-	if analysisErrsMembers.Count() > 0 {
-		for e := 0; e < len(analysisErrsMembers.Analysis); e++ {
-			builder.WriteString(analysisErrsMembers.Analysis[e].ErrDescription)
-			builder.WriteString("\n")
-		}
-	}
-
-	analysis = builder.String()
-	return analysis
-}
-
-// Return all errors found during the validation process
 // in an array
-func (fm *FamilyMember) ErrToArray() []string {
-	// log.Println("FamilyMember.ErrToArray()")
-	analysis := fm.Err()
+func (fm *FamilyMember) Err() []string {
+	// log.Println("FamilyMember.Err()")
 	toArray := []string{}
-	if len(analysis) > 0 {
-		newAnalisys := strings.Split(analysis, "\n")
-		for e := 0; e < len(newAnalisys)-1; e++ {
-			toArray = append(toArray, newAnalisys[e])
+	if fm.err.Count() > 0 {
+		for e := 0; e < len(fm.err.Err); e++ {
+			toArray = append(toArray, fm.err.Err[e].Description)
 		}
 	}
 	return toArray
@@ -143,12 +116,12 @@ func (fm *FamilyMember) add(member *Member) *FamilyMember {
 
 // check whether the current member is able to assume
 // the head of family position - only of age people can
-func (fm *FamilyMember) canBeHOF() bool {
+func (fm *FamilyMember) hofReady() bool {
 	hof := (fm.Member.IsAdult() || fm.Member.IsElderly())
 	if !hof {
 		fm.valid = false
 	}
-	// log.Printf("FamilyMember.canBeHOF(%t)", hof)
+	// log.Printf("FamilyMember.hofReady(%t)", hof)
 	return hof
 }
 
@@ -156,28 +129,38 @@ func (fm *FamilyMember) canBeHOF() bool {
 // is intact and filled accordingly to the model rules
 func (fm *FamilyMember) validate() {
 	// log.Println("FamilyMember.validate()")
-	analysisErrsFamilyMembers.RemoveAll()
+	fm.err.ClearAll()
 
 	// check member validation
-	fm.Member.validate()
+	memb := fm.Member
+	if !memb.IsValid() {
+		// invalid member (any reason)
+		fm.err.Add(ErrMemberError)
+
+		if fm.headOfFamily {
+			// it is not possible an invalid HOF
+			fm.err.Add(ErrFamilyMemberHOFError)
+		}
+	} else {
+		// hof must be a valid member
+		if fm.headOfFamily {
+			if !fm.hofReady() {
+				fm.err.Add(ErrFamilyMemberHOFInvalidAge)
+			}
+		}
+	}
 
 	// familiar relationship valid
 	_, ok := relations[fm.relationType]
 	if !ok {
-		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberInvalidRelation)
+		fm.err.Add(ErrFamilyMemberInvalidRelation)
 	}
-
 	if fm.relationType == "" {
-		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberNotRelated)
+		fm.err.Add(ErrFamilyMemberNotRelated)
 	}
 	if fm.relationType != Self && fm.headOfFamily {
-		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberInvalidRelation)
+		fm.err.Add(ErrFamilyMemberInvalidRelation)
 	}
 
-	if !fm.canBeHOF() {
-		analysisErrsFamilyMembers.AddErr(ErrFamilyMemberHOFInvalidAge)
-	}
-
-	fm.valid = (analysisErrsFamilyMembers.Count() == 0 && analysisErrsMembers.Count() == 0)
-	// log.Printf("FamilyMember.validate(%t)", fm.valid)
+	fm.valid = (fm.err.Count() == 0 && memb.err.Count() == 0)
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	family "github.com/renatospaka/emr/family/domain/entity"
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
 var (
@@ -50,7 +50,7 @@ func TestMember_Invalid_EmptyMember(t *testing.T) {
 
 	require.False(t, emptyMember.IsValid())
 
-	allErrors := emptyMember.ErrToArray()
+	allErrors := emptyMember.Err()
 	require.Contains(t, allErrors, family.ErrInvalidMember.Error())
 	require.Len(t, allErrors, 1)
 }
@@ -320,7 +320,7 @@ func TestMember_MoreThanOneError(t *testing.T) {
 
 	require.False(t, testMember.IsValid())
 
-	allErrors := testMember.ErrToArray()
+	allErrors := testMember.Err()
 	require.Contains(t, allErrors, family.ErrMemberNameTooShort.Error())
 	require.Contains(t, allErrors, family.ErrMemberLastNameTooLong.Error())
 	require.Contains(t, allErrors, family.ErrInvalidMemberGender.Error())

@@ -4,11 +4,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/err"
 )
 
 var (
-	analysisErrsMembers   = utils.NewAnalysisErrs()
+	// analysisErrsMembers   = err.NewErrors()
 	clearErrsOnValidation = true
 )
 
@@ -26,6 +27,7 @@ type Member struct {
 	valid        bool      `json:"-"`
 	headOfFamily bool      `json:"head_family"`
 	dob          time.Time `json:"day_of_birth"`
+	err          *err.Errors
 }
 
 func newMember() *Member {
@@ -42,6 +44,7 @@ func newMember() *Member {
 		headOfFamily: false,
 		dob:          time.Time{},
 		lastChanged:  time.Now().UnixNano(),
+		err:          err.NewErrors().ClearAll(),
 	}
 	return member
 }
@@ -210,31 +213,13 @@ func (m *Member) IsElderly() bool {
 }
 
 // Return all errors found during the validation process
-// in a single string with a \n segregating each error
-func (m *Member) Err() string {
+// in a single array
+func (m *Member) Err() []string {
 	// log.Println("Member.Err()")
-	analysis := ""
-	if analysisErrsMembers.Count() > 0 {
-		builder := strings.Builder{}
-		for e := 0; e < len(analysisErrsMembers.Analysis); e++ {
-			builder.WriteString(analysisErrsMembers.Analysis[e].ErrDescription)
-			builder.WriteString("\n")
-		}
-		analysis = builder.String()
-	}
-	return analysis
-}
-
-// Return all errors found during the validation process
-// in an array
-func (m *Member) ErrToArray() []string {
-	// log.Println("Member.ErrToArray()")
-	analysis := m.Err()
 	toArray := []string{}
-	if len(analysis) > 0 {
-		newAnalisys := strings.Split(analysis, "\n")
-		for e := 0; e < len(newAnalisys)-1; e++ {
-			toArray = append(toArray, newAnalisys[e])
+	if m.err.Count() > 0 {
+		for e := 0; e < len(m.err.Err); e++ {
+			toArray = append(toArray, m.err.Err[e].Description)
 		}
 	}
 	return toArray
@@ -298,9 +283,7 @@ func (m *Member) setAge() {
 // and filled accordingly to the model rules
 func (m *Member) validate() {
 	// log.Printf("Member.validate() -> clearErrsOnValidation: %t", clearErrsOnValidation)
-	if clearErrsOnValidation {
-		analysisErrsMembers.RemoveAll()
-	}
+	m.err.ClearAll()
 
 	// test if all properties are nil or empty
 	if m.id == "" &&
@@ -308,48 +291,50 @@ func (m *Member) validate() {
 		m.lastName == "" &&
 		m.gender == "" &&
 		m.dob.IsZero() {
-		analysisErrsMembers.AddErr(ErrInvalidMember)
-		m.valid = (analysisErrsMembers.Count() == 0)
+		m.err.Add(ErrInvalidMember)
+		m.valid = (m.err.Count() == 0)
 		// log.Printf("Member.validate(%t)", m.valid)
 		return
 	}
 
 	// test each property individually
 
+	err := utils.IsVaalidUUID(m.id)
+	if err != nil {
+		m.err.Add(ErrInvalidMemberID)
+		m.err.Add(err)
+	}
+
 	if m.name == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberName)
+		m.err.Add(ErrMissingMemberName)
 	} else if len(m.name) < 3 {
-		analysisErrsMembers.AddErr(ErrMemberNameTooShort)
+		m.err.Add(ErrMemberNameTooShort)
 	} else if len(m.name) > 20 {
-		analysisErrsMembers.AddErr(ErrMemberNameTooLong)
+		m.err.Add(ErrMemberNameTooLong)
 	}
 
 	if len(m.middleName) > 20 {
-		analysisErrsMembers.AddErr(ErrMemberMiddleNameTooLong)
+		m.err.Add(ErrMemberMiddleNameTooLong)
 	}
 
 	if m.lastName == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberLastName)
+		m.err.Add(ErrMissingMemberLastName)
 	} else if len(m.lastName) < 3 {
-		analysisErrsMembers.AddErr(ErrMemberLastNameTooShort)
+		m.err.Add(ErrMemberLastNameTooShort)
 	} else if len(m.lastName) > 20 {
-		analysisErrsMembers.AddErr(ErrMemberLastNameTooLong)
+		m.err.Add(ErrMemberLastNameTooLong)
 	}
 
 	gender := m.gender
 	if gender == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberGender)
+		m.err.Add(ErrMissingMemberGender)
 	} else if gender != Male && gender != Female && gender != Other {
-		analysisErrsMembers.AddErr(ErrInvalidMemberGender)
+		m.err.Add(ErrInvalidMemberGender)
 	}
 
 	if m.dob.IsZero() {
-		analysisErrsMembers.AddErr(ErrMissingMemberDOB)
+		m.err.Add(ErrMissingMemberDOB)
 	}
 
-	if m.id == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberID)
-	}
-	m.valid = (analysisErrsMembers.Count() == 0)
-	// log.Printf("Member.validate(%t)", m.valid)
+	m.valid = (m.err.Count() == 0)
 }

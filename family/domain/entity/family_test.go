@@ -2,11 +2,10 @@ package family_test
 
 import (
 	"testing"
-
 	"github.com/stretchr/testify/require"
 
 	family "github.com/renatospaka/emr/family/domain/entity"
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
 var (
@@ -76,9 +75,9 @@ func TestFamily_Size(t *testing.T) {
 		Build()
 	//Need to prepare to include a member
 	//This test will fail until then
-	Size := testFamily.Size()
+	size := testFamily.Size()
 
-	require.True(t, Size)
+	require.EqualValues(t, 1, size)
 }
 
 func TestFamily_Size_Missing(t *testing.T) {
@@ -91,7 +90,7 @@ func TestFamily_Size_Missing(t *testing.T) {
 	testFamily.IsValid()
 	size := testFamily.Size()
 
-	allErrors := testFamily.ErrToArray()
+	allErrors := testFamily.Err()
 	require.EqualValues(t, 1, size)
 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
 	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
@@ -120,7 +119,7 @@ func TestFamily_HasHeadOfFamily_Missing(t *testing.T) {
 	testFamily.IsValid()
 	hasHOF := testFamily.HasHeadOfFamily()
 
-	allErrors := testFamily.ErrToArray()
+	allErrors := testFamily.Err()
 	require.False(t, hasHOF)
 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
 	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())

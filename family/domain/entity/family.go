@@ -4,12 +4,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/err"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
-var (
-	analysisErrsFamily = utils.NewAnalysisErrs()
-)
+// var (
+// 	analysisErrsFamily = errs.NewErrors()
+// )
 
 type Family struct {
 	id          string          `json:"family_id"`
@@ -17,6 +18,7 @@ type Family struct {
 	valid       bool            `json:"-"`
 	lastChanged int64           `json:"-"`
 	members     []*FamilyMember `json:"members"`
+	err          *err.Errors
 }
 
 func newFamily() *Family {
@@ -27,6 +29,7 @@ func newFamily() *Family {
 		valid:       false,
 		lastChanged: time.Now().UnixNano(),
 		members:     []*FamilyMember{},
+		err:          err.NewErrors().ClearAll(),
 	}
 
 	return fam
@@ -79,49 +82,41 @@ func (f *Family) IsValid() bool {
 	// log.Println("Family.IsValid() - starting")
 	clearErrsOnValidation = true
 	f.validate()
-	// log.Println("Family.IsValid(", f.valid, ")")
+	// log.Printf("Family.IsValid(%t)", f.valid)
 	return f.valid
 }
 
 // Return all errors found during the validation process
-// in a single string with a \n segregating each error
-func (f *Family) Err() string {
+// in a single array
+func (f *Family) Err() []string {
 	// log.Println("Family.Err()")
-	analysis := ""
-	builder := strings.Builder{}
-
-	// errors from family validation
-	if analysisErrsFamily.Count() > 0 {
-		for e := 0; e < len(analysisErrsFamily.Analysis); e++ {
-			builder.WriteString(analysisErrsFamily.Analysis[e].ErrDescription)
-			builder.WriteString("\n")
-		}
-	}
-
-	// errors from member validation
-	if analysisErrsMembers.Count() > 0 {
-		for e := 0; e < len(analysisErrsMembers.Analysis); e++ {
-			builder.WriteString(analysisErrsMembers.Analysis[e].ErrDescription)
-			builder.WriteString("\n")
-		}
-	}
-
-	analysis = builder.String()
-	return analysis
-}
-
-// Return all errors found during the validation process
-// in an array
-func (f *Family) ErrToArray() []string {
-	// log.Println("Family.ErrToArray()")
-	analysis := f.Err()
 	toArray := []string{}
-	if len(analysis) > 0 {
-		newAnalisys := strings.Split(analysis, "\n")
-		for e := 0; e < len(newAnalisys)-1; e++ {
-			toArray = append(toArray, newAnalisys[e])
+	if f.err.Count() > 0 {
+		for e := 0; e < len(f.err.Err); e++ {
+			toArray = append(toArray, f.err.Err[e].Description)
 		}
 	}
+
+	// returns all errors found during the Family Member process
+	// in the same array
+	if len(f.members) > 0 {
+		if f.Size() > 0 {
+			for m := 0; m < len(f.members); m++ {
+				// family member level
+				famMemb := f.members[m]
+				for e := 0; e < len(famMemb.err.Err); e++ {
+					toArray = append(toArray, famMemb.err.Err[e].Description)
+				}
+
+				// member level
+				memb := famMemb.Member
+				for e := 0; e < len(memb.err.Err); e++ {
+					toArray = append(toArray, memb.err.Err[e].Description)
+				}
+			}
+		}
+	}
+	
 	return toArray
 }
 
@@ -129,67 +124,55 @@ func (f *Family) ErrToArray() []string {
 // and filled accordingly to the model rules
 func (f *Family) validate() {
 	// log.Println("Family.validate() -> clearErrsOnValidation:", clearErrsOnValidation)
-	analysisErrsFamily.RemoveAll()
-	analysisErrsMembers.RemoveAll()
+	f.err.ClearAll()
 
-	if strings.TrimSpace(f.surname) == "" {
-		analysisErrsFamily.AddErr(ErrMissingFamilySurname)
+	err := utils.IsVaalidUUID(f.id)
+	if err != nil {
+		f.err.Add(ErrInvalidFamilyID)
+		f.err.Add(err)
 	}
 
-	// Validate if all members, if any, are filled
+	if f.surname == "" {
+		f.err.Add(ErrMissingFamilySurname)
+	}
+
+	// validate if all members, if any, are filled
 	// accordingly to the model rules
+	hasHOF, hasErros := false, false
+	countHOF, countErrors := 0, 0
 	if f.Size() < 1 {
-		analysisErrsFamily.AddErr(ErrFamilyMemberMissing)
-	} else {
-		f.validateHeadOfFamily()
+		f.err.Add(ErrFamilyMemberMissing)
 	}
 
-	if strings.TrimSpace(f.id) == "" {
-		analysisErrsFamily.AddErr(ErrMissingFamilyID)
-	}
+	for fm := 0; fm < len(f.members); fm++ {
+		fMemb := f.members[fm]
+		isValid := !fMemb.IsValid()
+		isHOF := fMemb.IsHeadOfFamily()
 
-	// log.Println("Family.validate(", analysisErrsFamily.Count() == 0, ")")
-	f.valid = (analysisErrsFamily.Count() == 0 && analysisErrsMembers.Count() == 0)
-}
-
-// There must be at least one member in a family
-// All members must be valid
-// There must be one HOF defined
-// Only ONE HOF defined per family
-func (f *Family) validateHeadOfFamily() {
-	// log.Println("Family.validateHeadOfFamily()")
-	hasHOF := false
-	thisHOF := false
-	countHOF := 0
-	for m := 0; m < len(f.members); m++ {
-		clearErrsOnValidation = false
-		thisHOF = f.members[m].headOfFamily
-		f.members[m].Member.validate()
-
-		// how many HOF are there?
-		if thisHOF {
-			countHOF++
-			hasHOF = true
+		if !isValid {
+			countErrors += fMemb.err.Count()
+			hasErros = true
 		}
-
-		// invalid member (any reason)
-		if !f.members[m].Member.valid {
-			analysisErrsMembers.AddErr(ErrMemberError)
-
-			// there is not possible an invalid HOF
-			if thisHOF {
-				analysisErrsMembers.AddErr(ErrFamilyMemberHOFError)
-			}
+		
+		if isHOF {
+			countHOF ++
+			hasHOF = true
 		}
 	}
 
 	// there is no HOF defined
 	if !hasHOF {
-		analysisErrsFamily.AddErr(ErrFamilyMemberHOFMissing)
-	} else
+		f.err.Add(ErrFamilyMemberHOFMissing)
+		hasErros = true
+		countErrors ++
+	}
+
 	// there are more than one HOF defined
 	if hasHOF && countHOF > 1 {
-		analysisErrsFamily.AddErr(ErrFamilyMemberTooManyHOF)
+		f.err.Add(ErrFamilyMemberTooManyHOF)
+		hasErros = true
+		countErrors ++
 	}
-	clearErrsOnValidation = true
+
+	f.valid = (f.err.Count() == 0 && !hasErros)
 }

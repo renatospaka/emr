@@ -14,8 +14,3 @@ type FamilyEntityBuilderInterface interface {
 	Add(member *FamilyMember) *FamilyBuilder
 }
 
-type FamilyValidationEntityInterface interface {
-	IsValid() bool
-	Err() string
-	ErrToArray() []string
-}
