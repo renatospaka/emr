@@ -7,22 +7,13 @@ import (
 	family "github.com/renatospaka/emr/family/domain/entity"
 )
 
-func init() {
-	testFamilyBuilder = family.NewFamilyBuilder()
-}
 
 func TestFamilyBuilder_Build(t *testing.T) {
-	memberBuilder := family.NewMemberBuilder()
-	member := memberBuilder.
-		WithFullName("Name", "Middle", "Last").
-		WithBirthDate(dobAdult).
-		WithGender(family.Male).
-		WithNickname("Top Cat").
-		Build()
+	hof := createHOFMember()
 
 	famMembBuilder := family.NewFamilyMemberBuilder()
 	famMember := famMembBuilder.
-		AsHOF(member).
+		AsHOF(hof).
 		Build()
 	
 	famBuilder := family.NewFamilyBuilder()

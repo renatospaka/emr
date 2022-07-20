@@ -7,20 +7,22 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func init() {
-	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
-}
+// func init() {
+// 	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
+// }
 
 func TestFamilyMember_IsValid_HOF(t *testing.T) {
-	testMemberHOF = testMemberBuilder.
+	memberBuilder := family.NewMemberBuilder()
+	memberHOF := memberBuilder.
 		WithFullName("Name", "HOF", "Last").
 		WithBirthDate(dobAdult).
 		WithGender(family.Male).
 		WithNickname("Nick").
 		Build()
 	
-	famMember := testFamilyMemberBuilder. 
-		AsHOF(testMemberHOF).
+	familyMemberBuilder := family.NewFamilyMemberBuilder()
+	famMember := familyMemberBuilder. 
+		AsHOF(memberHOF).
 		Build()
 
 	require.EqualValues(t, family.Self, famMember.RelationType())
@@ -30,7 +32,8 @@ func TestFamilyMember_IsValid_HOF(t *testing.T) {
 }
 
 func TestFamilyMember_Inalid_HOF_Empty(t *testing.T) {
-	famMember := testFamilyMemberBuilder. 
+	familyMemberBuilder := family.NewFamilyMemberBuilder()
+	famMember := familyMemberBuilder. 
 		AsHOF(&family.Member{}).
 		Build()
 
@@ -40,15 +43,17 @@ func TestFamilyMember_Inalid_HOF_Empty(t *testing.T) {
 }
 
 func TestFamilyMember_Inalid_HOF_Invalid_Age(t *testing.T) {
-	testMemberHOF = testMemberBuilder.
+	memberBuilder := family.NewMemberBuilder()
+	memberHOF := memberBuilder.
 		WithFullName("Name", "Invalid Age", "Last").
 		WithBirthDate(dobTeen).
 		WithGender(family.Male).
 		WithNickname("Teen").
 		Build()
 	
-	famMember := testFamilyMemberBuilder. 
-		AsHOF(testMemberHOF).
+	familyMemberBuilder := family.NewFamilyMemberBuilder()
+	famMember := familyMemberBuilder. 
+		AsHOF(memberHOF).
 		Build()
 
 	require.False(t, famMember.IsValid())
@@ -57,14 +62,16 @@ func TestFamilyMember_Inalid_HOF_Invalid_Age(t *testing.T) {
 }
 
 func TestFamilyMember_IsValid_Ordinary(t *testing.T) {
-	testMemberOrdinary := testMemberBuilder.
+	memberBuilder := family.NewMemberBuilder()
+	testMemberOrdinary := memberBuilder.
 		WithFullName("Name", "Ordinary", "Last").
 		WithBirthDate(dobAdult).
 		WithGender(family.Male).
 		WithNickname("Nick").
 		Build()
 	
-	famMember := testFamilyMemberBuilder. 
+	familyMemberBuilder := family.NewFamilyMemberBuilder()
+	famMember := familyMemberBuilder. 
 		AsOrdinary(testMemberOrdinary).
 		RelatedAs(family.Father).
 		Build()
