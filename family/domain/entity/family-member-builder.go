@@ -27,7 +27,6 @@ func (fb *FamilyMemberBuilder) Build() *FamilyMember {
 	for _, action := range fb.actions {
 		action(famMemb)
 	}
-	famMemb.valid = false
 	famMemb.lastChanged = time.Now().UnixNano()
 	famMemb.validate()
 	return famMemb
@@ -47,7 +46,6 @@ func (fb *FamilyMemberBuilder) AsHOF(member *Member) *FamilyMemberBuilder {
 	log.Println("FamilyMemberBuilder.AsHOF()")
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.add(member)
-		// fm.Member = member
 		fm.PromoteToHOF()
 		fm.ChangeRelationType(Self)
 	})

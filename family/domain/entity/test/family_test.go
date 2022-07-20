@@ -1,26 +1,26 @@
 package family_test
 
-import (
-	// "testing"
-	// "github.com/stretchr/testify/require"
+// import (
+// 	// "testing"
+// 	// "github.com/stretchr/testify/require"
 
-	family "github.com/renatospaka/emr/family/domain/entity"
-	// "github.com/renatospaka/emr/common/infrastructure/utils"
-)
+// 	family "github.com/renatospaka/emr/family/domain/entity"
+// 	// "github.com/renatospaka/emr/common/infrastructure/utils"
+// )
 
-var (
-	testFamily *family.Family
-)
+// var (
+// 	testFamily *family.Family
+// )
 
-func init() {
-	testFamilyBuilder = family.NewFamilyBuilder()
-	testMember = testMemberBuilder.
-		WithFullName("Name", "Middle", "Last").
-		WithBirthDate(dobAdult).
-		WithGender(family.Male).
-		WithNickname("Nick").
-		Build()
-}
+// func init() {
+// 	testFamilyBuilder := family.NewFamilyBuilder()
+// 	testMember := testFamilyBuilder.
+// 		WithFullName("Name", "Middle", "Last").
+// 		WithBirthDate(dobAdult).
+// 		WithGender(family.Male).
+// 		WithNickname("Nick").
+// 		Build()
+// }
 
 // func TestFamily_IsValid(t *testing.T) {
 // 	testFamily := testFamilyBuilder.

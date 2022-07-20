@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/renatospaka/emr/common/infrastructure/err"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
 // var (
@@ -13,12 +14,12 @@ import (
 
 type FamilyMember struct {
 	*Member      `json:"member"`
-	relationType string `json:"relation_type"`
-	status       string `json:"status"`
-	valid        bool   `json:"-"`
-	headOfFamily bool   `json:"status"`
-	lastChanged  int64  `json:"-"`
 	err          *err.Errors
+	relationType string  
+	status       string 
+	valid        bool 
+	headOfFamily bool 
+	lastChanged  int64  
 }
 
 func newFamilyMember() *FamilyMember {
@@ -39,8 +40,8 @@ func newFamilyMember() *FamilyMember {
 func (fm *FamilyMember) PromoteToHOF() *FamilyMember {
 	log.Println("FamilyMember.PromoteToHOF()")
 	fm.headOfFamily = true
-	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
+	fm.validate()
 	return fm
 }
 
@@ -49,8 +50,8 @@ func (fm *FamilyMember) PromoteToHOF() *FamilyMember {
 func (fm *FamilyMember) DowngradeToOrdinary() *FamilyMember {
 	log.Println("FamilyMember.DowngradeToOrdinary()")
 	fm.headOfFamily = false
-	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
+	fm.validate()
 	return fm
 }
 
@@ -65,8 +66,8 @@ func (fm *FamilyMember) IsHeadOfFamily() bool {
 func (fm *FamilyMember) ChangeRelationType(relationType string) *FamilyMember {
 	log.Println("FamilyMember.ChangeRelationType()")
 	fm.relationType = relationType
-	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
+	fm.validate()
 	return fm
 }
 
@@ -109,8 +110,8 @@ func (fm *FamilyMember) Err() []string {
 func (fm *FamilyMember) add(member *Member) *FamilyMember {
 	log.Println("FamilyMember.add()")
 	fm.Member = member
-	fm.valid = false
 	fm.lastChanged = time.Now().UnixNano()
+	fm.validate()
 	return fm
 }
 
@@ -129,20 +130,26 @@ func (fm *FamilyMember) hofReady() bool {
 // is intact and filled accordingly to the model rules
 func (fm *FamilyMember) validate() {
 	log.Println("FamilyMember.validate()")
-	fm.err.ClearAll()
 
+	// test if it is an empty (nil) object
+	if (utils.IsEmpty(fm)) {
+		fm.err = err.NewErrors().Add(ErrInvalidFamilyMember)
+		fm.valid = false
+		return
+	} 
+	fm.err.ClearAll()
+	
 	// check member validation
-	// memb := fm.Member
 	if !fm.Member.IsValid() {
 		// invalid member (any reason)
 		fm.err.Add(ErrMemberError)
 
 		if fm.headOfFamily {
-			// it is not possible an invalid HOF
+			// it is not allowed an invalid HOF
 			fm.err.Add(ErrFamilyMemberHOFError)
 		}
 	} else {
-		// hof must be a valid member
+		// hof must be of age member
 		if fm.headOfFamily {
 			if !fm.hofReady() {
 				fm.err.Add(ErrFamilyMemberHOFInvalidAge)

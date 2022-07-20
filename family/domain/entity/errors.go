@@ -4,6 +4,7 @@ import "errors"
 
 // Errors related to the Family
 var (
+	ErrInvalidFamily        = errors.New("todas as propriedades dessa família estão vazias")
 	ErrInvalidFamilyID      = errors.New("o ID da família é inválido")
 	ErrMissingFamilyID      = errors.New("o ID da família está em branco ou ausente")
 	ErrMissingFamilySurname = errors.New("o nome de família está em branco ou ausente")
@@ -13,6 +14,7 @@ var (
 
 // Errors related to Family Member
 var (
+	ErrInvalidFamilyMember         = errors.New("todas as propriedades desse membro  estão vazias")
 	ErrFamilyMemberAlreadyLinked   = errors.New("a pessoa informada já pertence a essa família")
 	ErrFamilyMemberNotLinked       = errors.New("a pessoa informada não pertence a essa família")
 	ErrFamilyMemberNotRelated      = errors.New("a pessoa informada não tem vínculo familiar definido nessa família")

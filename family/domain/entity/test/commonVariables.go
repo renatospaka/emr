@@ -71,6 +71,20 @@ func createHOFMember() *family.Member {
 		Build()
 }
 
+func createTeenagerMember() *family.Member {
+	memberBuilder := createMemberBuilder()
+	return memberBuilder.
+		WithFullName("Name", "Teenager", "Last").
+		WithBirthDate(dobTeen).
+		WithGender(family.Male).
+		WithNickname("Teen").
+		Build()
+}
+
 func createEmptyMember() *family.Member {
 	return  &family.Member{}
+}
+
+func createEmptyFamilyMember() *family.FamilyMember {
+	return &family.FamilyMember{}
 }

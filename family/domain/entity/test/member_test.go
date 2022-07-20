@@ -314,5 +314,5 @@ func TestMember_MoreThanOneError(t *testing.T) {
 	require.Contains(t, allErrors, family.ErrMemberLastNameTooLong.Error())
 	require.Contains(t, allErrors, family.ErrInvalidMemberGender.Error())
 	require.Contains(t, allErrors, family.ErrMissingMemberDOB.Error())
-	require.Equal(t, len(allErrors), 4)
+	require.Len(t, allErrors, 4)
 }

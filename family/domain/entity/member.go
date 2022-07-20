@@ -277,13 +277,13 @@ func (m *Member) validate() {
 	log.Println("Member.validate()")
 
 	// test if it is an empty (nil) object
-	var mem Member
-	if (mem == Member{}) {
+	if (utils.IsEmpty(m)) {
 		m.err = err.NewErrors().Add(ErrInvalidMember)
 		m.valid = false
 		log.Printf("Member.validate(%t)", m.valid)
 		return
 	} 
+	m.err.ClearAll()
 
 	// test if all properties are nil or empty
 	if m.id == "" &&
@@ -298,7 +298,6 @@ func (m *Member) validate() {
 	}
 
 	// test each property individually
-	m.err.ClearAll()
 
 	err := utils.IsVaalidUUID(m.id)
 	if err != nil {
