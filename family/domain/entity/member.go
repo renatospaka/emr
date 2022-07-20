@@ -1,15 +1,12 @@
 package family
 
 import (
+	"log"
 	"strings"
 	"time"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
-)
-
-var (
-	analysisErrsMembers   = utils.NewAnalysisErrs()
-	clearErrsOnValidation = true
+	"github.com/renatospaka/emr/common/infrastructure/err"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
 type Member struct {
@@ -26,11 +23,11 @@ type Member struct {
 	valid        bool      `json:"-"`
 	headOfFamily bool      `json:"head_family"`
 	dob          time.Time `json:"day_of_birth"`
+	err          *err.Errors
 }
 
 func newMember() *Member {
-	// log.Println("Member.newMember()")
-	clearErrsOnValidation = true
+	log.Println("Member.newMember()")
 	member := &Member{
 		id:           utils.GetID(),
 		name:         "",
@@ -42,6 +39,7 @@ func newMember() *Member {
 		headOfFamily: false,
 		dob:          time.Time{},
 		lastChanged:  time.Now().UnixNano(),
+		err:          err.NewErrors().ClearAll(),
 	}
 	return member
 }
@@ -53,20 +51,20 @@ func (m *Member) ID() string {
 
 // Set the full name of this member
 // name + middle name + last name
-func (m *Member) SetFullName(name string, middleName string, lastName string) *Member {
-	// log.Println("Member.SetFullName()")
+func (m *Member) ChangeFullName(name string, middleName string, lastName string) *Member {
+	log.Println("Member.ChangeFullName()")
 	m.name = strings.TrimSpace(name)
 	m.lastName = strings.TrimSpace(lastName)
 	m.middleName = strings.TrimSpace(middleName)
 	m.lastChanged = time.Now().UnixNano()
-	m.valid = false
+	m.validate()
 	return m
 }
 
 // Return the full name of this member
 // in casual mode
 func (m *Member) FullName() string {
-	// log.Println("Member.FullName()")
+	log.Println("Member.FullName()")
 	builder := strings.Builder{}
 	fullName := ""
 
@@ -89,7 +87,7 @@ func (m *Member) FullName() string {
 // Return the full name of this member
 // in formal mode
 func (m *Member) FullNameFormal() string {
-	// log.Println("Member.FullNameFormal()")
+	log.Println("Member.FullNameFormal()")
 	builder := strings.Builder{}
 	fullNameTmp := m.FullName()
 	fullName := ""
@@ -110,131 +108,113 @@ func (m *Member) FullNameFormal() string {
 }
 
 // Set a nickname for this member
-func (m *Member) SetNickname(nick string) *Member {
-	// log.Println("Member.SetNickname()")
+func (m *Member) ChangeNickname(nick string) *Member {
+	log.Println("Member.ChangeNickname()")
 	m.nickname = strings.TrimSpace(nick)
 	m.lastChanged = time.Now().UnixNano()
-	m.valid = false
+	m.validate()
 	return m
 }
 
 // Return the nickname for this member, if any
 func (m *Member) Nickname() string {
-	// log.Println("Member.Nickname()")
+	log.Println("Member.Nickname()")
 	return m.nickname
 }
 
 // Set the day of birth of this member
-func (m *Member) SetBirthDate(dob time.Time) *Member {
-	// log.Println("Member.SetBirthDate()")
+func (m *Member) ChangeBirthDate(dob time.Time) *Member {
+	log.Println("Member.ChangeBirthDate()")
 	m.dob = dob
 	m.lastChanged = time.Now().UnixNano()
-	m.valid = false
-	m.setAge()
+	m.calculateAge()
+	m.validate()
 	return m
 }
 
 // Return the day of birth of this member
 func (m *Member) BirthDate() time.Time {
-	// log.Println("Member.BirthDate()")
+	log.Println("Member.BirthDate()")
 	return m.dob
 }
 
 // Set the gender of this member
-func (m *Member) SetGender(gender string) *Member {
-	// log.Println("Member.SetGender()")
+func (m *Member) ChangeGender(gender string) *Member {
+	log.Println("Member.ChangeGender()")
 	m.gender = gender
 	m.lastChanged = time.Now().UnixNano()
-	m.valid = false
+	m.validate()
 	return m
 }
 
 // Return the gender of this member
 func (m *Member) Gender() string {
-	// log.Println("Member.Gender()")
+	log.Println("Member.Gender()")
 	return m.gender
 }
 
 // Return the age of the member in years since birth
 func (m *Member) AgeInYears() int64 {
-	// log.Println("Member.AgeInYears()")
+	log.Println("Member.AgeInYears()")
 	return m.ageInYears
 }
 
 // Return the age of the member in months since birth
 func (m *Member) AgeInMonths() int64 {
-	// log.Println("Member.AgeInMonths()")
+	log.Println("Member.AgeInMonths()")
 	return m.ageInMonths
 }
 
 // Return if the member is a newborn
 func (m *Member) IsNewborn() bool {
-	// log.Println("Member.IsNewborn()")
+	log.Println("Member.IsNewborn()")
 	return m.age == Newborn
 }
 
 // Return if the member is a infant
 func (m *Member) IsInfant() bool {
-	// log.Println("Member.IsInfant()")
+	log.Println("Member.IsInfant()")
 	return m.age == Infant
 }
 
 // Return if the member is a toddler
 func (m *Member) IsToddler() bool {
-	// log.Println("Member.IsToddler()")
+	log.Println("Member.IsToddler()")
 	return m.age == Toddler
 }
 
 // Return if the member is a child
 func (m *Member) IsChild() bool {
-	// log.Println("Member.IsChild()")
+	log.Println("Member.IsChild()")
 	return m.age == Child
 }
 
 // Return if the member is a teen
 func (m *Member) IsTeen() bool {
-	// log.Println("Member.IsTeen()")
+	log.Println("Member.IsTeen()")
 	return m.age == Teen
 }
 
 // Return if the member is a adult
 func (m *Member) IsAdult() bool {
-	// log.Println("Member.IsAdult()")
+	log.Println("Member.IsAdult()")
 	return m.age == Adult
 }
 
 // Return if the member is a elderly
 func (m *Member) IsElderly() bool {
-	// log.Println("Member.IsElderly()")
+	log.Println("Member.IsElderly()")
 	return m.age == Elderly
 }
 
 // Return all errors found during the validation process
-// in a single string with a \n segregating each error
-func (m *Member) Err() string {
-	// log.Println("Member.Err()")
-	analysis := ""
-	if analysisErrsMembers.Count() > 0 {
-		builder := strings.Builder{}
-		for e := 0; e < len(analysisErrsMembers.Analysis); e++ {
-			builder.WriteString(analysisErrsMembers.Analysis[e].ErrDescription)
-			builder.WriteString("\n")
-		}
-		analysis = builder.String()
-	}
-	return analysis
-}
-
-// Return all errors found during the validation process
-// in an array
-func (m *Member) ErrToArray() []string {
-	// log.Println("Member.ErrToArray()")
-	analysis := m.Err()
+// in a single array
+func (m *Member) Err() []string {
+	log.Println("Member.Err()")
 	toArray := []string{}
-	if len(analysis) > 0 {
-		newAnalisys := strings.Split(analysis, "\n")
-		for e := 0; e < len(newAnalisys)-1; e++ {
-			toArray = append(toArray, newAnalisys[e])
+	if m.err.Count() > 0 {
+		for e := 0; e < len(m.err.Err); e++ {
+			toArray = append(toArray, m.err.Err[e].Description)
 		}
 	}
 	return toArray
@@ -243,18 +223,16 @@ func (m *Member) ErrToArray() []string {
 // Return if the member is validated
 // Use this whenever you want to guarantee the integrity of the structure
 func (m *Member) IsValid() bool {
-	// log.Println("Member.IsValid() - starting")
-	clearErrsOnValidation = true
+	log.Println("Member.IsValid()")
 	m.validate()
-	// log.Println("Member.IsValid(", m.valid, ")")
 	return m.valid
 }
 
 // Calculate the age of this member in months, year
 // and classify his/her age accordingly
 // every time the day of birth changes
-func (m *Member) setAge() {
-	// log.Println("Member.setAge()")
+func (m *Member) calculateAge() {
+	log.Println("Member.calculateAge()")
 	m.age = Undefined
 	m.ageInMonths = 0
 	m.ageInYears = 0
@@ -291,65 +269,74 @@ func (m *Member) setAge() {
 	m.ageInYears = ageInYears
 	m.ageInMonths = ageInMonths
 	m.lastChanged = time.Now().UnixNano()
-	m.valid = false
 }
 
 // Check whenever the member structure is intact
 // and filled accordingly to the model rules
 func (m *Member) validate() {
-	// log.Printf("Member.validate() -> clearErrsOnValidation: %t", clearErrsOnValidation)
-	if clearErrsOnValidation {
-		analysisErrsMembers.RemoveAll()
-	}
+	log.Println("Member.validate()")
+
+	// test if it is an empty (nil) object
+	var mem Member
+	if (mem == Member{}) {
+		m.err = err.NewErrors().Add(ErrInvalidMember)
+		m.valid = false
+		log.Printf("Member.validate(%t)", m.valid)
+		return
+	} 
 
 	// test if all properties are nil or empty
 	if m.id == "" &&
-		m.name == "" &&
-		m.lastName == "" &&
-		m.gender == "" && 
-		m.dob.IsZero() {
-			analysisErrsMembers.AddErr(ErrInvalidMember)
-			m.valid = (analysisErrsMembers.Count() == 0)
-			// log.Printf("Member.validate(%t)", m.valid)
-			return
+	m.name == "" &&
+	m.lastName == "" &&
+	m.gender == "" &&
+	m.dob.IsZero() {
+		m.err.Add(ErrInvalidMember)
+		m.valid = false
+		log.Printf("Member.validate(%t)", m.valid)
+		return
 	}
-	
+
 	// test each property individually
+	m.err.ClearAll()
+
+	err := utils.IsVaalidUUID(m.id)
+	if err != nil {
+		m.err.Add(ErrInvalidMemberID)
+		m.err.Add(err)
+	}
 
 	if m.name == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberName)
+		m.err.Add(ErrMissingMemberName)
 	} else if len(m.name) < 3 {
-		analysisErrsMembers.AddErr(ErrMemberNameTooShort)
+		m.err.Add(ErrMemberNameTooShort)
 	} else if len(m.name) > 20 {
-		analysisErrsMembers.AddErr(ErrMemberNameTooLong)
+		m.err.Add(ErrMemberNameTooLong)
 	}
 
 	if len(m.middleName) > 20 {
-		analysisErrsMembers.AddErr(ErrMemberMiddleNameTooLong)
+		m.err.Add(ErrMemberMiddleNameTooLong)
 	}
 
 	if m.lastName == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberLastName)
+		m.err.Add(ErrMissingMemberLastName)
 	} else if len(m.lastName) < 3 {
-		analysisErrsMembers.AddErr(ErrMemberLastNameTooShort)
+		m.err.Add(ErrMemberLastNameTooShort)
 	} else if len(m.lastName) > 20 {
-		analysisErrsMembers.AddErr(ErrMemberLastNameTooLong)
+		m.err.Add(ErrMemberLastNameTooLong)
 	}
 
 	gender := m.gender
 	if gender == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberGender)
+		m.err.Add(ErrMissingMemberGender)
 	} else if gender != Male && gender != Female && gender != Other {
-		analysisErrsMembers.AddErr(ErrInvalidMemberGender)
+		m.err.Add(ErrInvalidMemberGender)
 	}
 
 	if m.dob.IsZero() {
-		analysisErrsMembers.AddErr(ErrMissingMemberDOB)
+		m.err.Add(ErrMissingMemberDOB)
 	}
 
-	if m.id == "" {
-		analysisErrsMembers.AddErr(ErrMissingMemberID)
-	}
-	m.valid = (analysisErrsMembers.Count() == 0)
-	// log.Printf("Member.validate(%t)", m.valid)
+	m.valid = (m.err.Count() == 0)
+	log.Printf("Member.validate(%t)", m.valid)
 }

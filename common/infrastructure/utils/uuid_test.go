@@ -7,7 +7,7 @@ import (
 	uuid "github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
 func Test_GetID(t *testing.T) {

@@ -1,31 +1,21 @@
 package family_test
 
 import (
+	// "log"
 	"testing"
 
-	"github.com/stretchr/testify/require"
 	family "github.com/renatospaka/emr/family/domain/entity"
+	"github.com/stretchr/testify/require"
 )
-
-var (
-	testFamilyMemberBuilder *family.FamilyMemberBuilder
-)
-
-func init() {
-	testMemberBuilder = family.NewMemberBuilder()
-	testFamilyBuilder = family.NewFamilyBuilder()
-	testFamilyMemberBuilder = family.NewFamilyMemberBuilder()
-}
 
 func TestFamilyMember_Build_HOF(t *testing.T) {
-	hof := testMemberBuilder.
-		WithFullName("Name", "Middle", "Last").
-		WithBirthDate(dobAdult).
-		WithGender(family.Male).
-		WithNickname("Nick").
-		Build()
-		
-	famMember := testFamilyMemberBuilder.
+	// log.Println("TestFamilyMember_Build_HOF.createHOFMember()")
+	hof := createHOFMember()
+
+	// log.Println("TestFamilyMember_Build_HOF.NewFamilyMemberBuilder()")
+	famMembBuilder := family.NewFamilyMemberBuilder()
+	// log.Println("TestFamilyMember_Build_HOF.famMembBuilder()")
+	famMember := famMembBuilder.
 		AsHOF(hof).
 		Build()
 
@@ -35,8 +25,10 @@ func TestFamilyMember_Build_HOF(t *testing.T) {
 }
 
 func TestFamilyMember_Build_HOF_Invalid(t *testing.T) {
-	famMember := testFamilyMemberBuilder.
-		AsHOF(&family.Member{}).
+	empty := createEmptyMember()
+	famMembBuilder := family.NewFamilyMemberBuilder()
+	famMember := famMembBuilder.
+		AsHOF(empty).
 		Build()
 
 	require.False(t, famMember.IsValid())
@@ -44,14 +36,9 @@ func TestFamilyMember_Build_HOF_Invalid(t *testing.T) {
 }
 
 func TestFamilyMember_Build_Ordinary(t *testing.T) {
-	member := testMemberBuilder.
-		WithFullName("Name", "Middle", "Last").
-		WithBirthDate(dobAdult).
-		WithGender(family.Male).
-		WithNickname("Nick").
-		Build()
-		
-	famMember := testFamilyMemberBuilder.
+	member := createMember()
+	famMembBuilder := family.NewFamilyMemberBuilder()	
+	famMember := famMembBuilder.
 		AsOrdinary(member).
 		RelatedAs(family.Wife).
 		Build()

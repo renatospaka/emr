@@ -6,14 +6,14 @@ import (
 
 type MemberEntityInterface interface {
 	ID()
-	SetFullName(name string, middleName string, lastName string) *Member
+	ChangeFullName(name string, middleName string, lastName string) *Member
 	FullName() string
 	FullNameFormal() string
-	SetNickname(nick string) *Member
+	ChangeNickname(nick string) *Member
 	Nickname() string
-	SetGender(gender string) *Member
+	ChangeGender(gender string) *Member
 	Gender() string
-	SetBirthDate(dob time.Time) *Member
+	ChangeBirthDate(dob time.Time) *Member
 	BirthDate() time.Time
 	AgeInYears() int64
 }
