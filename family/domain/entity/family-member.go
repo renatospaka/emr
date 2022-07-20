@@ -130,13 +130,10 @@ func (fm *FamilyMember) hofReady() bool {
 func (fm *FamilyMember) validate() {
 	log.Println("FamilyMember.validate()")
 	fm.err.ClearAll()
-	log.Println("FamilyMember.validate().fm.err.ClearAll()")
 
 	// check member validation
 	// memb := fm.Member
-	log.Println("FamilyMember.validate().fm.Member")
 	if !fm.Member.IsValid() {
-		log.Println("FamilyMember.validate().[x]fm.Member.IsValid()")
 		// invalid member (any reason)
 		fm.err.Add(ErrMemberError)
 
@@ -145,12 +142,9 @@ func (fm *FamilyMember) validate() {
 			fm.err.Add(ErrFamilyMemberHOFError)
 		}
 	} else {
-		log.Println("FamilyMember.validate().[ok]fm.Member.IsValid()")
 		// hof must be a valid member
 		if fm.headOfFamily {
-			log.Println("FamilyMember.validate().[ok]fm.headOfFamily")
 			if !fm.hofReady() {
-				log.Println("FamilyMember.validate().[x]fm.hofReady()")
 				fm.err.Add(ErrFamilyMemberHOFInvalidAge)
 			}
 		}

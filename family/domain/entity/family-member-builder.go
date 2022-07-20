@@ -46,10 +46,8 @@ func (fb *FamilyMemberBuilder) RelatedAs(relationType string) *FamilyMemberBuild
 func (fb *FamilyMemberBuilder) AsHOF(member *Member) *FamilyMemberBuilder {
 	log.Println("FamilyMemberBuilder.AsHOF()")
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
-		log.Println("FamilyMemberBuilder.AsHOF()[A].fm.add(member)", member)
 		fm.add(member)
 		// fm.Member = member
-		log.Println("FamilyMemberBuilder.AsHOF()[B].fm.add(member)")
 		fm.PromoteToHOF()
 		fm.ChangeRelationType(Self)
 	})

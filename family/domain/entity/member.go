@@ -275,21 +275,30 @@ func (m *Member) calculateAge() {
 // and filled accordingly to the model rules
 func (m *Member) validate() {
 	log.Println("Member.validate()")
-	m.err.ClearAll()
+
+	// test if it is an empty (nil) object
+	var mem Member
+	if (mem == Member{}) {
+		m.err = err.NewErrors().Add(ErrInvalidMember)
+		m.valid = false
+		log.Printf("Member.validate(%t)", m.valid)
+		return
+	} 
 
 	// test if all properties are nil or empty
 	if m.id == "" &&
-		m.name == "" &&
-		m.lastName == "" &&
-		m.gender == "" &&
-		m.dob.IsZero() {
+	m.name == "" &&
+	m.lastName == "" &&
+	m.gender == "" &&
+	m.dob.IsZero() {
 		m.err.Add(ErrInvalidMember)
-		m.valid = (m.err.Count() == 0)
+		m.valid = false
 		log.Printf("Member.validate(%t)", m.valid)
 		return
 	}
 
 	// test each property individually
+	m.err.ClearAll()
 
 	err := utils.IsVaalidUUID(m.id)
 	if err != nil {
