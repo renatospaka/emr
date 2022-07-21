@@ -4,86 +4,116 @@ import (
 	"log"
 	"time"
 
-	"github.com/renatospaka/emr/infrastructure/utils"
-	// 	family "github.com/renatospaka/emr/family/domain/entity"
-	// 	familyRepository "github.com/renatospaka/emr/infrastructure/repository/family/inMemory"
+	"github.com/renatospaka/emr/common/infrastructure/utils"
+	family "github.com/renatospaka/emr/family/domain/entity"
 )
 
+var (
+	today    = time.Now()
+	dobAdult = today.Add(-33 * utils.HoursYear * time.Hour)
+)
+
+func createMemberBuilder() *family.MemberBuilder {
+	// log.Println("createMemberBuilder()")
+	return family.NewMemberBuilder()
+}
+
+func createFamilyMemberBuilder() *family.FamilyMemberBuilder {
+	// log.Println("createFamilyMemberBuilder()")
+	return family.NewFamilyMemberBuilder()
+}
+
+func createFamilyBuilder() *family.FamilyBuilder {
+	// log.Println("createFamilyBuilder()")
+	return family.NewFamilyBuilder()
+}
+
+func createHOFMember() *family.Member {
+	// log.Println("createHOFMember()")
+	memberBuilder := createMemberBuilder()
+	return memberBuilder.
+		WithFullName("Name", "Middle", "Last").
+		WithBirthDate(dobAdult).
+		WithGender(family.Male).
+		WithNickname("HOF").
+		Build()
+}
+
+func createFamilyMember() *family.FamilyMember {
+	// log.Println("createFamilyMember()")
+	member := createHOFMember()
+	famMembBuilder := createFamilyMemberBuilder()
+	return famMembBuilder.
+		AsHOF(member).
+		Build()
+}
+
 func main() {
-	// 	repoFamily := familyRepository.NewFamilyRepositoryInMemory()
-	// 	fam1 := family.NewFamily("Familyname")
-	// 	err := repoFamily.Create(fam1)
-	// 	if err != nil {
-	// 		log.Println("Nova família criada com erro:", err)
-	// 	} else {
-	// 		log.Println("Nova família criada -", fam1)
-	// 	}
+	log.Println("Testing Family Member")
+	testFamilyMember()
 
-	// 	repoMember := familyRepository.NewMemberRepositoryInMemory()
-	// 	memb := family.NewMember("Name", "MiddleName", "Lastname", family.Male, time.Date(2006, 8, 5, 0, 0, 0, 0, time.UTC))
-	// 	err = repoMember.Add(memb)
-	// 	if err != nil {
-	// 		log.Println("Novo membro criado com erro:", err)
-	// 	} else {
-	// 		log.Println("Novo membro criado! Full name:(", memb.FullNameFormal(), memb.ID, ")")
-	// 	}
+	log.Println("Testing Family ")
+	testFamily()
 
-	// 	id := memb.ID
-	// 	findMemb, err := repoMember.FindById(id)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 	} else {
-	// 		log.Println("Achou! Full name:", findMemb.FullNameFormal())
-	// 	}
+	// log.Println("Testing Dates")
+	// testDates()
+}
 
-	// 	famMember := family.NewFamilyMember(memb)
-	// 	// log.Println(famMember.Member.FullName(), famMember.RelationType, famMember.Status)
-	// 	fam2, err := repoFamily.AddFamilyMember(*famMember, fam1.ID)
-	// 	if err != nil {
-	// 		log.Println(err)
-	// 	} else {
-	// 		log.Println("Adicionou o novo integrante:", fam2.Members[0].Member.FullNameFormal(), fam2.Members[0].Member.ID)
-	// 	}
-
-	// 	// err = repoMember.Remove(id)
-	// 	// if err != nil {
-	// 	// 	log.Println(err)
-	// 	// }
-
-	// 	// err = repoMember.Remove(id)
-	// 	// if err != nil {
-	// 	// 	log.Println(err)
-	// 	// }
-
+func testDates() {
 	today := time.Now()
-	ageInYears, ageInMonths := utils.AgeFromToday(today)
-	log.Println("today", today, ageInYears, ageInMonths)
+	dobNewborn1 := time.Date(today.Year(), today.Month(), today.Day()-33, today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
+	dobNewborn2 := today.Add(-33 * utils.HoursDay * time.Hour)
 
-	dobNewborn := time.Date(today.Year(), today.Month(), today.Day()-33, today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobNewborn)
-	log.Println("dobNewborn", dobNewborn, ageInYears, ageInMonths)
+	log.Println("dobNewborn1", dobNewborn1)
+	log.Println("dobNewborn2", dobNewborn2)
 
-	dobInfant := time.Date(today.Year(), today.Month()-11, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobInfant)
-	log.Println("dobInfant", dobInfant, ageInYears, ageInMonths)
+	dobTeen1 := time.Date(today.Year()-15, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
+	dobTeen2 := today.Add(-15 * (utils.HoursYear) * time.Hour)
 
-	dobToddler := time.Date(today.Year(), today.Month()-54, today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobToddler)
-	log.Println("dobToddler", dobToddler, ageInYears, ageInMonths)
+	log.Println("dobTeen1", dobTeen1)
+	log.Println("dobTeen2", dobTeen2)
+}
 
-	dobChild := time.Date(today.Year()-7, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobChild)
-	log.Println("dobChild", dobChild, ageInYears, ageInMonths)
+func memberNoErr() *family.Member {
+	memberBuilder := createMemberBuilder()
+	member := memberBuilder.
+		WithFullName("Name", "Middle", "Last").
+		WithBirthDate(dobAdult).
+		WithGender(family.Male).
+		WithNickname("Nick").
+		Build()
+	return member
+}
 
-	dobTeen := time.Date(today.Year()-15, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobTeen)
-	log.Println("dobTeen", dobTeen, ageInYears, ageInMonths)
+func memberErr() *family.Member {
+	memberBuilder := createMemberBuilder()
+	member := memberBuilder.
+		WithFullName("Na", "Middle", "LastLastLastLastLastLastLast").
+		WithBirthDate(time.Time{}).
+		WithGender("other").
+		WithNickname("Nick").
+		Build()
+	return member
+}
 
-	dobAdult := time.Date(today.Year()-33, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobAdult)
-	log.Println("dobAdult", dobAdult, ageInYears, ageInMonths)
+func testFamilyMember() {
+	member := createHOFMember()
+	log.Println("Member :=", member)
 
-	dobElderly := time.Date(today.Year()-67, today.Month(), today.Day(), today.Hour(), today.Minute(), today.Second(), today.Nanosecond(), time.UTC)
-	ageInYears, ageInMonths = utils.AgeFromToday(dobElderly)
-	log.Println("dobElderly", dobElderly, ageInYears, ageInMonths)
+	famMemberBuilder := createFamilyMemberBuilder()
+	famMember := famMemberBuilder.
+		AsHOF(member).
+		Build()
+	log.Println("famMember :=", famMember)
+}
+
+func testFamily() {
+	famMember := createFamilyMember()
+
+	familyBuilder := createFamilyBuilder()
+	fam := familyBuilder.
+		WithSurname("Super Family").
+		Add(famMember).
+		Build()
+	log.Println("fam :=", fam)
 }

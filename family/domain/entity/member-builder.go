@@ -1,7 +1,6 @@
 package family
 
 import (
-	"log"
 	"time"
 )
 
@@ -13,7 +12,7 @@ type MemberBuilder struct {
 
 // Initialize the new members builder
 func NewMemberBuilder() *MemberBuilder {
-	log.Println("MemberBuilder.NewMemberBuilder()")
+	// log.Println("MemberBuilder.NewMemberBuilder()")
 	return &MemberBuilder{
 		actions: []memberActions{},
 	}
@@ -22,7 +21,7 @@ func NewMemberBuilder() *MemberBuilder {
 // Execute all actions, create the Member
 // and return it to builder function
 func (mb *MemberBuilder) Build() *Member {
-	log.Println("MemberBuilder.Build()")
+	// log.Println("MemberBuilder.Build()")
 	member := newMember()
 	for _, action := range mb.actions {
 		action(member)
@@ -36,7 +35,7 @@ func (mb *MemberBuilder) Build() *Member {
 // Set the full name during the construction of this member
 // name + middle name + last name
 func (mb *MemberBuilder) WithFullName(name string, middleName string, lastName string) *MemberBuilder {
-	log.Println("MemberBuilder.WithFullName()")
+	// log.Println("MemberBuilder.WithFullName()")
 	mb.actions = append(mb.actions, func(m *Member) {
 		m.ChangeFullName(name, middleName, lastName)
 	})
@@ -45,7 +44,7 @@ func (mb *MemberBuilder) WithFullName(name string, middleName string, lastName s
 
 // Set the day of birth during the construction of this member
 func (mb *MemberBuilder) WithBirthDate(dob time.Time) *MemberBuilder {
-	log.Println("MemberBuilder.WithBirthDate()")
+	// log.Println("MemberBuilder.WithBirthDate()")
 	mb.actions = append(mb.actions, func(m *Member) {
 		m.ChangeBirthDate(dob)
 	})
@@ -54,7 +53,7 @@ func (mb *MemberBuilder) WithBirthDate(dob time.Time) *MemberBuilder {
 
 // Set the gender during the construction of this member
 func (mb *MemberBuilder) WithGender(gender string) *MemberBuilder {
-	log.Println("MemberBuilder.WithGender()")
+	// log.Println("MemberBuilder.WithGender()")
 	mb.actions = append(mb.actions, func(m *Member) {
 		m.ChangeGender(gender)
 	})
@@ -63,7 +62,7 @@ func (mb *MemberBuilder) WithGender(gender string) *MemberBuilder {
 
 // Set the nickname during the construction of this member
 func (mb *MemberBuilder) WithNickname(nick string) *MemberBuilder {
-	log.Println("MemberBuilder.WithNickname()")
+	// log.Println("MemberBuilder.WithNickname()")
 	mb.actions = append(mb.actions, func(m *Member) {
 		m.ChangeNickname(nick)
 	})

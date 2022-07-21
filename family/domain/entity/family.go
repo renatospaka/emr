@@ -13,12 +13,12 @@ import (
 // )
 
 type Family struct {
-	id          string          `json:"family_id"`
-	surname     string          `json:"surname"`
-	valid       bool            `json:"-"`
-	lastChanged int64           `json:"-"`
-	members     []*FamilyMember `json:"members"`
-	err          *err.Errors
+	members     []*FamilyMember
+	err         *err.Errors
+	id          string
+	surname     string
+	valid       bool
+	lastChanged int64
 }
 
 func newFamily() *Family {
@@ -27,9 +27,9 @@ func newFamily() *Family {
 		id:          utils.GetID(),
 		surname:     "",
 		valid:       false,
-		lastChanged: time.Now().UnixNano(),
 		members:     []*FamilyMember{},
-		err:          err.NewErrors().ClearAll(),
+		err:         err.NewErrors().ClearAll(),
+		lastChanged: time.Now().UnixNano(),
 	}
 
 	return fam
@@ -46,7 +46,7 @@ func (f *Family) ChangeSurname(surname string) *Family {
 	// log.Println("Family.ChangeSurname()")
 	f.surname = strings.TrimSpace(surname)
 	f.lastChanged = time.Now().UnixNano()
-	f.valid = false
+	f.validate()
 	return f
 }
 
@@ -72,7 +72,7 @@ func (f *Family) HasHeadOfFamily() bool {
 			break
 		}
 	}
-	// log.Println("Family.HasHeadOfFamily(", hasHOF, ")")
+	// log.Printf("Family.HasHeadOfFamily(%t)", hasHOF)
 	return hasHOF
 }
 
@@ -114,7 +114,7 @@ func (f *Family) Err() []string {
 			}
 		}
 	}
-	
+
 	return toArray
 }
 
@@ -138,22 +138,22 @@ func (f *Family) validate() {
 	// accordingly to the model rules
 	hasHOF, hasErros := false, false
 	countHOF, countErrors := 0, 0
-	if f.Size() < 1 {
+	if len(f.members) < 1 {
 		f.err.Add(ErrFamilyMemberMissing)
 	}
 
 	for fm := 0; fm < len(f.members); fm++ {
 		fMemb := f.members[fm]
-		isValid := !fMemb.IsValid()
-		isHOF := fMemb.IsHeadOfFamily()
+		isValid := fMemb.IsValid()
+		isHOF := f.members[fm].headOfFamily
 
 		if !isValid {
 			countErrors += fMemb.err.Count()
 			hasErros = true
 		}
-		
+
 		if isHOF {
-			countHOF ++
+			countHOF++
 			hasHOF = true
 		}
 	}
@@ -162,14 +162,14 @@ func (f *Family) validate() {
 	if !hasHOF {
 		f.err.Add(ErrFamilyMemberHOFMissing)
 		hasErros = true
-		countErrors ++
+		countErrors++
 	}
 
 	// there are more than one HOF defined
-	if hasHOF && countHOF > 1 {
+	if hasHOF && (countHOF > 1) {
 		f.err.Add(ErrFamilyMemberTooManyHOF)
 		hasErros = true
-		countErrors ++
+		countErrors++
 	}
 
 	f.valid = (f.err.Count() == 0 && !hasErros)

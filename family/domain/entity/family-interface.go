@@ -13,4 +13,3 @@ type FamilyEntityBuilderInterface interface {
 	WithSurname(surname string) *FamilyBuilder
 	Add(member *FamilyMember) *FamilyBuilder
 }
-
