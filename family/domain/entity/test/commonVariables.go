@@ -66,11 +66,6 @@ func createEmptyMember() *family.Member {
 	return  &family.Member{}
 }
 
-func createFamilyBuilder() *family.FamilyBuilder {
-	// log.Println("createFamilyBuilder()")
-	return family.NewFamilyBuilder()
-}
-
 func createFamilyMemberBuilder() *family.FamilyMemberBuilder {
 	return family.NewFamilyMemberBuilder()
 }
@@ -86,4 +81,13 @@ func createFamilyMember() *family.FamilyMember {
 
 func createEmptyFamilyMember() *family.FamilyMember {
 	return &family.FamilyMember{}
+}
+
+func createFamilyBuilder() *family.FamilyBuilder {
+	// log.Println("createFamilyBuilder()")
+	return family.NewFamilyBuilder()
+}
+
+func createEmptyFamily() *family.Family {
+	return &family.Family{}
 }

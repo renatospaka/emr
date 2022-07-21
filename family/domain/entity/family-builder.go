@@ -44,7 +44,7 @@ func (fb *FamilyBuilder) WithSurname(surname string) *FamilyBuilder {
 func (fb *FamilyBuilder) Add(member *FamilyMember) *FamilyBuilder {
 	// log.Println("FamilyBuilder.Add()")
 	fb.actions = append(fb.actions, func(f *Family) {
-		member.ChangeRelationType(Self)
+		member.ChangeRelationType(RelSelf)
 		f.members = append(f.members, member)
 	})
 	return fb

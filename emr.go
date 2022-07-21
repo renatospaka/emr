@@ -11,6 +11,7 @@ import (
 var (
 	today    = time.Now()
 	dobAdult = today.Add(-33 * utils.HoursYear * time.Hour)
+	dobTeen = today.Add(-15 * utils.HoursYear * time.Hour)
 )
 
 func createMemberBuilder() *family.MemberBuilder {
@@ -39,12 +40,31 @@ func createHOFMember() *family.Member {
 		Build()
 }
 
+func createTeenagerMember() *family.Member {
+	memberBuilder := createMemberBuilder()
+	return memberBuilder.
+		WithFullName("Name", "Teenager", "Last").
+		WithBirthDate(dobTeen).
+		WithGender(family.Female).
+		WithNickname("Teen").
+		Build()
+}
+
 func createFamilyMember() *family.FamilyMember {
 	// log.Println("createFamilyMember()")
 	member := createHOFMember()
 	famMembBuilder := createFamilyMemberBuilder()
 	return famMembBuilder.
 		AsHOF(member).
+		Build()
+}
+
+func createTeenFamilyMember() *family.FamilyMember {
+	// log.Println("createFamilyMember()")
+	member := createTeenagerMember()
+	famMembBuilder := createFamilyMemberBuilder()
+	return famMembBuilder.
+		AsOrdinary(member).
 		Build()
 }
 
@@ -109,11 +129,17 @@ func testFamilyMember() {
 
 func testFamily() {
 	famMember := createFamilyMember()
-
 	familyBuilder := createFamilyBuilder()
 	fam := familyBuilder.
 		WithSurname("Super Family").
 		Add(famMember).
 		Build()
+
+	// 	teenFamMember := createTeenFamilyMember()
+	// 	teenFamMember.Member.ChangeGender(family.Female)
+	// 	teenFamMember.ChangeRelationType(family.RelDaughter)
+	// 	// adding a new member
+	// fam.AddMember(teenFamMember)
+
 	log.Println("fam :=", fam)
 }

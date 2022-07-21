@@ -25,7 +25,7 @@ func newFamilyMember() *FamilyMember {
 	// log.Println("FamilyMember.newFamilyMember()")
 	return &FamilyMember{
 		Member:       &Member{},
-		relationType: TBDRelation,
+		relationType: RelTBDRelation,
 		status:       FreshMember,
 		valid:        false,
 		headOfFamily: false,
@@ -132,7 +132,6 @@ func (fm *FamilyMember) validate() {
 
 	// test if it is an empty (nil) object
 	if utils.IsEmpty(fm) {
-		// log.Println("FamilyMember.validate().utils.IsEmpty(fm)")
 		fm.err = err.NewErrors().Add(ErrInvalidFamilyMember)
 		fm.valid = false
 		return
@@ -141,8 +140,6 @@ func (fm *FamilyMember) validate() {
 
 	// check member validation
 	if !fm.Member.IsValid() {
-		// log.Println("FamilyMember.validate().fm.Member.IsValid() -> FALSE")
-
 		// invalid member (any reason)
 		fm.err.Add(ErrMemberError)
 
@@ -151,7 +148,6 @@ func (fm *FamilyMember) validate() {
 			fm.err.Add(ErrFamilyMemberHOFError)
 		}
 	} else {
-		// log.Println("FamilyMember.validate().fm.Member.IsValid() -> TRUE")
 		// hof must be of age member
 		if fm.headOfFamily {
 			if !fm.hofReady() {
@@ -168,7 +164,7 @@ func (fm *FamilyMember) validate() {
 	if fm.relationType == "" {
 		fm.err.Add(ErrFamilyMemberNotRelated)
 	}
-	if fm.relationType != Self && fm.headOfFamily {
+	if fm.relationType != RelSelf && fm.headOfFamily {
 		fm.err.Add(ErrFamilyMemberInvalidRelation)
 	}
 

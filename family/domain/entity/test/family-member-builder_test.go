@@ -40,7 +40,7 @@ func TestFamilyMember_Build_Ordinary(t *testing.T) {
 	famMembBuilder := family.NewFamilyMemberBuilder()
 	famMember := famMembBuilder.
 		AsOrdinary(member).
-		RelatedAs(family.Wife).
+		RelatedAs(family.RelWife).
 		Build()
 
 	require.True(t, famMember.IsValid())

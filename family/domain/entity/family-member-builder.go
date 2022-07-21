@@ -46,7 +46,7 @@ func (fb *FamilyMemberBuilder) AsHOF(member *Member) *FamilyMemberBuilder {
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.add(member)
 		fm.PromoteToHOF()
-		fm.ChangeRelationType(Self)
+		fm.ChangeRelationType(RelSelf)
 	})
 	return fb
 }
@@ -57,7 +57,7 @@ func (fb *FamilyMemberBuilder) AsOrdinary(member *Member) *FamilyMemberBuilder {
 	fb.actions = append(fb.actions, func(fm *FamilyMember) {
 		fm.add(member)
 		fm.DowngradeToOrdinary()
-		fm.ChangeRelationType(TBDRelation)
+		fm.ChangeRelationType(RelTBDRelation)
 	})
 	return fb
 }

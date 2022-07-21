@@ -31,9 +31,9 @@ func TestMember_IsValid(t *testing.T) {
 
 func TestMember_Invalid_EmptyMember(t *testing.T) {
 	emptyMember := createEmptyMember()
-	require.False(t, emptyMember.IsValid())
 
 	allErrors := emptyMember.Err()
+	require.False(t, emptyMember.IsValid())
 	require.Contains(t, allErrors, family.ErrInvalidMember.Error())
 	require.Len(t, allErrors, 1)
 }
@@ -53,8 +53,7 @@ func TestMember_FullName(t *testing.T) {
 	member := createMember()
 	member.
 		ChangeFullName("Name2", "Middle2", "Last2").
-		ChangeBirthDate(dobAdult).
-		IsValid()
+		ChangeBirthDate(dobAdult)
 
 	require.Equal(t, member.FullName(), "Name2 Middle2 Last2")
 	require.Len(t, member.Err(), 0)
@@ -64,8 +63,7 @@ func TestMember_FullNameFormal(t *testing.T) {
 	member := createMember()
 	member.
 		ChangeFullName("Name2", "Middle2", "Last2").
-		ChangeBirthDate(dobAdult).
-		IsValid()
+		ChangeBirthDate(dobAdult)
 
 	require.Equal(t, member.FullNameFormal(), "Sr. Name2 Middle2 Last2")
 	require.Len(t, member.Err(), 0)
@@ -150,11 +148,9 @@ func TestMember_ChangeNickname(t *testing.T) {
 
 func TestMember_Nickname(t *testing.T) {
 	member := createMember()
-	member.
-		ChangeNickname("Nickname").
-		IsValid()
-	nick := member.Nickname()
+	member.ChangeNickname("Nickname")
 
+	nick := member.Nickname()
 	require.EqualValues(t, "Nickname", nick)
 }
 
@@ -162,8 +158,7 @@ func TestMember_ChangeGender(t *testing.T) {
 	member := createMember()
 	member.
 		ChangeGender(family.Female).
-		ChangeBirthDate(dobAdult).
-		IsValid()
+		ChangeBirthDate(dobAdult)
 
 	require.EqualValues(t, family.Female, member.Gender())
 	require.Len(t, member.Err(), 0)
@@ -198,9 +193,10 @@ func TestMember_Gender(t *testing.T) {
 func TestMember_ChangeBirthDate(t *testing.T) {
 	member := createMember()
 	member.ChangeBirthDate(dobElderly)
-
+	dob := member.BirthDate()
+	
 	require.True(t, member.IsValid())
-	require.EqualValues(t, dobElderly, member.BirthDate())
+	require.EqualValues(t, dobElderly, dob)
 }
 
 func TestMember_ChangeBirthDate_Missing(t *testing.T) {
@@ -215,7 +211,7 @@ func TestMember_BirthDate(t *testing.T) {
 	member := createMember()
 	member.ChangeBirthDate(dobToddler)
 	dob := member.BirthDate()
-
+	
 	require.EqualValues(t, dobToddler, dob)
 }
 
@@ -307,9 +303,9 @@ func TestMember_IsElderly(t *testing.T) {
 
 func TestMember_MoreThanOneError(t *testing.T) {
 	member := createInvalidMember()
-	require.False(t, member.IsValid())
-
+	
 	allErrors := member.Err()
+	require.False(t, member.IsValid())
 	require.Contains(t, allErrors, family.ErrMemberNameTooShort.Error())
 	require.Contains(t, allErrors, family.ErrMemberLastNameTooLong.Error())
 	require.Contains(t, allErrors, family.ErrInvalidMemberGender.Error())

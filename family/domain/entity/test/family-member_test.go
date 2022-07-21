@@ -14,7 +14,7 @@ func TestFamilyMember_IsValid_HOF(t *testing.T) {
 		AsHOF(hof).
 		Build()
 
-	require.EqualValues(t, family.Self, famMember.RelationType())
+	require.EqualValues(t, family.RelSelf, famMember.RelationType())
 	require.True(t, famMember.IsHeadOfFamily())
 	require.True(t, famMember.IsValid())
 	require.Empty(t, famMember.Err())
@@ -54,10 +54,10 @@ func TestFamilyMember_IsValid_Ordinary(t *testing.T) {
 	familyMemberBuilder := family.NewFamilyMemberBuilder()
 	famMember := familyMemberBuilder.
 		AsOrdinary(ordinary).
-		RelatedAs(family.Father).
+		RelatedAs(family.RelFather).
 		Build()
 
-	require.EqualValues(t, family.Father, famMember.RelationType())
+	require.EqualValues(t, family.RelFather, famMember.RelationType())
 	require.False(t, famMember.IsHeadOfFamily())
 	require.True(t, famMember.IsValid())
 	require.Empty(t, famMember.Err())
