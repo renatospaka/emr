@@ -18,28 +18,28 @@ const (
 )
 
 const (
-	Father        string = "Father"
-	Mother        string = "Mother"
-	Brother       string = "Brother"
-	Sister        string = "Sister"
-	Daughter      string = "Daughter"
-	Son           string = "Son"
-	Husband       string = "Husband"
-	Wife          string = "Wife"
-	StepFather    string = "StepFather"
-	StepMother    string = "StepMother"
-	StepBrother   string = "StepBrother"
-	StepSister    string = "StepSister"
-	StepDaughter  string = "StepDaughter"
-	StepSon       string = "StepSon"
-	FatherInLaw   string = "FatherInLaw"
-	MotherInLaw   string = "MotherInLaw"
-	BrotherInLaw  string = "BrotherInLaw"
-	SisterInLaw   string = "SisterInLaw"
-	DaughterInLaw string = "DaughterInLaw"
-	SonInLaw      string = "SonInLaw"
-	TBDRelation   string = "ToBeDefined"
-	Self          string = "Self"
+	RelFather        string = "Father"
+	RelMother        string = "Mother"
+	RelBrother       string = "Brother"
+	RelSister        string = "Sister"
+	RelDaughter      string = "Daughter"
+	RelSon           string = "Son"
+	RelHusband       string = "Husband"
+	RelWife          string = "Wife"
+	RelStepFather    string = "StepFather"
+	RelStepMother    string = "StepMother"
+	RelStepBrother   string = "StepBrother"
+	RelStepSister    string = "StepSister"
+	RelStepDaughter  string = "StepDaughter"
+	RelStepSon       string = "StepSon"
+	RelFatherInLaw   string = "FatherInLaw"
+	RelMotherInLaw   string = "MotherInLaw"
+	RelBrotherInLaw  string = "BrotherInLaw"
+	RelSisterInLaw   string = "SisterInLaw"
+	RelDaughterInLaw string = "DaughterInLaw"
+	RelSonInLaw      string = "SonInLaw"
+	RelTBDRelation   string = "ToBeDefined"
+	RelSelf          string = "Self"
 )
 
 const (
@@ -53,26 +53,26 @@ var relations map[string]string
 
 func init() {
 	relations = make(map[string]string)
-	relations[TBDRelation] = TBDRelation
-	relations[Self] = Self
-	relations[Father] = Father
-	relations[Mother] = Mother
-	relations[Brother] = Brother
-	relations[Sister] = Sister
-	relations[Daughter] = Daughter
-	relations[Son] = Son
-	relations[Husband] = Husband
-	relations[Wife] = Wife
-	relations[StepFather] = StepFather
-	relations[StepMother] = StepMother
-	relations[StepBrother] = StepBrother
-	relations[StepSister] = StepSister
-	relations[StepDaughter] = StepDaughter
-	relations[StepSon] = StepSon
-	relations[FatherInLaw] = FatherInLaw
-	relations[MotherInLaw] = MotherInLaw
-	relations[BrotherInLaw] = BrotherInLaw
-	relations[SisterInLaw] = SisterInLaw
-	relations[DaughterInLaw] = DaughterInLaw
-	relations[SonInLaw] = SonInLaw
+	relations[RelTBDRelation] = RelTBDRelation
+	relations[RelSelf] = RelSelf
+	relations[RelFather] = RelFather
+	relations[RelMother] = RelMother
+	relations[RelBrother] = RelBrother
+	relations[RelSister] = RelSister
+	relations[RelDaughter] = RelDaughter
+	relations[RelSon] = RelSon
+	relations[RelHusband] = RelHusband
+	relations[RelWife] = RelWife
+	relations[RelStepFather] = RelStepFather
+	relations[RelStepMother] = RelStepMother
+	relations[RelStepBrother] = RelStepBrother
+	relations[RelStepSister] = RelStepSister
+	relations[RelStepDaughter] = RelStepDaughter
+	relations[RelStepSon] = RelStepSon
+	relations[RelFatherInLaw] = RelFatherInLaw
+	relations[RelMotherInLaw] = RelMotherInLaw
+	relations[RelBrotherInLaw] = RelBrotherInLaw
+	relations[RelSisterInLaw] = RelSisterInLaw
+	relations[RelDaughterInLaw] = RelDaughterInLaw
+	relations[RelSonInLaw] = RelSonInLaw
 }

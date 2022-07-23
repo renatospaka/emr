@@ -1,7 +1,6 @@
 package family_test
 
 import (
-	// "log"
 	"testing"
 
 	family "github.com/renatospaka/emr/family/domain/entity"
@@ -9,12 +8,9 @@ import (
 )
 
 func TestFamilyMember_Build_HOF(t *testing.T) {
-	// log.Println("TestFamilyMember_Build_HOF.createHOFMember()")
 	hof := createHOFMember()
 
-	// log.Println("TestFamilyMember_Build_HOF.NewFamilyMemberBuilder()")
 	famMembBuilder := family.NewFamilyMemberBuilder()
-	// log.Println("TestFamilyMember_Build_HOF.famMembBuilder()")
 	famMember := famMembBuilder.
 		AsHOF(hof).
 		Build()
@@ -32,18 +28,32 @@ func TestFamilyMember_Build_HOF_Invalid(t *testing.T) {
 		Build()
 
 	require.False(t, famMember.IsValid())
-	require.NotEmpty(t, famMember.Err())
+	allErrors := famMember.Err()
+
+	require.Contains(t, allErrors, family.ErrMemberError.Error())
+	require.Contains(t, allErrors, family.ErrFamilyMemberHOFError.Error())
+	require.Len(t, allErrors, 2)
 }
 
 func TestFamilyMember_Build_Ordinary(t *testing.T) {
 	member := createMember()
-	famMembBuilder := family.NewFamilyMemberBuilder()	
+	famMembBuilder := family.NewFamilyMemberBuilder()
 	famMember := famMembBuilder.
 		AsOrdinary(member).
-		RelatedAs(family.Wife).
+		RelatedAs(family.RelWife).
 		Build()
 
 	require.True(t, famMember.IsValid())
 	require.Empty(t, famMember.Err())
 	require.IsTypef(t, &family.Member{}, famMember.Member, "não é do tipo *FamilyMember{}")
+}
+
+func TestFamilyMember_Empty(t *testing.T) {
+	famMember := createEmptyFamilyMember()
+
+	require.False(t, famMember.IsValid())
+	allErrors := famMember.Err()
+
+	require.Contains(t, allErrors, family.ErrInvalidFamilyMember.Error())
+	require.Len(t, allErrors, 1)
 }

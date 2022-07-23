@@ -1,127 +1,141 @@
 package family_test
 
 import (
-	// "testing"
-	// "github.com/stretchr/testify/require"
+	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	family "github.com/renatospaka/emr/family/domain/entity"
-	// "github.com/renatospaka/emr/common/infrastructure/utils"
 )
 
-var (
-	testFamily *family.Family
-)
-
-func init() {
-	testFamilyBuilder = family.NewFamilyBuilder()
-	testMember = testMemberBuilder.
-		WithFullName("Name", "Middle", "Last").
-		WithBirthDate(dobAdult).
-		WithGender(family.Male).
-		WithNickname("Nick").
+func TestFamily_IsValid(t *testing.T) {
+	familyMember := createFamilyMember()
+	familyBuilder := createFamilyBuilder()
+	fam := familyBuilder.
+		WithSurname("Super Family").
+		Add(familyMember).
 		Build()
+
+	require.Empty(t, fam.Err())
+	require.True(t, fam.IsValid())
 }
 
-// func TestFamily_IsValid(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	testFamily.ChangeSurname("Surname")
+func TestFamily_Invalid(t *testing.T) {
+	familyMember := createFamilyMember()
+	familyBuilder := createFamilyBuilder()
+	fam := familyBuilder.
+		WithSurname("").
+		Add(familyMember).
+		Build()
 
-// 	require.True(t, testFamily.IsValid())
-// 	require.Empty(t, testFamily.Err())
-// }
+	allErrors := fam.Err()
+	require.False(t, fam.IsValid())
+	require.Contains(t, allErrors, family.ErrMissingFamilySurname.Error())
+	require.Len(t, allErrors, 1)
+}
 
-// func TestFamily_ID(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Build()
+func TestFamily_Invalid_EmptyFamily(t *testing.T) {
+	fam := createEmptyFamily()
 
-// 	id := testFamily.ID()
-// 	err := utils.IsVaalidUUID(id)
+	require.False(t, fam.IsValid())
+	allErrors := fam.Err()
+	require.Contains(t, allErrors, family.ErrInvalidFamily.Error())
+	require.Len(t, allErrors, 1)
+}
 
-// 	require.IsType(t, "", id)
-// 	require.Len(t, id, 36)
-// 	require.Nil(t, err)
-// }
+func TestFamily_Invalid_InvalidMember(t *testing.T) {
+	fam := createInvalidFamily()
+	size := fam.Size()
 
-// func TestFamily_IsValid_No(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	testFamily.ChangeSurname("")
+	allErrors := fam.Err()
+	require.False(t, fam.IsValid())
+	require.EqualValues(t, 1, size)
+	require.Contains(t, allErrors, family.ErrInvalidMember.Error())
+	require.Equal(t, 3, len(allErrors))
+}
 
-// 	require.False(t, testFamily.IsValid())
-// 	require.NotEmpty(t, testFamily.Err())
-// }
+func TestFamily_ID(t *testing.T) {
+	fam := createFamily()
+	id := fam.ID()
 
-// func TestFamily_Surname(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	testFamily.ChangeSurname("Another Surname")
-// 	surname := testFamily.Surname()
+	require.True(t, fam.IsValid())
+	require.IsType(t, "", id)
+}
 
-// 	require.EqualValues(t, "Another Surname", surname)
-// }
+func TestFamily_ChangeSurname(t *testing.T) {
+	fam := createFamily()
+	fam.ChangeSurname("Another Surname")
+	surname := fam.Surname()
 
-// func TestFamily_Size(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	size := testFamily.Size()
+	require.True(t, fam.IsValid())
+	require.EqualValues(t, "Another Surname", surname)
+}
 
-// 	require.EqualValues(t, 1, size)
-// }
+func TestFamily_Size(t *testing.T) {
+	fam := createFamily()
+	size := fam.Size()
 
-// func TestFamily_Size_Missing(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	testFamily.IsValid()
-// 	size := testFamily.Size()
+	require.True(t, fam.IsValid())
+	require.EqualValues(t, 1, size)
+}
 
-// 	allErrors := testFamily.Err()
-// 	require.EqualValues(t, 1, size)
-// 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
-// 	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
-// 	require.Equal(t, 1, len(allErrors))
-// }
+func TestFamily_HasHeadOfFamily(t *testing.T) {
+	fam := createFamily()
+	hasHOF := fam.HasHeadOfFamily()
 
-// func TestFamily_HasHeadOfFamily(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	hasHOF := testFamily.HasHeadOfFamily()
+	require.True(t, fam.IsValid())
+	require.True(t, hasHOF)
+}
 
-// 	require.True(t, hasHOF)
-// }
+func TestFamily_HasHeadOfFamily_Missing(t *testing.T) {
+	fam := createMissingHOFFamily()
+	hasHOF := fam.HasHeadOfFamily()
+	allErrors := fam.Err()
 
-// func TestFamily_HasHeadOfFamily_Missing(t *testing.T) {
-// 	testFamily := testFamilyBuilder.
-// 		WithSurname("Super Family").
-// 		Add(testMember).
-// 		Build()
-// 	//Need to prepare to include a member
-// 	//This test will fail until then
-// 	testFamily.IsValid()
-// 	hasHOF := testFamily.HasHeadOfFamily()
+	require.False(t, fam.IsValid())
+	require.False(t, hasHOF)
+	require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
+	require.Equal(t, 1, len(allErrors))
+}
 
-// 	allErrors := testFamily.Err()
-// 	require.False(t, hasHOF)
-// 	require.Contains(t, allErrors, family.ErrFamilyMemberMissing.Error())
-// 	// require.Contains(t, allErrors, family.ErrFamilyMemberHOFMissing.Error())
-// 	require.Equal(t, 1, len(allErrors))
-// }
+func TestFamily_AddMember(t *testing.T) {
+	fam := createFamily()
+	newMember := createOrdinaryFamilyMember()
+	newMember.Member.ChangeBirthDate(dobChild)
+	newMember.ChangeGender(family.Female)
+	newMember.ChangeRelationType(family.RelDaughter)
+	fam.AddMember(newMember)
+
+	require.Empty(t, fam.Err())
+	require.True(t, fam.IsValid())
+}
+
+func TestFamily_Members(t *testing.T) {
+	fam := createFamily()
+	newMember := createOrdinaryFamilyMember()
+	newMember.Member.ChangeBirthDate(dobChild)
+	newMember.ChangeGender(family.Female)
+	newMember.ChangeRelationType(family.RelDaughter)
+	fam.AddMember(newMember)
+	allMembers := fam.Members()
+
+	require.Empty(t, fam.Err())
+	require.Equal(t, 2, len(allMembers))
+	require.True(t, fam.IsValid())
+}
+
+func TestFamily_AddMember_InvalidMember(t *testing.T) {
+	fam := createFamily()
+	invalidNewMember := createEmptyOrdinaryFamilyMember()
+	invalidNewMember.Member.ChangeBirthDate(dobChild)
+	invalidNewMember.ChangeGender(family.Female)
+	invalidNewMember.ChangeRelationType(family.RelDaughter)
+	fam.AddMember(invalidNewMember)
+	allErrors := fam.Err()
+
+	require.False(t, fam.IsValid())
+	// require.Contains(t, allErrors, family.ErrInvalidMember.Error())
+	require.Contains(t, allErrors, family.ErrMemberError.Error())
+	require.Contains(t, allErrors, family.ErrInvalidMemberID.Error())
+	require.Equal(t, 4, len(allErrors))
+}
