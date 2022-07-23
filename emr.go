@@ -135,11 +135,16 @@ func testFamily() {
 		Add(famMember).
 		Build()
 
-	// 	teenFamMember := createTeenFamilyMember()
-	// 	teenFamMember.Member.ChangeGender(family.Female)
-	// 	teenFamMember.ChangeRelationType(family.RelDaughter)
-	// 	// adding a new member
-	// fam.AddMember(teenFamMember)
+	teenFamMember := createTeenFamilyMember()
+	teenFamMember.Member.ChangeBirthDate(dobTeen)
+	teenFamMember.Member.ChangeGender(family.Female)
+	teenFamMember.ChangeRelationType(family.RelDaughter)
+		// adding a new member
+	fam.AddMember(teenFamMember)
 
-	log.Println("fam :=", fam)
+	log.Println("fam :=", fam, fam.Size(), fam.IsValid())
+	members := fam.Members()
+	for m := 0; m < len(members); m++ {
+		log.Println("member :=", m, members[m].Member.FullName(), members[m].Member.Gender(), members[m].Member.AgeInYears(), members[m].RelationType(), members[m].IsHeadOfFamily())
+	}
 }

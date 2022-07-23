@@ -76,6 +76,12 @@ func (f *Family) HasHeadOfFamily() bool {
 	return hasHOF
 }
 
+// return all family mambers from this family
+func (f *Family) Members() []*FamilyMember {
+	// log.Println("Family.Members()")
+	return f.members     
+}
+
 // Add a new member to the family
 func (f *Family) AddMember(member *FamilyMember) *Family {
 	// log.Println("Family.AddMember()")
