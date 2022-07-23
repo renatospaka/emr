@@ -25,7 +25,7 @@ func createMemberBuilder() *family.MemberBuilder {
 func createMember() *family.Member {
 	// log.Println("createMember()")
 	memberBuilder := createMemberBuilder()
-	return  memberBuilder.
+	return memberBuilder.
 		WithFullName("Name", "Middle", "Last").
 		WithBirthDate(dobAdult).
 		WithGender(family.Male).
@@ -67,7 +67,7 @@ func createTeenagerMember() *family.Member {
 
 func createEmptyMember() *family.Member {
 	// log.Println("createEmptyMember()")
-	return  &family.Member{}
+	return &family.Member{}
 }
 
 func createFamilyMemberBuilder() *family.FamilyMemberBuilder {
@@ -98,8 +98,17 @@ func createOrdinaryFamilyMember() *family.FamilyMember {
 		Build()
 }
 
-func createMissingMemberFamilyMember() *family.FamilyMember {
-	// log.Println("createMissingMemberFamilyMember()")
+func createEmptyOrdinaryFamilyMember() *family.FamilyMember {
+	// log.Println("createEmptyOrdinaryFamilyMember()")
+	member := createEmptyMember()
+	famMembBuilder := createFamilyMemberBuilder()
+	return famMembBuilder.
+		AsOrdinary(member).
+		Build()
+}
+
+func createEmptyMemberFamilyMember() *family.FamilyMember {
+	// log.Println("createEmptyMemberFamilyMember()")
 	member := createEmptyMember()
 	famMembBuilder := createFamilyMemberBuilder()
 	return famMembBuilder.
@@ -124,7 +133,7 @@ func createFamily() *family.Family {
 
 func createInvalidFamily() *family.Family {
 	// log.Println("createInvalidFamily()")
-	missingFamilyMember := createMissingMemberFamilyMember()
+	missingFamilyMember := createEmptyMemberFamilyMember()
 	familyBuilder := createFamilyBuilder()
 	return familyBuilder.
 		WithSurname("Super Family").

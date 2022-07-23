@@ -290,7 +290,7 @@ func (m *Member) validate() {
 		m.lastName == "" &&
 		m.gender == "" &&
 		m.dob.IsZero() {
-		m.err.Add(ErrInvalidMember)
+		m.err = err.NewErrors().Add(ErrInvalidMember)
 		m.valid = false
 		// log.Printf("Member.validate(%t)", m.valid)
 		return
@@ -301,7 +301,7 @@ func (m *Member) validate() {
 	err := utils.IsVaalidUUID(m.id)
 	if err != nil {
 		m.err.Add(ErrInvalidMemberID)
-		m.err.Add(err)
+		// m.err.Add(err)
 	}
 
 	if m.name == "" {
