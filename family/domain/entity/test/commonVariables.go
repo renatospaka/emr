@@ -23,6 +23,7 @@ func createMemberBuilder() *family.MemberBuilder {
 }
 
 func createMember() *family.Member {
+	// log.Println("createMember()")
 	memberBuilder := createMemberBuilder()
 	return  memberBuilder.
 		WithFullName("Name", "Middle", "Last").
@@ -32,6 +33,7 @@ func createMember() *family.Member {
 }
 
 func createInvalidMember() *family.Member {
+	// log.Println("createInvalidMember()")
 	memberBuilder := createMemberBuilder()
 	return memberBuilder.
 		WithFullName("Na", "Middle", "LastLastLastLastLastLastLast").
@@ -53,6 +55,7 @@ func createHOFMember() *family.Member {
 }
 
 func createTeenagerMember() *family.Member {
+	// log.Println("createTeenagerMember()")
 	memberBuilder := createMemberBuilder()
 	return memberBuilder.
 		WithFullName("Name", "Teenager", "Last").
@@ -63,10 +66,12 @@ func createTeenagerMember() *family.Member {
 }
 
 func createEmptyMember() *family.Member {
+	// log.Println("createEmptyMember()")
 	return  &family.Member{}
 }
 
 func createFamilyMemberBuilder() *family.FamilyMemberBuilder {
+	// log.Println("createFamilyMemberBuilder()")
 	return family.NewFamilyMemberBuilder()
 }
 
@@ -80,7 +85,26 @@ func createFamilyMember() *family.FamilyMember {
 }
 
 func createEmptyFamilyMember() *family.FamilyMember {
+	// log.Println("createEmptyFamilyMember()")
 	return &family.FamilyMember{}
+}
+
+func createOrdinaryFamilyMember() *family.FamilyMember {
+	// log.Println("createOrdinaryFamilyMember()")
+	member := createMember()
+	famMembBuilder := createFamilyMemberBuilder()
+	return famMembBuilder.
+		AsOrdinary(member).
+		Build()
+}
+
+func createMissingMemberFamilyMember() *family.FamilyMember {
+	// log.Println("createMissingMemberFamilyMember()")
+	member := createEmptyMember()
+	famMembBuilder := createFamilyMemberBuilder()
+	return famMembBuilder.
+		AsHOF(member).
+		Build()
 }
 
 func createFamilyBuilder() *family.FamilyBuilder {
@@ -88,6 +112,37 @@ func createFamilyBuilder() *family.FamilyBuilder {
 	return family.NewFamilyBuilder()
 }
 
+func createFamily() *family.Family {
+	// log.Println("createFamily()")
+	familyMember := createFamilyMember()
+	familyBuilder := createFamilyBuilder()
+	return familyBuilder.
+		WithSurname("Super Family").
+		Add(familyMember).
+		Build()
+}
+
+func createInvalidFamily() *family.Family {
+	// log.Println("createInvalidFamily()")
+	missingFamilyMember := createMissingMemberFamilyMember()
+	familyBuilder := createFamilyBuilder()
+	return familyBuilder.
+		WithSurname("Super Family").
+		Add(missingFamilyMember).
+		Build()
+}
+
+func createMissingHOFFamily() *family.Family {
+	// log.Println("createMissingHOFFamily()")
+	ordinaryFamilyMember := createOrdinaryFamilyMember()
+	familyBuilder := createFamilyBuilder()
+	return familyBuilder.
+		WithSurname("Super Family").
+		Add(ordinaryFamilyMember).
+		Build()
+}
+
 func createEmptyFamily() *family.Family {
+	// log.Println("createEmptyFamily()")
 	return &family.Family{}
 }

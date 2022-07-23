@@ -32,8 +32,8 @@ func TestMember_IsValid(t *testing.T) {
 func TestMember_Invalid_EmptyMember(t *testing.T) {
 	emptyMember := createEmptyMember()
 
-	allErrors := emptyMember.Err()
 	require.False(t, emptyMember.IsValid())
+	allErrors := emptyMember.Err()
 	require.Contains(t, allErrors, family.ErrInvalidMember.Error())
 	require.Len(t, allErrors, 1)
 }

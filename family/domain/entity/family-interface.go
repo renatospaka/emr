@@ -6,6 +6,8 @@ type FamilyEntityInterface interface {
 	Surname() string
 	Size() int
 	HasHeadOfFamily() bool
+	AddMember(member *FamilyMember) *Family
+	RemoveMember(memberId string)
 }
 
 type FamilyEntityBuilderInterface interface {

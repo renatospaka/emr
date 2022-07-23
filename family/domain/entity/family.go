@@ -76,6 +76,21 @@ func (f *Family) HasHeadOfFamily() bool {
 	return hasHOF
 }
 
+// Add a new member to the family
+func (f *Family) AddMember(member *FamilyMember) *Family {
+	// log.Println("Family.AddMember()")
+
+	isValid := f.IsValid()
+	if !isValid {
+		return f
+	}
+
+	f.members = append(f.members, member)
+	f.lastChanged = time.Now().UnixNano()
+	f.validate()	// really in doubt if this should be executed again...
+	return f
+}
+
 // Check whenever the family structure is intact
 // and filled accordingly to the model rules
 func (f *Family) IsValid() bool {
@@ -122,7 +137,17 @@ func (f *Family) Err() []string {
 // and filled accordingly to the model rules
 func (f *Family) validate() {
 	// log.Println("Family.validate()")
+
+	// test if it is an empty (nil) object
+	if utils.IsEmpty(f) {
+		f.err = err.NewErrors().Add(ErrInvalidFamily)
+		f.valid = false
+		// log.Printf("Family.validate(%t)", f.valid)
+		return
+	}
 	f.err.ClearAll()
+
+	// test if all properties are nil or empty
 
 	err := utils.IsVaalidUUID(f.id)
 	if err != nil {
